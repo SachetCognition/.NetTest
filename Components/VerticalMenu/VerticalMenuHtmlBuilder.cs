@@ -173,7 +173,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
                 liBuilder.InnerHtml.AppendHtml(anchorBuilder1Html + (childMenuTagsUl == null ? string.Empty : childMenuTagsUl.ToString()));
 
-                if (Array.IndexOf((liBuilder.InnerHtml.Split('"')), this.Component.SelectedMenu) > -1)
+                var innerHtmlString = liBuilder.InnerHtml.ToString();
+                if (innerHtmlString != null && Array.IndexOf(innerHtmlString.Split('"'), this.Component.SelectedMenu) > -1)
                 {
                     liBuilder.AddCssClass("first active");
                     this.isMenuSelected = true;
@@ -266,7 +267,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
             //childLiTag.InnerHtml.AppendHtml(childLiTag.InnerHtml.Replace("<a", string.Format(CultureInfo.CurrentCulture, "<a onclick=$.selectedMenuItem(this.id,'{0}')", this.Component.Name)));
            
-            if (Array.IndexOf((childLiTag.InnerHtml.Split('"')), selectedMenuName) > -1)
+            var childInnerHtmlString = childLiTag.InnerHtml.ToString();
+            if (childInnerHtmlString != null && Array.IndexOf(childInnerHtmlString.Split('"'), selectedMenuName) > -1)
             {
                 childLiTag.AddCssClass("first active");
                 this.isMenuSelected = true;

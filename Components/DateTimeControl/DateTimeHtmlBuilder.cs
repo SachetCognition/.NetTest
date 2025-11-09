@@ -79,7 +79,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 //GKG:Fixed for remark 218.Removed the ExternalLabelText which taken as a parameter in string.format method. 
                 this.Component.CustomLabel.AccessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.LBL000022);
 
-                var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
+                var tagBuilderLabelDiv = new TagBuilder("div");
+            tagBuilderLabelDiv.InnerHtml.AppendHtml(this.Component.CustomLabel.ToHtmlString());
                 if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
                 {
                     tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);

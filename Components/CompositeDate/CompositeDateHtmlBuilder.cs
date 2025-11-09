@@ -103,7 +103,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
 
             //set associated control id for label to first date textbox
             this.Component.CustomLabel.AssociatedControlId = this.GetForAttribute(datesToShow, weeksToShow);
-            var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
+            var tagBuilderLabelDiv = new TagBuilder("div");
+            tagBuilderLabelDiv.InnerHtml.AppendHtml(this.Component.CustomLabel.ToHtmlString());
 
             if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
             {

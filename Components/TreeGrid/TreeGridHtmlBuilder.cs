@@ -163,7 +163,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                     tagBuilderDiv.AddCssClass("tree-Custommargin");
                 }
 
-                var tagSpan = new TagBuilder("span") { InnerHtml = variable.HeaderText };
+                var tagSpan = new TagBuilder("span");
+                tagSpan.InnerHtml.Append(variable.HeaderText);
                 if (!variable.IsHeaderVisible)
                 {
                     tagSpan.MergeAttribute("class", "tree-headervisibility");
