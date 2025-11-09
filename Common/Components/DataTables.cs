@@ -86,7 +86,13 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         Import = 7,
         Print = 8,
         Refresh = 9,
-        Search = 10
+        Search = 10,
+        Linkbutton = 11,
+        Redirect = 12,
+        RedirectJs = 13,
+        LinkbuttonJs = 14,
+        Imagebutton = 15,
+        ImagebuttonJs = 16
     }
 
     public class MenuItem
