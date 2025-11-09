@@ -97,7 +97,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                     if (!string.IsNullOrEmpty(item.Text))
                     {
                         this.GenerateCheckBox(item, chkBoxBuilder);
-                        tagBuilderLi.InnerHtml.SetHtmlContent(chkBoxBuilder.ToString());
+                        tagBuilderLi.InnerHtml.AppendHtml(chkBoxBuilder.ToString());
                         chkBoxBuilder.Clear();
                     }
                     liStringBuilder.Append(tagBuilderLi);
@@ -109,7 +109,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 }
 
                 //the complete LI will be placed in the UL's inner html.
-                tagBuilderUl.InnerHtml.SetHtmlContent(liStringBuilder.ToString());
+                tagBuilderUl.InnerHtml.AppendHtml(liStringBuilder.ToString());
                 if (!string.IsNullOrEmpty(this.Component.Title))
                 {
                     tagBuilderUl.MergeAttribute("title", this.Component.Title);
@@ -119,8 +119,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 // Add a hidden span with legend title for reading software.
                 legend.MergeAttribute("class", "hide-access");
                 var hiddenSpan = new TagBuilder("span");
-                hiddenSpan.InnerHtml.SetContent(this.Component.Title);
-                legend.InnerHtml.SetHtmlContent(hiddenSpan.ToString());
+                hiddenSpan.InnerHtml.Append(this.Component.Title);
+                legend.InnerHtml.AppendHtml(hiddenSpan.ToString());
 
                 var div = new TagBuilder("div");
 
@@ -128,7 +128,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 div.MergeAttribute("class", divCssClass);
                 var sbinnerHtml = string.Empty;
 
-                tagBuilderFieldSet.InnerHtml.SetHtmlContent(sbinnerHtml.AppendWithBuilder(
+                tagBuilderFieldSet.InnerHtml.AppendHtml(sbinnerHtml.AppendWithBuilder(
                     legend.ToString(),
                     "<div class=\"" + divCssClass + "\">",
                     tagBuilderUl.ToString(),
@@ -183,7 +183,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
             //tagbuilder for individual label's for each checkbox.
             var tagBuilderLabel = new TagBuilder("label");
             tagBuilderLabel.MergeAttribute("for", compId);
-            tagBuilderLabel.SetInnerText(item.Text);
+            tagBuilderLabel.InnerHtml.Append(System.Net.WebUtility.HtmlEncode(item.Text));
             chkBoxBuilder.Append(tagBuilderCheckBox.ToString()).Append(tagBuilderLabel);
         }
     }
