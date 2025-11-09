@@ -72,5 +72,22 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
             Component.ImageUrl = imageUrl;
             return this;
         }
+
+        public HyperLinkBuilder HtmlAttributes(object htmlAttributes)
+        {
+            if (htmlAttributes != null)
+            {
+                var properties = htmlAttributes.GetType().GetProperties();
+                foreach (var prop in properties)
+                {
+                    var value = prop.GetValue(htmlAttributes);
+                    if (value != null)
+                    {
+                        Component.HtmlAttributes[prop.Name] = value;
+                    }
+                }
+            }
+            return this;
+        }
     }
 }
