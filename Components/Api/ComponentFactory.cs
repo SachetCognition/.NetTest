@@ -11,6 +11,18 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
     /// <summary>
     /// </summary>
+    public class ComponentFactory<TModel>
+    {
+        public ComponentFactory(IHtmlHelper<TModel> htmlHelper, object scriptRendererBuilder, object styleRendererBuilder)
+        {
+            HtmlHelper = htmlHelper;
+        }
+
+        public IHtmlHelper<TModel> HtmlHelper { get; private set; }
+    }
+
+    /// <summary>
+    /// </summary>
     public static class ComponentFactory
     {
         /// <summary>

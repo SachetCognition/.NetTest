@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;

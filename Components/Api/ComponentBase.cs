@@ -51,6 +51,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
         /// <summary>
         /// </summary>
+        public System.Text.StringBuilder ValidationString { get; set; } = new System.Text.StringBuilder();
+
+        /// <summary>
+        /// </summary>
+        public Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata? ModelMetadata { get; set; }
+
+        /// <summary>
+        /// </summary>
         public abstract ReadOnlyCollection<JsResource> JsResources { get; }
 
         /// <summary>
