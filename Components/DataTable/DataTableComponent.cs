@@ -621,11 +621,13 @@
         public override void WriteInitScript(TextWriter writer)
         {
             var request = this.HtmlHelper.ViewContext.HttpContext.Request;
-            var path = request.ApplicationPath;
+            var path = request.PathBase.Value ?? string.Empty;
             if (string.IsNullOrEmpty(this.ErrorPageUrl))
             {
+                var numFen = request.Query["NumFen"].ToString();
+                var cookieName = request.Query["COOKIENAME"].ToString();
                 this.ErrorPageUrl = string.Format(CultureInfo.InvariantCulture, "{0}/Home/SubErr?NUMFEN={1}&COOKIENAME={2}",
-                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), request["NumFen"], request["COOKIENAME"]);
+                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), numFen, cookieName);
             }
 
             if (writer != null)

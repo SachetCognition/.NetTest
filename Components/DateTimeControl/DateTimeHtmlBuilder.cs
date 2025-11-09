@@ -157,11 +157,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             //include error comp here to align it with the date
             //certain controls to be added only if the component is updatable
-            if (this.Component.IsUpdatable && !MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (this.Component.IsUpdatable && !string.IsNullOrEmpty(this.Component.ValidationString?.ToString()))
             {
-                this.Component.ValidationString = new MvcHtmlString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
+                this.Component.ValidationString = this.GetValidationSpan(this.Component.GetUpdatableDateTextName);
                 this.Component.ErrorMessage = ErrorHelper.CreateErrorComponent(this.Component);
-                sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage.ToHtmlString());
+                sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage?.ToString() ?? string.Empty);
                 //  sbTagMainDivInnerHtml.Append(this.CreateErrorString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName), this.Component.HtmlHelper));
             }
 
@@ -198,7 +198,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </returns>
         private string GetValidationSpan(string forName)
         {
-            if (MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (string.IsNullOrEmpty(this.Component.ValidationString?.ToString()))
             {
                 return string.Empty;
             }
