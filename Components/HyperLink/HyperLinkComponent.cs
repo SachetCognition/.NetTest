@@ -17,6 +17,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
         public string Url { get; set; }
         public string Target { get; set; }
         public string Title { get; set; }
+        public string ImageUrl { get; set; }
+        public string CssClass { get; set; }
 
         public override ReadOnlyCollection<JsResource> JsResources
         {

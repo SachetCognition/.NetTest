@@ -23,6 +23,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
         public bool DisplayInformationIcon { get; set; }
         public string CssMainDiv { get; set; }
         public string CssClass { get; set; }
+        public string AssociatedWeekYearHtmlId { get; set; }
         
         public System.Collections.Generic.List<MenuItem> ReturnChildMenu()
         {

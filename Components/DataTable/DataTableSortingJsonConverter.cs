@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
+    using Equant.SAV2000.ComponentLibrary.Common.Enums;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;

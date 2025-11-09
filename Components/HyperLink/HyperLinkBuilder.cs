@@ -66,5 +66,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
             Component.Url = actionUrl;
             return this;
         }
+
+        public HyperLinkBuilder ImageUrl(string imageUrl)
+        {
+            Component.ImageUrl = imageUrl;
+            return this;
+        }
     }
 }
