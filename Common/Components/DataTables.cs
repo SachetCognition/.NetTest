@@ -113,38 +113,4 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
             return new System.Collections.Generic.List<MenuItem>();
         }
     }
-
-    public class DataTableLanguageOption
-    {
-        public string Info { get; set; } = string.Empty;
-        public string InfoEmpty { get; set; } = string.Empty;
-        public string InfoFiltered { get; set; } = string.Empty;
-        public string InfoThousands { get; set; } = string.Empty;
-        public string LoadingRecords { get; set; } = string.Empty;
-        public string Processing { get; set; } = string.Empty;
-        public string Search { get; set; } = string.Empty;
-        public string ZeroRecords { get; set; } = string.Empty;
-        public object Paginate { get; set; }
-    }
-
-    public class DataTableColumnsReorderOption
-    {
-        public bool AllowReorder { get; set; }
-        public bool AllowResize { get; set; }
-    }
-
-    public class DataTableColumnFilterColumnOption
-    {
-        public string ColumnType { get; set; } = string.Empty;
-        public int MaxLength { get; set; }
-        public string Filter { get; set; } = string.Empty;
-    }
-
-    public class DataTableColumnFilterColumnTypeOption
-    {
-        public string Text { get; set; } = string.Empty;
-        public string Number { get; set; } = string.Empty;
-        public string Select { get; set; } = string.Empty;
-        public string Null { get; set; } = string.Empty;
-    }
 }
