@@ -2,7 +2,8 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
@@ -20,7 +21,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="modelMetadata">
         /// The model metadata.
         /// </param>
-        public TreeGridBuilder(TreeGridComponent component, ModelMetadata modelMetadata)
+        public TreeGridBuilder(TreeGridComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }

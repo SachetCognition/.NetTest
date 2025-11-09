@@ -8,8 +8,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
     using System.Globalization;
     using System.Text;
     using System.Threading;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -48,7 +49,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {

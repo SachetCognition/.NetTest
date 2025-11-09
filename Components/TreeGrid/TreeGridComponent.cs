@@ -4,8 +4,9 @@ using System.Linq;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 {
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
@@ -42,7 +43,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="treeData">
         /// The tree data.
         /// </param>
-        public TreeGridComponent(HtmlHelper htmlHelper, System.Data.DataTable treeData)
+        public TreeGridComponent(IHtmlHelper htmlHelper, System.Data.DataTable treeData)
             : base(htmlHelper)
         {
             var jsRes = new List<JsResource>
@@ -82,7 +83,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new TreeGridHtmlBuilder(this).Build(writer);
         }
@@ -118,7 +119,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {
