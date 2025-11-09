@@ -11,7 +11,7 @@
 // -------------------------------------------------------------------------------------------------
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
@@ -27,7 +27,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public ButtonBuilder(ButtonComponent component, ModelMetadata modelMetadata)
+        public ButtonBuilder(ButtonComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }

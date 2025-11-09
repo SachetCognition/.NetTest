@@ -12,8 +12,8 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
 {
     using System;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
@@ -39,35 +39,42 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
                 throw new ArgumentException("The parameter writer cannot be null");
             }
 
-            if (this.Component.IsVisible)
+            if (this.Component != null && this.Component.IsVisible)
             {
                 var tagBuilderButton = new TagBuilder("input");
-                tagBuilderButton.MergeAttribute("id", this.Component.Id);
+                tagBuilderButton.Attributes.Add("id", this.Component.Id);
 
                 if (!string.IsNullOrEmpty(this.Component.Name))
                 {
-                    tagBuilderButton.MergeAttribute("name", this.Component.Name);
+                    tagBuilderButton.Attributes.Add("name", this.Component.Name);
                 }
 
-                tagBuilderButton.MergeAttribute("type", "submit");
+                tagBuilderButton.Attributes.Add("type", "submit");
                 if (!string.IsNullOrWhiteSpace(this.Component.DialogDivId))
                 {
-                    tagBuilderButton.MergeAttribute("data-toggle", "modal"); 
-                    tagBuilderButton.MergeAttribute("data-target", "#"+this.Component.DialogDivId);
+                    tagBuilderButton.Attributes.Add("data-toggle", "modal"); 
+                    tagBuilderButton.Attributes.Add("data-target", "#"+this.Component.DialogDivId);
                 }
 
-                tagBuilderButton.MergeAttributes(this.Component.HtmlAttributes);
+                foreach (var attr in this.Component.HtmlAttributes)
+                {
+                    tagBuilderButton.Attributes.Add(attr.Key, attr.Value?.ToString() ?? string.Empty);
+                }
 
                 tagBuilderButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
 
-                writer.Write(tagBuilderButton.ToString(TagRenderMode.StartTag));
+                using (var stringWriter = new StringWriter())
+                {
+                    tagBuilderButton.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                    writer.Write(stringWriter.ToString());
+                }
             }
         }
     }

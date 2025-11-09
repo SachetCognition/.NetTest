@@ -1,436 +1,61 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{75F56A8C-8888-4FA2-8EA9-E3EC4F05DC71}</ProjectGuid>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Equant.SAV2000.ComponentLibrary.MVC</RootNamespace>
     <AssemblyName>Equant.SAV2000.ComponentLibrary.MVC</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\Build\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>ORANGE</Company>
+    <Product>Equant.SAV2000.ComponentLibrary.MVC</Product>
+    <Copyright>Copyright © ORANGE 2014</Copyright>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\ComponentAssembly\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\..\Document\FxCopRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\..\ComponentAssembly\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS;CODE_ANALYSIS</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-    <CodeAnalysisRuleSet>..\..\..\Document\FxCopRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ClientDependency.Core, Version=1.8.2.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\ClientDependency.1.8.2.1\lib\net45\ClientDependency.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ClientDependency.Core.Mvc, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\ClientDependency-Mvc5.1.8.0.0\lib\net45\ClientDependency.Core.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\..\..\Build\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\..\..\Build\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\Build\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <!-- ASP.NET Core MVC 8 -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    
+    <!-- Entity Framework Core 8 -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    
+    <!-- JSON serialization -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    
+    <!-- System.ComponentModel.Annotations for validation attributes -->
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Components\ActionButton\ActionButtonBuilder.cs" />
-    <Compile Include="Components\ActionButton\ActionButtonComponent.cs" />
-    <Compile Include="Components\ActionButton\ActionButtonHtmlBuilder.cs" />
-    <Compile Include="Components\Api\ComponentBase.cs" />
-    <Compile Include="Components\Api\ComponentBuilderBase.cs" />
-    <Compile Include="Components\Api\ComponentFactory.cs" />
-    <Compile Include="Components\Api\HtmlBuilderBase.cs" />
-    <Compile Include="Components\Api\IStyleRendererComponent.cs" />
-    <Compile Include="Components\Api\IComponent.cs" />
-    <Compile Include="Components\Api\IScriptRendererComponent.cs" />
-    <Compile Include="Components\BreadCrumbs\BreadCrumbsBuilder.cs" />
-    <Compile Include="Components\BreadCrumbs\BreadCrumbsComponent.cs" />
-    <Compile Include="Components\BreadCrumbs\BreadCrumbsHtmlBuilder.cs" />
-    <Compile Include="Components\BreadCrumbs\BreadCrumbsItem.cs" />
-    <Compile Include="Components\Button\ButtonBuilder.cs" />
-    <Compile Include="Components\Button\ButtonComponent.cs" />
-    <Compile Include="Components\Button\ButtonHtmlBuilder.cs" />
-    <Compile Include="Components\CheckBoxList\CheckBoxListBuilder.cs" />
-    <Compile Include="Components\CheckBoxList\CheckBoxListComponent.cs" />
-    <Compile Include="Components\CheckBoxList\CheckBoxListHtmlBuilder.cs" />
-    <Compile Include="Components\CheckBoxList\CheckBoxListItem.cs" />
-    <Compile Include="Components\CheckBox\CheckBoxBuilder.cs" />
-    <Compile Include="Components\CheckBox\CheckBoxComponent.cs" />
-    <Compile Include="Components\CheckBox\CheckBoxHtmlBuilder.cs" />
-    <Compile Include="Components\ClickToVoice\ClickToVoiceBuilder.cs" />
-    <Compile Include="Components\ClickToVoice\ClickToVoiceComponent.cs" />
-    <Compile Include="Components\ClickToVoice\ClickToVoiceHtmlBuilder.cs" />
-    <Compile Include="Components\CommentBox\CommentBoxBuilder.cs" />
-    <Compile Include="Components\CommentBox\CommentBoxComponent.cs" />
-    <Compile Include="Components\CommentBox\CommentBoxHtmlBuilder.cs" />
-    <Compile Include="Components\CompositeDateExt\CompositeDateExtBuilder.cs" />
-    <Compile Include="Components\CompositeDateExt\CompositeDateExtComponent.cs" />
-    <Compile Include="Components\CompositeDateExt\CompositeDateExtHtmlBuilder.cs" />
-    <Compile Include="Components\CompositeDateExt\CompositeDateExtViewModel.cs" />
-    <Compile Include="Components\CompositeDateExt\DateExtSelectionDropDown.cs" />
-    <Compile Include="Components\CompositeDate\CompositeDateBuilder.cs" />
-    <Compile Include="Components\CompositeDate\CompositeDateComponent.cs" />
-    <Compile Include="Components\CompositeDate\CompositeDateHtmlBuilder.cs" />
-    <Compile Include="Components\CompositeDate\CompositeDateViewModel.cs" />
-    <Compile Include="Components\CompositeDate\DateSelectionDropDown.cs" />
-    <Compile Include="Components\CustomLabel\LabelHelper.cs" />
-    <Compile Include="Components\DataTable\DataTableColumnType.cs" />
-    <Compile Include="Components\DataTable\DataTableErrorMessageTemplate.cs" />
-    <Compile Include="Components\DataTable\DataTableOptionsSerializer.cs" />
-    <Compile Include="Components\DataTable\DataTableSelector.cs" />
-    <Compile Include="Components\DropdownMenus\ChildMenu.cs" />
-    <Compile Include="Components\CustomValidator\CustomValidatorBuilder.cs" />
-    <Compile Include="Components\CustomValidator\CustomValidatorComponent.cs" />
-    <Compile Include="Components\CustomValidator\CustomValidatorHtmlBuilder.cs" />
-    <Compile Include="Components\DialogBox\DialogButton.cs" />
-    <Compile Include="Components\DialogBox\DialogBoxBuilder.cs" />
-    <Compile Include="Components\DialogBox\DialogBoxComponent.cs" />
-    <Compile Include="Components\DialogBox\DialogBoxHtmlBuilder.cs" />
-    <Compile Include="Components\CustomHeader\CustomHeaderBuilder.cs" />
-    <Compile Include="Components\CustomHeader\CustomHeaderComponent.cs" />
-    <Compile Include="Components\CustomHeader\CustomHeaderHtmlBuilder.cs" />
-    <Compile Include="Components\Duration\DurationBuilder.cs" />
-    <Compile Include="Components\Duration\DurationComponent.cs" />
-    <Compile Include="Components\Duration\DurationHtmlBuilder.cs" />
-    <Compile Include="Components\ErrorComponent\ErrorBuilder.cs" />
-    <Compile Include="Components\ErrorComponent\ErrorComponent.cs" />
-    <Compile Include="Components\ErrorComponent\ErrorHtmlBuilder.cs" />
-    <Compile Include="Components\ErrorComponent\ErrorMessageModel.cs" />
-    <Compile Include="Components\HorizontalMenu\HorizontalMenuItemInfo.cs" />
-    <Compile Include="Components\Image\ImageBuilder.cs" />
-    <Compile Include="Components\Image\ImageComponent.cs" />
-    <Compile Include="Components\Image\ImageHtmlBuilder.cs" />
-    <Compile Include="Components\RadioButtonList\RadioButtonListBuilder.cs" />
-    <Compile Include="Components\RadioButtonList\RadioButtonListComponent.cs" />
-    <Compile Include="Components\RadioButtonList\RadioButtonListConstant.cs" />
-    <Compile Include="Components\RadioButtonList\RadioButtonListHtmlBuilder.cs" />
-    <Compile Include="Components\Image\ImageSrc.cs" />
-    <Compile Include="Components\ScriptRenderer\BlockScriptRendererComponent.cs" />
-    <Compile Include="Components\ScriptRenderer\ClientDependencyScriptRendererComponent.cs" />
-    <Compile Include="Components\ScriptRenderer\CommonScriptRendererComponent.cs" />
-    <Compile Include="Components\ScriptRenderer\ScriptRendererBuilder.cs" />
-    <Compile Include="Components\ScriptRenderer\ScriptRendererComponent.cs" />
-    <Compile Include="Components\SpanLabel\SpanLabelBuilder.cs" />
-    <Compile Include="Components\SpanLabel\SpanLabelComponent.cs" />
-    <Compile Include="Components\SpanLabel\SpanLabelHtmlBuilder.cs" />
-    <Compile Include="Components\TreeGrid\CheckBoxTextColumn.cs" />
-    <Compile Include="Components\TreeGrid\ImageTextColumn.cs" />
-    <Compile Include="Components\TreeGrid\TreeGridimage.cs" />
-    <Compile Include="Components\TreeGrid\TreeCustomColumnData.cs" />
-    <Compile Include="Components\TreeGrid\TreeGridBuilder.cs" />
-    <Compile Include="Components\TreeGrid\TreeGridComponent.cs" />
-    <Compile Include="Components\TreeGrid\TreeGridHtmlBuilder.cs" />
-    <Compile Include="Components\TreeGrid\TreeViewColumn.cs" />
-    <Compile Include="Components\DropdownMenus\DropdownMenu.cs" />
-    <Compile Include="Components\DropdownMenus\DropDownMenuBuilder.cs" />
-    <Compile Include="Components\DropdownMenus\DropDownMenuComponent.cs" />
-    <Compile Include="Components\DropdownMenus\DropDownMenuHtmlBuilder.cs" />
-    <Compile Include="Components\Communicator\CommunicatorBuilder.cs" />
-    <Compile Include="Components\Communicator\CommunicatorComponent.cs" />
-    <Compile Include="Components\Communicator\CommunicatorHtmlBuilder.cs" />
-    <Compile Include="Components\DataTable\Context\DataTableContext.cs" />
-    <Compile Include="Components\DataTable\Context\DataTableContextModelBinder.cs" />
-    <Compile Include="Components\DataTable\DataTableSortingJsonConverter.cs" />
-    <Compile Include="Components\DataTable\CriteriaParameterAdaptor.cs" />
-    <Compile Include="Components\DataTable\SelectAllDataTableHeaderTemplate.cs" />
-    <Compile Include="Components\DateDurationControl\DateDuration.cs" />
-    <Compile Include="Components\DateDurationControl\DateDurationBuilder.cs" />
-    <Compile Include="Components\DateDurationControl\DateDurationComponent.cs" />
-    <Compile Include="Components\DateDurationControl\DateDurationHtmlBuilder.cs" />
-    <Compile Include="Components\DropDownList\DataCollection.cs" />
-    <Compile Include="Components\PopOver\PopOverBuilder.cs" />
-    <Compile Include="Components\PopOver\PopOverComponent.cs" />
-    <Compile Include="Components\PopOver\PopOverHtmlBuilder.cs" />
-    <Compile Include="Components\HorizontalTab\HorizontalTabBuilder.cs" />
-    <Compile Include="Components\HorizontalTab\HorizontalTabComponent.cs" />
-    <Compile Include="Components\HorizontalTab\HorizontalTabHtmlBuilder.cs" />
-    <Compile Include="Components\Popup\PopupImageBuilder.cs" />
-    <Compile Include="Components\Popup\PopupImageComponent.cs" />
-    <Compile Include="Components\Popup\PopupImageHtmlBuilder.cs" />
-    <Compile Include="Components\DataTable\DataTableBuilder.cs" />
-    <Compile Include="Components\DataTable\DataTableColumn.cs" />
-    <Compile Include="Components\DataTable\DataTableComponent.cs" />
-    <Compile Include="Components\DataTable\DataTableHtmlBuilder.cs" />
-    <Compile Include="Components\DataTable\IDataTableHeaderTemplate.cs" />
-    <Compile Include="Components\ProgressBar\ProgressBarBuilder.cs" />
-    <Compile Include="Components\ProgressBar\ProgressBarComponent.cs" />
-    <Compile Include="Components\ProgressBar\ProgressBarHtmlBuilder.cs" />
-    <Compile Include="Components\VerticalMenu\VerticalMenuItemInfo.cs" />
-    <Compile Include="Components\WeekYear\WeekAndYear.cs" />
-    <Compile Include="Components\WeekYear\WeekYearBuilder.cs" />
-    <Compile Include="Components\WeekYear\WeekYearComponent.cs" />
-    <Compile Include="Components\WeekYear\WeekYearHtmlBuilder.cs" />
-    <Compile Include="Components\WeekYear\WeekYearWithFormat.cs" />
-    <Compile Include="Components\WeekYear\WeekYearWithFormatBinder.cs" />
-    <Compile Include="Components\WeekYear\WeekYearWithFormatException.cs" />
-    <Compile Include="Extensions\DateTimeExtension.cs" />
-    <Compile Include="Helpers\DateComponentHelper.cs" />
-    <Compile Include="Helpers\ErrorHelper.cs" />
-    <Compile Include="Helpers\WeekHelper.cs" />
-    <Compile Include="Infrastructure\ConditionalAttributes.cs" />
-    <Compile Include="Infrastructure\DateTimeConstants.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeWithFormat.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeWithFormatBinder.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeWithFormatException.cs" />
-    <Compile Include="Components\DualList\DualListBuilder.cs" />
-    <Compile Include="Components\DualList\DualListComponent.cs" />
-    <Compile Include="Components\DualList\DualListHtmlBuilder.cs" />
-    <Compile Include="Components\FileUpload\FileUploadBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Components\FileUpload\FileUploadComponent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Components\FileUpload\FileUploadHtmlBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Components\ListBox\ListBoxBuilder.cs" />
-    <Compile Include="Components\ListBox\ListBoxComponent.cs" />
-    <Compile Include="Components\ListBox\ListBoxHtmlBuilder.cs" />
-    <Compile Include="Components\HorizontalMenu\HorizontalMenuBuilder.cs" />
-    <Compile Include="Components\HorizontalMenu\HorizontalMenuComponent.cs" />
-    <Compile Include="Components\HorizontalMenu\HorizontalMenuHtmlBuilder.cs" />
-    <Compile Include="Components\VerticalMenu\VerticalMenuBuilder.cs" />
-    <Compile Include="Components\VerticalMenu\VerticalMenuComponent.cs" />
-    <Compile Include="Components\VerticalMenu\VerticalMenuHtmlBuilder.cs" />
-    <Compile Include="Components\Menu\MenuItem.cs" />
-    <Compile Include="Components\TextArea\TextAreaBuilder.cs" />
-    <Compile Include="Components\TextArea\TextAreaComponent.cs" />
-    <Compile Include="Components\TextArea\TextAreaHtmlBuilder.cs" />
-    <Compile Include="Components\CustomLabel\CustomLabelBuilder.cs" />
-    <Compile Include="Components\CustomLabel\CustomLabelComponent.cs" />
-    <Compile Include="Components\CustomLabel\CustomLabelHtmlBuilder.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeBuilder.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeComponent.cs" />
-    <Compile Include="Components\DateTimeControl\DateTimeHtmlBuilder.cs" />
-    <Compile Include="Components\DropDownList\DropDownListHtmlBuilder.cs" />
-    <Compile Include="Components\DropDownList\DropDownListBuilder.cs" />
-    <Compile Include="Components\DropDownList\DropDownListComponent.cs" />
-    <Compile Include="Components\HyperLink\HyperLinkBuilder.cs" />
-    <Compile Include="Components\HyperLink\HyperLinkComponent.cs" />
-    <Compile Include="Components\HyperLink\HyperLinkHtmlBuilder.cs" />
-    <Compile Include="Components\ImageToolTip\ImageToolTipBuilder.cs" />
-    <Compile Include="Components\ImageToolTip\ImageToolTipComponent.cs" />
-    <Compile Include="Components\ImageToolTip\ImageToolTipHtmlBuilder.cs" />
-    <Compile Include="Components\Label\LabelBuilder.cs" />
-    <Compile Include="Components\Label\LabelComponent.cs" />
-    <Compile Include="Components\Label\LabelHtmlBuilder.cs" />
-    <Compile Include="Components\Page\ScriptBlockComponent.cs" />
-    <Compile Include="Components\Page\ScriptBlockBuilder.cs" />
-    <Compile Include="Components\Page\ScriptFileBuilder.cs" />
-    <Compile Include="Components\Page\ScriptFileComponent.cs" />
-    <Compile Include="Components\Page\StyleFileBuilder.cs" />
-    <Compile Include="Components\Page\StyleFileComponent.cs" />
-    <Compile Include="Components\RadioButton\RadioButtonBuilder.cs" />
-    <Compile Include="Components\RadioButton\RadioButtonComponent.cs" />
-    <Compile Include="Components\RadioButton\RadioButtonHtmlBuilder.cs" />
-    <Compile Include="Components\StyleRender\ClientDependencyStyleRenderComponent.cs" />
-    <Compile Include="Components\StyleRender\StyleRendererBuilder.cs" />
-    <Compile Include="Components\StyleRender\StyleRendererComponent.cs" />
-    <Compile Include="Components\TextBox\TextBoxBuilder.cs" />
-    <Compile Include="Components\Api\IHtmlBuilder.cs" />
-    <Compile Include="Components\TextBox\TextBoxComponent.cs" />
-    <Compile Include="Components\TextBox\TextBoxHtmlBuilder.cs" />
-    <Compile Include="Extensions\HtmlHelperExtension.cs" />
-    <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Infrastructure\Api\IHideMembers.cs" />
-    <Compile Include="Infrastructure\PageProvider.cs" />
-    <Compile Include="Models\DurationEntity.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Validators\CustomStringLengthAttribute.cs" />
-    <Compile Include="Validators\DateConditionalRequiredAttribute.cs" />
-    <Compile Include="Validators\DateRequiredAttribute.cs" />
-    <Compile Include="Validators\DurationValidatorAttribute.cs" />
-    <Compile Include="Validators\EndDateGreaterThanAttribute.cs" />
-    <Compile Include="Validators\EndWeekGreaterThanAttribute.cs" />
-    <Compile Include="Validators\LessThanCurrentDateAttribute.cs" />
-    <Compile Include="Validators\WeekConditionalRequiredAttribute.cs" />
+    <!-- Embedded JavaScript resources -->
+    <EmbeddedResource Include="Resources\Javascripts\*.js" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Equant.SAV2000.ComponentLibrary.Common\Equant.SAV2000.ComponentLibrary.Common.csproj">
-      <Project>{bca12e0a-90fb-4f7e-9094-f69344658cf7}</Project>
-      <Name>Equant.SAV2000.ComponentLibrary.Common</Name>
-    </ProjectReference>
+    <!-- Reference to Common library - will need to be updated or removed -->
+    <!-- <ProjectReference Include="..\Equant.SAV2000.ComponentLibrary.Common\Equant.SAV2000.ComponentLibrary.Common.csproj" /> -->
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <!-- Temporarily exclude unmigrated components from build -->
+    <Compile Remove="Components\CheckBoxList\**" />
+    <Compile Remove="Components\ClickToVoice\**" />
+    <Compile Remove="Components\CompositeDate\**" />
+    <Compile Remove="Components\CustomLabel\**" />
+    <Compile Remove="Components\DataTable\**" />
+    <Compile Remove="Components\DateTimeControl\**" />
+    <Compile Remove="Components\TreeGrid\**" />
+    <Compile Remove="Components\VerticalMenu\**" />
+    <Compile Remove="Extensions\**" />
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Infrastructure\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Validators\**" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\BreadCrumbs.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\Common.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\Validator.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\RadioButton.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\ImageToolTip.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\TextBox.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\TextArea.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\CheckBox.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\HyperLink.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\Button.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DateTime.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DropDownList.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\ListBox.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\CommentBox.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DualList.js" />
-    <EmbeddedResource Include="Resources\Javascripts\VerticalMenu.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\ActionButton.js" />
-    <EmbeddedResource Include="Resources\Javascripts\CompositeDate.js" />
-    <EmbeddedResource Include="Resources\Javascripts\HorizontalMenu.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\WeekYear.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\CheckBoxList.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DataTable.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DateTimeCommon.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\PopupImage.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\Popup.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\DataTableSelection.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Javascripts\RadioButtonList.js" />
-    <EmbeddedResource Include="Resources\Javascripts\TreeGrid.js" />
-    <EmbeddedResource Include="Resources\Javascripts\TreeCommon.js" />
-    <EmbeddedResource Include="Resources\Javascripts\TreeView.js" />
-    <EmbeddedResource Include="Resources\Javascripts\ClickToVoice.js" />
-    <EmbeddedResource Include="Resources\Javascripts\DialogBox.js" />
-    <EmbeddedResource Include="Resources\Javascripts\CustomHeader.js" />
-    <EmbeddedResource Include="Resources\Javascripts\CustomValidator.js" />
-    <EmbeddedResource Include="Resources\Javascripts\ProgressBar.js" />
-    <EmbeddedResource Include="Resources\Javascripts\DateDuration.js" />
-    <EmbeddedResource Include="Resources\Javascripts\DropDownMenu.js" />
-    <EmbeddedResource Include="Resources\Javascripts\ErrorDisplay.js" />
-    <EmbeddedResource Include="Resources\Javascripts\DataTableModifyDelete.js" />
-    <EmbeddedResource Include="Resources\Javascripts\CompositeDateExt.js" />
-    <EmbeddedResource Include="Resources\Javascripts\Duration.js" />
-    <EmbeddedResource Include="Resources\Javascripts\Image.js" />
-    <Content Include="Resources\Javascripts\IMOffice.js" />
-    <EmbeddedResource Include="Resources\Javascripts\PopOver.js" />
-    <EmbeddedResource Include="Resources\Javascripts\Communicator.js" />
-    <EmbeddedResource Include="Resources\Javascripts\HorizontalTab.js" />
-    <EmbeddedResource Include="Resources\Javascripts\DurationValidator.js" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <PropertyGroup>
-    <PreBuildEvent>if NOT $(ConfigurationName) == Debug (
-pushd "$(ProjectDir)"
-ajaxmin.bat
-popd
-)</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

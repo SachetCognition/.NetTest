@@ -11,7 +11,7 @@
 // -------------------------------------------------------------------------------------------------
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
@@ -27,7 +27,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public CheckBoxBuilder(CheckBoxComponent component, ModelMetadata modelMetadata)
+        public CheckBoxBuilder(CheckBoxComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }
