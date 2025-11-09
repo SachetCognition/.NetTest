@@ -22,6 +22,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
         public string ToolTipText { get; set; }
         public string CssClassImage { get; set; }
         public string ToolTipId { get; set; }
+        public PersistanceMode PersistanceMode { get; set; }
 
         public override ReadOnlyCollection<JsResource> JsResources
         {
