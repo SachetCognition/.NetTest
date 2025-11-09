@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets or sets the html helper.
         /// </summary>
-        public HtmlHelper HtmlHelper { get; set; }
+        public IHtmlHelper HtmlHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the client identifier

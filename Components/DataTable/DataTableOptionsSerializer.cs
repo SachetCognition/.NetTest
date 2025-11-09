@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
 
+    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables.Options;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
 

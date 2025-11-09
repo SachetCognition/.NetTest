@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets or sets the html helper.
         /// </summary>
-        HtmlHelper HtmlHelper { get; set; }
+        IHtmlHelper HtmlHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
