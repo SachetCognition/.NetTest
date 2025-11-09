@@ -46,7 +46,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         public VerticalMenuComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
-            this.MenuItems = new List<MenuItem>();
+            this.MenuItems = new List<Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem>();
             this.CopyRightImage = new ImageComponent(htmlHelper);
             var jsRes = new List<JsResource>
                                    {
@@ -85,7 +85,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <summary>
         /// Gets or sets the items.
         /// </summary>
-        internal List<MenuItem> MenuItems { get; private set; }
+        internal List<Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem> MenuItems { get; private set; }
 
         /// <summary>
         /// Gets the outer menu div CSS class.
