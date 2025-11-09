@@ -384,7 +384,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         {
             if (dateToShow == DateVisibility.HideBothDates)
             {
-                if (!this.Component.SecondDate.Value.IsEmpty() || !this.Component.FirstDate.Value.IsEmpty())
+                if (!this.Component.SecondDate.Value.IsEmpty || !this.Component.FirstDate.Value.IsEmpty)
                 {
                     throw new ArgumentException(
                         "The value provided for both date and format should be empty for the selected date type value:".AppendWithBuilder(
@@ -394,7 +394,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
 
             if (dateToShow == DateVisibility.HideSecondDate)
             {
-                if (!this.Component.SecondDate.Value.IsEmpty())
+                if (!this.Component.SecondDate.Value.IsEmpty)
                 {
                     throw new ArgumentException(
                         "The value provided for second date and format should be empty for the selected date type value:".AppendWithBuilder(
