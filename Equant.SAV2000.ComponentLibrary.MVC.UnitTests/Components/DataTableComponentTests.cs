@@ -23,7 +23,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
 
             Assert.NotNull(component);
             Assert.True(component.IsVisible);
-            Assert.NotNull(component.Options);
+            Assert.NotNull(component.Columns);
         }
 
         [Fact]
@@ -49,15 +49,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         }
 
         [Fact]
-        public void Builder_SetsOptions()
+        public void Builder_SetsCssClass()
         {
             var component = new DataTableComponent(_mockHtmlHelper.Object);
             var builder = new DataTableBuilder(component, null);
-            var options = new DataTableOptions();
 
-            builder.Options(options);
+            builder.CssClass("custom-datatable");
 
-            Assert.Equal(options, component.Options);
+            Assert.Equal("custom-datatable", component.CssClass);
         }
 
         [Fact]

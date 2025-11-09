@@ -24,7 +24,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
 
             Assert.NotNull(component);
             Assert.True(component.IsVisible);
-            Assert.NotNull(component.MenuItems);
         }
 
         [Fact]
@@ -50,19 +49,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         }
 
         [Fact]
-        public void Builder_SetsMenuItems()
+        public void Builder_SetsCauseValidation()
         {
             var component = new VerticalMenuComponent(_mockHtmlHelper.Object);
             var builder = new VerticalMenuBuilder(component, null);
-            var menuItems = new List<MenuItem>
-            {
-                new MenuItem { Text = "Item 1", Url = "/item1" }
-            };
 
-            builder.MenuItems(menuItems);
+            builder.CauseValidation(true);
 
-            Assert.Single(component.MenuItems);
-            Assert.Equal("Item 1", component.MenuItems[0].Text);
+            Assert.True(component.CauseValidation);
         }
 
         [Fact]

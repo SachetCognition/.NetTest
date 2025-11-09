@@ -52,7 +52,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         {
             var component = new WeekYearComponent(_mockHtmlHelper.Object);
             var builder = new WeekYearBuilder(component, null);
-            var weekYearValue = new WeekYearWithFormat("ww/yyyy", false);
+            var weekYearValue = new WeekYearWithFormat();
 
             builder.Value(weekYearValue);
 
