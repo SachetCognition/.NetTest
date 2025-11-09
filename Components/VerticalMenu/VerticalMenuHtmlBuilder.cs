@@ -23,7 +23,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
+    using MenuItemClass = Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem;
+    using EMenuCtrlTypeEnum = Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.EMenuCtrlType;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     using Newtonsoft.Json.Linq;

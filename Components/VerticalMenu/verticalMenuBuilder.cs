@@ -20,7 +20,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
+    using MenuItemClass = Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem;
 
     /// <summary>
     /// The menu builder.
