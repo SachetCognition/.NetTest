@@ -155,8 +155,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
                 if (endDate.Date != null && lesserDate.Date != null)
                 {
-                    var endDateValue = endDate.Date.Value;
-                    var lesserDateValue = lesserDate.Date.Value;
+                    System.DateTime endDateValue = endDate.Date;
+                    System.DateTime lesserDateValue = lesserDate.Date;
                     if (endDateValue.CompareTo(lesserDateValue) < 0)
                     {
                         validationResult = new ValidationResult(this.ErrorMessage ?? "End week must be greater than start week");
