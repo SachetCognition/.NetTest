@@ -14,7 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
@@ -24,7 +25,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// This is date required attribute class
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class LessThanCurrentDateAttribute : ValidationAttribute, IClientValidatable
+    public sealed class LessThanCurrentDateAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LessThanCurrentDateAttribute"/> class.
@@ -55,9 +56,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
         {
-            var validationRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "lessthancurrentdate" };
+            var validationRule = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "lessthancurrentdate" };
             yield return validationRule;
         }
 

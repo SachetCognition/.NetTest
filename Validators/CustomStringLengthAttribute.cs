@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
 {
@@ -11,7 +12,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// Specifies the minimum and maximum length of characters that are allowed in a data field
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientValidatable
+    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientModelValidator
     {
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
         {
             var adapt = new StringLengthAttributeAdapter(metadata, context, this);
             return adapt.GetClientValidationRules();

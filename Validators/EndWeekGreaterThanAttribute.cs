@@ -14,7 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
 
@@ -23,7 +24,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute, IClientValidatable
+    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// The other property name.
@@ -102,9 +103,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
         {
-            var dateGreaterThanRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "endweekgreaterthan" };
+            var dateGreaterThanRule = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "endweekgreaterthan" };
             dateGreaterThanRule.ValidationParameters.Add("lesserweekid", this.otherPropertyHtmlId);
             yield return dateGreaterThanRule;
         }
