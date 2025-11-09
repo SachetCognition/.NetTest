@@ -14,10 +14,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -48,7 +48,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {

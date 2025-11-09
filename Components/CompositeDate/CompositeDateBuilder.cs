@@ -44,7 +44,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public CompositeDateBuilder(CompositeDateComponent component, ModelMetadata modelMetadata)
+        public CompositeDateBuilder(CompositeDateComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
             this.customLabelBuilder = new CustomLabelBuilder(this.Component.CustomLabel, modelMetadata);
