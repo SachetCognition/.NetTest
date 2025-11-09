@@ -18,7 +18,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DateDurationControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
 
     /// <summary>
