@@ -63,5 +63,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
             Component.CssClassWeekDiv = value;
             return this;
         }
+
+        public WeekYearBuilder OnWeekChange(string onWeekChange)
+        {
+            Component.OnWeekChange = onWeekChange;
+            return this;
+        }
     }
 }
