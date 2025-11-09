@@ -13,7 +13,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
@@ -57,7 +58,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// </param>
         /// <param name="modelMetadata">
         /// </param>
-        public VerticalMenuBuilder(VerticalMenuComponent component, ModelMetadata modelMetadata)
+        public VerticalMenuBuilder(VerticalMenuComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
             this.copyRightImgBuilder = new ImageBuilder(this.Component.CopyRightImage, modelMetadata);

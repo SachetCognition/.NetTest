@@ -15,8 +15,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -61,7 +62,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// </param>
           [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0"
     , Justification = "HtmlTextWriter can never be null as it is handled by the base framework.")]
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             var tagBuilderOuterDiv = new TagBuilder("div");
             tagBuilderOuterDiv.AddCssClass(VerticalMenuComponent.OuterMenuDivCssClass);

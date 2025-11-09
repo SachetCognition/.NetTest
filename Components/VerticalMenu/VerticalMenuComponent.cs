@@ -14,8 +14,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
@@ -41,7 +42,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public VerticalMenuComponent(HtmlHelper htmlHelper)
+        public VerticalMenuComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.MenuItems = new List<MenuItem>();
@@ -111,7 +112,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// </param>
         /// <exception cref="NotImplementedException">
         /// </exception>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new VerticalMenuHtmlBuilder(this).Build(writer);
         }
@@ -122,7 +123,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {
