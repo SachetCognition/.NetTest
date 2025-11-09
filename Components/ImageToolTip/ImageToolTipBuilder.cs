@@ -41,5 +41,35 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
             Component.PersistanceMode = mode;
             return this;
         }
+
+        public ImageToolTipBuilder Title(string title)
+        {
+            Component.Title = title;
+            return this;
+        }
+
+        public ImageToolTipBuilder AlternateText(string altText)
+        {
+            Component.AlternateText = altText;
+            return this;
+        }
+
+        public ImageToolTipBuilder Css(string css)
+        {
+            Component.Css = css;
+            return this;
+        }
+
+        public ImageToolTipBuilder CssClassSpan(string cssClass)
+        {
+            Component.CssClassSpan = cssClass;
+            return this;
+        }
+
+        public ImageToolTipBuilder CssClassInnerSpan(string cssClass)
+        {
+            Component.CssClassInnerSpan = cssClass;
+            return this;
+        }
     }
 }
