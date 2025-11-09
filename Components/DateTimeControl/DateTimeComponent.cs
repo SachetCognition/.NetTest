@@ -16,12 +16,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
@@ -119,7 +117,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public DateTimeComponent(HtmlHelper htmlHelper)
+        public DateTimeComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             //set default values for properties
@@ -567,7 +565,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new DateTimeHtmlBuilder(this).Build(writer);
         }
@@ -578,7 +576,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

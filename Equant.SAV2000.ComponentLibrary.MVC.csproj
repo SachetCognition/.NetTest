@@ -42,16 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Temporarily exclude components with heavy dependencies on unmigrated components -->
-    <Compile Remove="Components\CompositeDate\**" />
-    <Compile Remove="Components\DataTable\**" />
-    <Compile Remove="Components\DateTimeControl\**" />
-    <Compile Remove="Components\TreeGrid\**" />
-    <Compile Remove="Components\VerticalMenu\**" />
-    
-    <!-- Include EnumDateTypes even though CompositeDate is excluded -->
-    <Compile Include="Components\CompositeDate\EnumDateTypes.cs" />
-    
     <!-- Exclude unmigrated validators, models, and some infrastructure from build -->
     <Compile Remove="Infrastructure\PageProvider.cs" />
     <Compile Remove="Infrastructure\ConditionalAttributes.cs" />

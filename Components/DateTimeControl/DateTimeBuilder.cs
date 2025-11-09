@@ -13,7 +13,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -32,7 +33,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public DateTimeBuilder(DateTimeComponent component, ModelMetadata modelMetadata)
+        public DateTimeBuilder(DateTimeComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
             this.customLabelBuilder = new CustomLabelBuilder(this.Component.CustomLabel, modelMetadata);
