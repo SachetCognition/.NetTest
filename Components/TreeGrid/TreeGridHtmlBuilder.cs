@@ -126,7 +126,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
             var tagBuilderul = new TagBuilder("ul");
             tagBuilderul.MergeAttribute("class", "lvl-0");
 
-            var sbCustomInnerHtml = new StringBuilder(tagBuilderul.InnerHtml);
+            var sbCustomInnerHtml = new StringBuilder();
             sbCustomInnerHtml.Append(this.Makeheader());
             sbCustomInnerHtml.Append(this.Maketree());
             tagBuilderul.InnerHtml.AppendHtml(sbCustomInnerHtml.ToString());

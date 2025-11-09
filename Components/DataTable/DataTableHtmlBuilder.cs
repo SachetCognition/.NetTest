@@ -38,7 +38,7 @@
 
                 // Generate table HTML tag
                 var tagBuilderTable = new TagBuilder("table");
-                var stringBuilderTable = new StringBuilder(tagBuilderTable.InnerHtml);
+                var stringBuilderTable = new StringBuilder();
                 tagBuilderTable.MergeAttribute("id", this.Component.Id);
 
                 if (!string.IsNullOrEmpty(this.Component.Name))
@@ -71,12 +71,12 @@
                 
                 // Generate tr HTML tag
                 var tagBuilderTr = new TagBuilder("tr");
-                var stringBuilderTr = new StringBuilder(tagBuilderTr.InnerHtml);
+                var stringBuilderTr = new StringBuilder();
 
                 // Generate tr HTML tag for column filter
                 var tagBuilderTrFilter = new TagBuilder("tr");
                 tagBuilderTrFilter.AddCssClass("filter-search");
-                var stringBuilderTrFilter = new StringBuilder(tagBuilderTrFilter.InnerHtml);
+                var stringBuilderTrFilter = new StringBuilder();
                 
                 // Generate the column headers
                 foreach (var column in this.Component.Columns)
