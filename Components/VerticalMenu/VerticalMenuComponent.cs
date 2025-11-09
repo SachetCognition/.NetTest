@@ -18,6 +18,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.IO;
 
+    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;

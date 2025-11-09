@@ -42,11 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Exclude unmigrated validators, models, and some infrastructure from build -->
+    <!-- Exclude unmigrated models and some infrastructure from build -->
     <Compile Remove="Infrastructure\PageProvider.cs" />
     <Compile Remove="Infrastructure\ConditionalAttributes.cs" />
     <Compile Remove="Models\**" />
-    <Compile Remove="Validators\**" />
     
     <!-- Exclude test projects from main library build -->
     <Compile Remove="Equant.SAV2000.ComponentLibrary.MVC.UnitTests\**" />

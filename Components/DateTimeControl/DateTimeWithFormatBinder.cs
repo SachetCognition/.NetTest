@@ -13,7 +13,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 {
     using System;
     using System.Globalization;
-    using System.Web.Mvc;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
@@ -23,7 +24,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     /// <summary>
     /// The custom model binder for the date time with format class.
     /// </summary>
-    public class DateTimeWithFormatBinder : DefaultModelBinder
+    public class DateTimeWithFormatBinder : IModelBinder
     {
         /// <summary>
         /// This method binds the model.
@@ -39,7 +40,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext == null)
             {
