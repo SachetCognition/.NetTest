@@ -369,7 +369,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             tagBuilderHidden.MergeAttribute("type", "hidden");
             tagBuilderHidden.MergeAttribute("value", value);
-            return tagBuilderHidden.ToString(TagRenderMode.StartTag);
+            return tagBuilderHidden.ToString();
         }
 
         /// <summary>
