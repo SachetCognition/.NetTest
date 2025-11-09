@@ -3,7 +3,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
     using System.Collections.ObjectModel;
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
 
     public class DropDownListComponent : ComponentBase
     {
@@ -17,6 +19,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
         }
 
         public bool IsDivNeeded { get; set; }
+        public string CssClassSelectDiv { get; set; }
+        public SelectList SelectList { get; set; }
+        public CustomLabelComponent CustomLabel { get; set; }
+        public bool IsDisabled { get; set; }
+        public string SelectedValue { get; set; }
+        public string OnChange { get; set; }
+        public ModelMetadata ModelMetadata { get; set; }
 
         public string ToHtmlString()
         {

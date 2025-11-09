@@ -20,6 +20,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
         public string Text { get; set; }
         public string ImageUrl { get; set; }
         public string ToolTipText { get; set; }
+        public string CssClassImage { get; set; }
         public string ToolTipId { get; set; }
 
         public override ReadOnlyCollection<JsResource> JsResources
