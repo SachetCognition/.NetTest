@@ -1,0 +1,24 @@
+# Build artifacts
+bin/
+obj/
+packages/
+
+# Visual Studio files
+*.suo
+*.user
+*.sln.docstates
+*.userprefs
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+[Bb]in/
+[Oo]bj/
