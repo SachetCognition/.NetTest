@@ -127,6 +127,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         }
 
         /// <summary>
+        /// </summary>
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
         /// The write html.
         /// </summary>
         /// <param name="writer">

@@ -21,6 +21,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
             get { return new ReadOnlyCollection<JsResource>(new System.Collections.Generic.List<JsResource>()); }
         }
 
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
+
         public override void WriteHtml(TextWriter writer)
         {
             if (IsVisible)

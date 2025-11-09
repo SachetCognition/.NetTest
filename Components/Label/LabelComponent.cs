@@ -24,6 +24,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Label
             get { return new ReadOnlyCollection<JsResource>(new List<JsResource>()); }
         }
 
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
+
         public override void WriteHtml(TextWriter writer)
         {
             if (writer == null) throw new ArgumentException("writer cannot be null");
