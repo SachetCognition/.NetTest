@@ -35,5 +35,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
             Component.CssClassImage = cssClass;
             return this;
         }
+
+        public ImageToolTipBuilder PersistanceMode(PersistanceMode mode)
+        {
+            Component.PersistanceMode = mode;
+            return this;
+        }
     }
 }

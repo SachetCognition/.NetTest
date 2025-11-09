@@ -17,6 +17,7 @@
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+    using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
     using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     using Resources = Equant.SAV2000.ComponentLibrary.Common.Resources;
