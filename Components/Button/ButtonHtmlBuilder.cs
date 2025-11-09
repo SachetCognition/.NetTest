@@ -1,0 +1,74 @@
+﻿// -------------------------------------------------------------------------------------------------
+// <copyright file="ButtonHtmlBuilder.cs" company="OBS">
+//   OBS
+// </copyright>
+// <summary>
+//    
+//    Creation Date: 07/04/2014
+//    Author:  Sharma Siddharth (54626) 
+//    Description: The Html Builder class for the Button component
+// </summary>
+// -------------------------------------------------------------------------------------------------
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
+{
+    using System;
+    using System.Web.Mvc;
+    using System.Web.UI;
+
+    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+    /// <summary>
+    /// The Html Builder class for the Button component
+    /// </summary>
+    public class ButtonHtmlBuilder : HtmlBuilderBase<ButtonComponent>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonHtmlBuilder"/> class.
+        /// </summary>
+        /// <param name="component">
+        /// The component.
+        /// </param>
+        public ButtonHtmlBuilder(ButtonComponent component)
+        {
+            this.Component = component;
+        }
+
+        /// <summary>
+        /// The build.
+        /// </summary>
+        /// <param name="writer">
+        /// The writer.
+        /// </param>
+        public override void Build(HtmlTextWriter writer)
+        {
+            if (writer == null)
+            {
+                throw new ArgumentException("The parameter writer cannot be null");
+            }
+
+            if (this.Component.IsVisible)
+            {
+                var tagBuilderButton = new TagBuilder("input");
+                tagBuilderButton.MergeAttribute("id", this.Component.Id);
+
+                if (!string.IsNullOrEmpty(this.Component.Name))
+                {
+                    tagBuilderButton.MergeAttribute("name", this.Component.Name);
+                }
+
+                tagBuilderButton.MergeAttribute("type", "submit");
+                if (!string.IsNullOrWhiteSpace(this.Component.DialogDivId))
+                {
+                    tagBuilderButton.MergeAttribute("data-toggle", "modal"); 
+                    tagBuilderButton.MergeAttribute("data-target", "#"+this.Component.DialogDivId);
+                }
+
+                tagBuilderButton.MergeAttributes(this.Component.HtmlAttributes);
+
+                tagBuilderButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
+
+                writer.Write(tagBuilderButton.ToString(TagRenderMode.StartTag));
+            }
+        }
+    }
+}
