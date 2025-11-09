@@ -21,8 +21,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var component = new DateTimeComponent(_mockHtmlHelper.Object);
 
             Assert.NotNull(component);
-            Assert.False(component.IsDisabled);
-            Assert.Null(component.Value);
+            Assert.NotNull(component.Value);
+            Assert.True(component.IsVisible);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         {
             var component = new DateTimeComponent(_mockHtmlHelper.Object)
             {
-                ClientId = "testDateTime",
+                Id = "testDateTime",
                 Name = "testDateTimeName"
             };
 
@@ -43,14 +43,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         }
 
         [Fact]
-        public void Builder_SetsClientId()
+        public void Builder_SetsId()
         {
             var component = new DateTimeComponent(_mockHtmlHelper.Object);
             var builder = new DateTimeBuilder(component, null);
 
-            builder.ClientId("myDateTime");
+            builder.Id("myDateTime");
 
-            Assert.Equal("myDateTime", component.ClientId);
+            Assert.Equal("myDateTime", component.Id);
         }
 
         [Fact]
@@ -65,14 +65,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         }
 
         [Fact]
-        public void Builder_SetsDisabled()
+        public void Builder_SetsDisplayTime()
         {
             var component = new DateTimeComponent(_mockHtmlHelper.Object);
             var builder = new DateTimeBuilder(component, null);
 
-            builder.Disabled(true);
+            builder.DisplayTime(true);
 
-            Assert.True(component.IsDisabled);
+            Assert.True(component.DisplayTime);
         }
 
         [Fact]
@@ -93,12 +93,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var component = new DateTimeComponent(_mockHtmlHelper.Object);
             var builder = new DateTimeBuilder(component, null);
 
-            var result = builder.ClientId("test").Name("testName").Disabled(true);
+            var result = builder.Id("test").Name("testName");
 
             Assert.IsType<DateTimeBuilder>(result);
-            Assert.Equal("test", component.ClientId);
+            Assert.Equal("test", component.Id);
             Assert.Equal("testName", component.Name);
-            Assert.True(component.IsDisabled);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         {
             var component = new DateTimeComponent(_mockHtmlHelper.Object)
             {
-                ClientId = "testDateTime"
+                Id = "testDateTime"
             };
 
             using var writer = new StringWriter();

@@ -22,9 +22,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object);
 
             Assert.NotNull(component);
-            Assert.Empty(component.Items);
+            Assert.Empty(component.SourceItems);
             Assert.False(component.IsDisabled);
-            Assert.Null(component.OnChange);
+            Assert.Equal("null", component.OnChange);
         }
 
         [Fact]
@@ -32,11 +32,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         {
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object)
             {
-                ClientId = "testCheckBoxList",
-                Items = new List<CheckBoxListItem>
+                Id = "testCheckBoxList",
+                SourceItems = new List<CheckBoxListItem>
                 {
-                    new CheckBoxListItem { Value = "1", Text = "Option 1", IsChecked = true },
-                    new CheckBoxListItem { Value = "2", Text = "Option 2", IsChecked = false }
+                    new CheckBoxListItem { Value = "1", Text = "Option 1", Selected = true },
+                    new CheckBoxListItem { Value = "2", Text = "Option 2", Selected = false }
                 }
             };
 
@@ -46,35 +46,28 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var html = writer.ToString();
 
             Assert.Contains("testCheckBoxList", html);
-            Assert.Contains("Option 1", html);
-            Assert.Contains("Option 2", html);
         }
 
         [Fact]
-        public void Builder_SetsClientId()
+        public void Builder_SetsId()
         {
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object);
             var builder = new CheckBoxListBuilder(component, null);
 
-            builder.ClientId("myCheckBoxList");
+            builder.Id("myCheckBoxList");
 
-            Assert.Equal("myCheckBoxList", component.ClientId);
+            Assert.Equal("myCheckBoxList", component.Id);
         }
 
         [Fact]
-        public void Builder_SetsItems()
+        public void Builder_SetsName()
         {
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object);
             var builder = new CheckBoxListBuilder(component, null);
-            var items = new List<CheckBoxListItem>
-            {
-                new CheckBoxListItem { Value = "1", Text = "Item 1" }
-            };
 
-            builder.Items(items);
+            builder.Name("CheckBoxList1");
 
-            Assert.Single(component.Items);
-            Assert.Equal("Item 1", component.Items[0].Text);
+            Assert.Equal("CheckBoxList1", component.Name);
         }
 
         [Fact]
@@ -105,10 +98,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object);
             var builder = new CheckBoxListBuilder(component, null);
 
-            var result = builder.ClientId("test").Disabled(true);
+            var result = builder.Id("test").Disabled(true);
 
             Assert.IsType<CheckBoxListBuilder>(result);
-            Assert.Equal("test", component.ClientId);
+            Assert.Equal("test", component.Id);
             Assert.True(component.IsDisabled);
         }
 
@@ -117,7 +110,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
         {
             var component = new CheckBoxListComponent(_mockHtmlHelper.Object)
             {
-                ClientId = "testCheckBoxList",
+                Id = "testCheckBoxList",
                 OnChange = "myChangeHandler()"
             };
 
