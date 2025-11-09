@@ -107,7 +107,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
            
             var copyRightTextDiv = new TagBuilder("div");
             var copyRightPara = new TagBuilder("p");
-            copyRightPara.SetInnerText(this.Component.CopyRightText);
+            copyRightPara.InnerHtml.Append(this.Component.CopyRightText);
             copyRightTextDiv.InnerHtml.AppendHtml(copyRightPara.ToString());
 
             var copyRightImgAndText = new StringBuilder(string.Empty);

@@ -104,8 +104,13 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public string ActionName { get; set; } = string.Empty;
         public string ActionUrl { get; set; } = string.Empty;
         public string MenuName { get; set; } = string.Empty;
-        public string MenuType { get; set; } = string.Empty;
+        public EMenuCtrlType MenuType { get; set; }
         public string OnclickEvent { get; set; } = string.Empty;
-        public string ReturnChildMenu { get; set; } = string.Empty;
+        public bool Hidden { get; set; }
+        
+        public System.Collections.Generic.List<MenuItem> ReturnChildMenu()
+        {
+            return new System.Collections.Generic.List<MenuItem>();
+        }
     }
 }
