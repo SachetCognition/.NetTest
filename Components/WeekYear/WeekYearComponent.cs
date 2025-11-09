@@ -19,6 +19,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
         public bool Disabled { get; set; }
         public WeekYearWithFormat Value { get; set; } = new WeekYearWithFormat();
         public string WeekTextId { get; set; } = string.Empty;
+        public bool DisplayInformationIcon { get; set; }
+        public string CssMainDiv { get; set; }
+        public string CssClass { get; set; }
+        
+        public System.Collections.Generic.List<MenuItem> ReturnChildMenu()
+        {
+            return new System.Collections.Generic.List<MenuItem>();
+        }
 
         public string ToHtmlString()
         {

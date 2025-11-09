@@ -27,5 +27,28 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Label
             Component.CssClass = value;
             return this;
         }
+
+        /// <summary>
+        /// </summary>
+        public LabelBuilder HtmlAttributes(object htmlAttributes)
+        {
+            if (htmlAttributes != null)
+            {
+                var properties = htmlAttributes.GetType().GetProperties();
+                foreach (var prop in properties)
+                {
+                    Component.HtmlAttributes[prop.Name] = prop.GetValue(htmlAttributes);
+                }
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public LabelBuilder CssClassLabel(string cssClass)
+        {
+            Component.CssClassLabel = cssClass;
+            return this;
+        }
     }
 }

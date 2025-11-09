@@ -27,5 +27,29 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
             this.Component.Disabled = disabled;
             return this;
         }
+
+        /// <summary>
+        /// </summary>
+        public WeekYearBuilder DisplayInformationIcon(bool display)
+        {
+            Component.DisplayInformationIcon = display;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public WeekYearBuilder CssMainDiv(string cssClass)
+        {
+            Component.CssMainDiv = cssClass;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public WeekYearBuilder CssClass(string cssClass)
+        {
+            Component.CssClass = cssClass;
+            return this;
+        }
     }
 }

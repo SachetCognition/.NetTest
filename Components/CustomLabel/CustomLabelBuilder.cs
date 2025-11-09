@@ -202,5 +202,20 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
             Component.AccessText = value;
             return this;
         }
+
+        /// <summary>
+        /// </summary>
+        public CustomLabelBuilder HtmlAttributes(object htmlAttributes)
+        {
+            if (htmlAttributes != null)
+            {
+                var properties = htmlAttributes.GetType().GetProperties();
+                foreach (var prop in properties)
+                {
+                    Component.HtmlAttributes[prop.Name] = prop.GetValue(htmlAttributes);
+                }
+            }
+            return this;
+        }
     }
 }

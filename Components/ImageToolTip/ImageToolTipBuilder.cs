@@ -27,5 +27,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
             Component.ToolTipText = value;
             return this;
         }
+
+        /// <summary>
+        /// </summary>
+        public ImageToolTipBuilder CssClassImage(string cssClass)
+        {
+            Component.CssClassImage = cssClass;
+            return this;
+        }
     }
 }
