@@ -4,6 +4,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
 
     public class WeekYearComponent : ComponentBase
     {
