@@ -213,7 +213,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
                 sbTagMainDivInnerHtml.Append(this.Component.InformationIcon.ToHtmlString());
             }
 
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
+            tagBuilderMainDiv.InnerHtml.AppendHtml(sbTagMainDivInnerHtml.ToString());
             writer.Write(tagBuilderMainDiv.ToString());
         }
 

@@ -77,16 +77,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             tagBuilderMenuDiv.AddCssClass("in");
             
             //Create MenuItem in Div based on item collection
-            tagBuilderMenuDiv.InnerHtml = this.CreateHeaderMenuTemplate();
+            tagBuilderMenuDiv.InnerHtml.AppendHtml(this.CreateHeaderMenuTemplate());
 
             var copyRightDiv = this.CreateCopyRightDiv();
 
             //Add tagBuilderMenuDiv in tagBuilderSubOuterDiv
-            tagBuilderSubOuterDiv.InnerHtml = tagBuilderMenuDiv.ToString()
+            tagBuilderSubOuterDiv.InnerHtml.AppendHtml(tagBuilderMenuDiv.ToString()
                 .AppendWithBuilder(copyRightDiv, string.Format(CultureInfo.CurrentCulture, "<input type = 'hidden' name='{0}'>", this.Component.Name));
 
             //Add tagBuilderSubOuterDiv in outer Div
-            tagBuilderOuterDiv.InnerHtml = tagBuilderSubOuterDiv.ToString();
+            tagBuilderOuterDiv.InnerHtml.AppendHtml(tagBuilderSubOuterDiv.ToString());
 
             //Render menu HTML
             writer.Write(tagBuilderOuterDiv.ToString());
@@ -108,14 +108,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             var copyRightTextDiv = new TagBuilder("div");
             var copyRightPara = new TagBuilder("p");
             copyRightPara.SetInnerText(this.Component.CopyRightText);
-            copyRightTextDiv.InnerHtml = copyRightPara.ToString();
+            copyRightTextDiv.InnerHtml.AppendHtml(copyRightPara.ToString());
 
             var copyRightImgAndText = new StringBuilder(string.Empty);
             copyRightImgAndText.Append(this.Component.CopyRightImage.ToHtmlString());
          
             copyRightImgAndText.Append(copyRightTextDiv);
-            innerCopyDIv.InnerHtml = copyRightImgAndText.ToString();
-            copyRightDiv.InnerHtml = innerCopyDIv.ToString();
+            innerCopyDIv.InnerHtml.AppendHtml(copyRightImgAndText.ToString());
+            copyRightDiv.InnerHtml.AppendHtml(innerCopyDIv.ToString());
 
             return copyRightDiv.ToString();
         }
@@ -136,7 +136,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             headerTemplateUl.AddCssClass("nav nav-vertical");
            
             //Add Other menu Items
-            headerTemplateUl.InnerHtml = this.CreateMenuItems();
+            headerTemplateUl.InnerHtml.AppendHtml(this.CreateMenuItems());
             return headerTemplateUl.ToString();
         }
 
@@ -171,7 +171,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                     liBuilder.AddCssClass("active");
                 }
 
-                liBuilder.InnerHtml = anchorBuilder1Html + (childMenuTagsUl == null ? string.Empty : childMenuTagsUl.ToString());
+                liBuilder.InnerHtml.AppendHtml(anchorBuilder1Html + (childMenuTagsUl == null ? string.Empty : childMenuTagsUl.ToString()));
 
                 if (Array.IndexOf((liBuilder.InnerHtml.Split('"')), this.Component.SelectedMenu) > -1)
                 {
@@ -235,7 +235,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                     index++;
                 }
 
-                childMenuTagsUl.InnerHtml = childMenuItems.ToString();
+                childMenuTagsUl.InnerHtml.AppendHtml(childMenuItems.ToString());
             }
 
             return childMenuTagsUl;
@@ -262,9 +262,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             string selectedMenuName = this.Component.SelectedMenu;
 
             var menuCtrlHtml = this.CreateInnerMenuHtml(childItem, indexLevel, menuLevel, "first");
-            childLiTag.InnerHtml = menuCtrlHtml;
+            childLiTag.InnerHtml.AppendHtml(menuCtrlHtml);
 
-            //childLiTag.InnerHtml = childLiTag.InnerHtml.Replace("<a", string.Format(CultureInfo.CurrentCulture, "<a onclick=$.selectedMenuItem(this.id,'{0}')", this.Component.Name));
+            //childLiTag.InnerHtml.AppendHtml(childLiTag.InnerHtml.Replace("<a", string.Format(CultureInfo.CurrentCulture, "<a onclick=$.selectedMenuItem(this.id,'{0}')", this.Component.Name)));
            
             if (Array.IndexOf((childLiTag.InnerHtml.Split('"')), selectedMenuName) > -1)
             {
@@ -406,11 +406,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                     tbAccSpan.AddCssClass("hide-access");
                 }
 
-                tbAccSpan.InnerHtml = accessText;
+                tbAccSpan.InnerHtml.AppendHtml(accessText);
                 sbInnerHtml.Append(tbAccSpan);
             }
 
-            tagBuilderAnchor.InnerHtml = sbInnerHtml.ToString();
+            tagBuilderAnchor.InnerHtml.AppendHtml(sbInnerHtml.ToString());
             return tagBuilderAnchor.ToString();
         }
 

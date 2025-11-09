@@ -92,7 +92,7 @@
                         column.HeaderTemplate.HtmlHelper = this.Component.HtmlHelper;
                         column.HeaderTemplate.Title = column.HeaderText;
                         column.HeaderTemplate.BuildHtml(stringBuilderTh);
-                        tagBuilderTh.InnerHtml = stringBuilderTh.ToString();
+                        tagBuilderTh.InnerHtml.AppendHtml(stringBuilderTh.ToString());
                         stringBuilderTr.Append(tagBuilderTh);
                     }
                     else
@@ -101,11 +101,11 @@
 
                         if (column.ShowHeaderText)
                         {
-                            tagBuilderTh.InnerHtml = column.HeaderText;
+                            tagBuilderTh.InnerHtml.AppendHtml(column.HeaderText);
                         }
                         else
                         {
-                            tagBuilderTh.InnerHtml = string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText );
+                            tagBuilderTh.InnerHtml.AppendHtml(string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText ));
                         }
 
                         stringBuilderTr.Append(tagBuilderTh);
@@ -120,13 +120,13 @@
                     }
                 }
                 
-                tagBuilderTr.InnerHtml = stringBuilderTr.ToString();
-                tagBuilderThead.InnerHtml = tagBuilderTr.ToString();
+                tagBuilderTr.InnerHtml.AppendHtml(stringBuilderTr.ToString());
+                tagBuilderThead.InnerHtml.AppendHtml(tagBuilderTr.ToString());
 
                 if (this.Component.IsFilter && this.Component.IsShowHeader)
                 {
-                    tagBuilderTrFilter.InnerHtml = stringBuilderTrFilter.ToString();
-                    tagBuilderThead.InnerHtml = string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter);
+                    tagBuilderTrFilter.InnerHtml.AppendHtml(stringBuilderTrFilter.ToString());
+                    tagBuilderThead.InnerHtml.AppendHtml(string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter));
                 }
 
                 stringBuilderTable.Append(tagBuilderCaption);
@@ -135,7 +135,7 @@
                 var tagBuilderTbody = new TagBuilder("tbody");
                 stringBuilderTable.Append(tagBuilderTbody);
 
-                tagBuilderTable.InnerHtml = stringBuilderTable.ToString();
+                tagBuilderTable.InnerHtml.AppendHtml(stringBuilderTable.ToString());
 
                 writer.Write(tagBuilderTable);
             }

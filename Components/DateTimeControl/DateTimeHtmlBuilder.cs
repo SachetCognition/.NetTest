@@ -180,9 +180,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 }
             }
 
-            tagBuilderDateDiv.InnerHtml = sbTagDateDivInnerHtml.ToString();
+            tagBuilderDateDiv.InnerHtml.AppendHtml(sbTagDateDivInnerHtml.ToString());
             sbTagMainDivInnerHtml.Append(tagBuilderDateDiv);
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
+            tagBuilderMainDiv.InnerHtml.AppendHtml(sbTagMainDivInnerHtml.ToString());
             writer.Write(tagBuilderMainDiv.ToString());
         }
 
