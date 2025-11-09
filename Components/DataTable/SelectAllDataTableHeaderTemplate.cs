@@ -69,7 +69,7 @@
                 tagBuilder.MergeAttribute("name", this.Name);
                 tagBuilder.MergeAttribute("id", this.Id);
 
-                builder.Append(tagBuilder.ToString(TagRenderMode.StartTag));
+                builder.Append(tagBuilder.ToString());
 
                 builder.AppendLine(tbAccSpan.ToString());
 

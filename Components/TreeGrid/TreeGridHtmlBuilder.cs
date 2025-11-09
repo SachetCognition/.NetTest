@@ -393,7 +393,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                                 tagchk.MergeAttribute("disabled", "disabled");
                             }
                         }
-                        sb.Append(tagchk.ToString(TagRenderMode.SelfClosing));
+                        sb.Append(tagchk.ToString());
 
                         sb.Append(taglbl);
 

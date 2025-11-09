@@ -27,7 +27,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
         /// <summary>
         /// </summary>
-        protected TComponent Component { get; }
+        public TComponent Component { get; }
 
         /// <summary>
         /// </summary>
