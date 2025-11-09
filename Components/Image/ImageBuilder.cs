@@ -30,13 +30,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Image
 
         public ImageBuilder Width(int width)
         {
-            this.Component.Width = width;
+            this.Component.Width = width.ToString();
             return this;
         }
 
         public ImageBuilder Height(int height)
         {
-            this.Component.Height = height;
+            this.Component.Height = height.ToString();
             return this;
         }
     }

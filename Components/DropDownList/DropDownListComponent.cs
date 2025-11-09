@@ -20,6 +20,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
 
         public bool IsDivNeeded { get; set; }
         public string CssClassSelectDiv { get; set; }
+        public string CssClass { get; set; }
         public SelectList SelectList { get; set; }
         public CustomLabelComponent CustomLabel { get; set; }
         public bool IsDisabled { get; set; }
