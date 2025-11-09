@@ -11,7 +11,8 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     /// <summary>
     /// The label helper.
@@ -42,24 +43,23 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 
             if (!string.IsNullOrEmpty(spanToolTip))
             {
-                tagBuilderSpan.MergeAttribute("title", spanToolTip);
+                tagBuilderSpan.Attributes.Add("title", spanToolTip);
             }
 
             if (!string.IsNullOrEmpty(spanCssClass))
             {
-                tagBuilderSpan.MergeAttribute("class", spanCssClass);
+                tagBuilderSpan.Attributes.Add("class", spanCssClass);
             }
 
-            if (isHtmlEncode)
+            var innerText = isHtmlEncode ? System.Net.WebUtility.HtmlEncode(spanText) : spanText;
+            
+            using (var stringWriter = new StringWriter())
             {
-                tagBuilderSpan.SetInnerText(spanText);
+                tagBuilderSpan.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                var html = stringWriter.ToString();
+                var closingTag = html.IndexOf(">");
+                return html.Substring(0, closingTag + 1) + innerText + "</span>";
             }
-            else
-            {
-                tagBuilderSpan.InnerHtml = spanText;
-            }
-
-            return tagBuilderSpan.ToString();
         }
 
         /// <summary>
@@ -83,10 +83,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
                 tagBuilderSpan.MergeAttribute("title", spanToolTip);
             }
 
-            tagBuilderSpan.MergeAttribute("class", "required");
-            tagBuilderSpan.InnerHtml = abbrText;
-
-            return tagBuilderSpan.ToString();
+            tagBuilderSpan.Attributes.Add("class", "required");
+            
+            using (var stringWriter = new StringWriter())
+            {
+                tagBuilderSpan.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                var html = stringWriter.ToString();
+                var closingTag = html.IndexOf(">");
+                return html.Substring(0, closingTag + 1) + abbrText + "</abbr>";
+            }
         }
     }
 }

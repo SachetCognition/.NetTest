@@ -11,8 +11,8 @@
 // -------------------------------------------------------------------------------------------------
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
@@ -31,7 +31,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public CustomLabelComponent(HtmlHelper htmlHelper)
+        public CustomLabelComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.DisplayColon = true;
@@ -110,9 +110,21 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         public string SuperscriptToolTip { get; set; }
 
         /// <summary>
-        /// Gets or sets the id.
+        /// Gets or sets the access text for screen readers.
         /// </summary>
-        public override string Id { get; set; }
+        public string AccessText { get; set; }
+        
+        /// <summary>
+        /// Gets the JS resources.
+        /// </summary>
+        public override System.Collections.ObjectModel.ReadOnlyCollection<JsResource> JsResources
+        {
+            get
+            {
+                return new System.Collections.ObjectModel.ReadOnlyCollection<JsResource>(
+                    new System.Collections.Generic.List<JsResource>());
+            }
+        }
 
         /// <summary>
         /// The write html.
@@ -120,7 +132,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new CustomLabelHtmlBuilder(this).Build(writer);
         }
@@ -131,7 +143,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
         }
     }

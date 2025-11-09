@@ -42,20 +42,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Temporarily exclude unmigrated components from build -->
+    <!-- Temporarily exclude components with heavy dependencies on unmigrated components -->
     <Compile Remove="Components\CheckBoxList\**" />
-    <Compile Remove="Components\ClickToVoice\**" />
     <Compile Remove="Components\CompositeDate\**" />
-    <Compile Remove="Components\CustomLabel\**" />
     <Compile Remove="Components\DataTable\**" />
     <Compile Remove="Components\DateTimeControl\**" />
     <Compile Remove="Components\TreeGrid\**" />
     <Compile Remove="Components\VerticalMenu\**" />
+    
+    <!-- Exclude unmigrated helpers, extensions, validators, and infrastructure from build -->
     <Compile Remove="Extensions\**" />
     <Compile Remove="Helpers\**" />
     <Compile Remove="Infrastructure\**" />
     <Compile Remove="Models\**" />
     <Compile Remove="Validators\**" />
+    
+    <!-- Exclude test projects from main library build -->
+    <Compile Remove="Equant.SAV2000.ComponentLibrary.MVC.UnitTests\**" />
+    <Compile Remove="Equant.SAV2000.ComponentLibrary.MVC.IntegrationTests\**" />
+    <Compile Remove="Equant.SAV2000.ComponentLibrary.MVC.E2ETests\**" />
   </ItemGroup>
 
 </Project>
