@@ -6,8 +6,9 @@
     using System;
     using System.Globalization;
     using System.Linq;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
@@ -61,7 +62,7 @@
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public DataTableComponent(HtmlHelper htmlHelper)
+        public DataTableComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.Caption = string.Empty;
@@ -570,7 +571,7 @@
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             // Parameters sanity checks
             if (!string.IsNullOrEmpty(this.ServiceUri) && (this.Data != null))
@@ -615,7 +616,7 @@
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             var request = this.HtmlHelper.ViewContext.HttpContext.Request;
             var path = request.ApplicationPath;

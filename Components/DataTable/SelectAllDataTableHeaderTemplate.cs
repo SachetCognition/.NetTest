@@ -1,7 +1,8 @@
 ﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Text;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The select all data table header template.
