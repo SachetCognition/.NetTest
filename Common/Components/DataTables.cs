@@ -28,6 +28,35 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public DataTableColumnsOption? Columns { get; set; }
         public bool ServerSide { get; set; }
         public int PageLength { get; set; } = 10;
+        public string AjaxSource { get; set; } = string.Empty;
+        public string Class { get; set; } = string.Empty;
+        public bool ColReorder { get; set; }
+        public string ColumnType { get; set; } = string.Empty;
+        public string Data { get; set; } = string.Empty;
+        public string DefaultContent { get; set; } = string.Empty;
+        public bool DeferRender { get; set; }
+        public int DisplayLength { get; set; }
+        public int DisplayStart { get; set; }
+        public string Dom { get; set; } = string.Empty;
+        public string DrawCallBack { get; set; } = string.Empty;
+        public string EncryptedParameters { get; set; } = string.Empty;
+        public bool IsEncryptionRequired { get; set; }
+        public bool IsFilter { get; set; }
+        public bool IsMultiSelect { get; set; }
+        public bool IsPaginate { get; set; }
+        public bool IsServerSide { get; set; }
+        public bool IsSortable { get; set; }
+        public bool IsVisible { get; set; }
+        public object Language { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string PaginationType { get; set; } = string.Empty;
+        public string Render { get; set; } = string.Empty;
+        public bool ScrollCollapse { get; set; }
+        public string ScrollX { get; set; } = string.Empty;
+        public string ScrollY { get; set; } = string.Empty;
+        public string ServerMethod { get; set; } = string.Empty;
+        public string ServerParams { get; set; } = string.Empty;
+        public object Sorting { get; set; }
     }
 
     public class DataTableColumnsOption
@@ -35,6 +64,14 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public string[] Targets { get; set; } = Array.Empty<string>();
         public bool Searchable { get; set; }
         public bool Orderable { get; set; }
+        public string Class { get; set; } = string.Empty;
+        public string ColumnType { get; set; } = string.Empty;
+        public string Data { get; set; } = string.Empty;
+        public string DefaultContent { get; set; } = string.Empty;
+        public bool IsSortable { get; set; }
+        public bool IsVisible { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Render { get; set; } = string.Empty;
     }
 
     public enum EMenuCtrlType
@@ -43,7 +80,13 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         Edit = 1,
         Delete = 2,
         View = 3,
-        Custom = 4
+        Custom = 4,
+        Add = 5,
+        Export = 6,
+        Import = 7,
+        Print = 8,
+        Refresh = 9,
+        Search = 10
     }
 
     public class MenuItem
