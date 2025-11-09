@@ -13,7 +13,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;

@@ -14,10 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
