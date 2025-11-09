@@ -63,7 +63,8 @@
                 tagBuilderTable.MergeAttributes(this.Component.HtmlAttributes);
 
                 // Generate caption
-                var tagBuilderCaption = new TagBuilder("caption") { InnerHtml = this.Component.Caption };
+                var tagBuilderCaption = new TagBuilder("caption");
+                tagBuilderCaption.InnerHtml.Append(this.Component.Caption);
                 tagBuilderCaption.AddCssClass("hide-access");
 
                 // Generate thead HTML tag
