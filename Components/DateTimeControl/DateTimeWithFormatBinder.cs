@@ -72,11 +72,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 throw new DateTimeWithFormatException(exceptionMessage);
             }
 
-            var dateValue = dateProviderResult.AttemptedValue;
-            var formatValue = formatProviderResult.AttemptedValue;
-            var typeValue = typeProviderResult.AttemptedValue;
-            var timeOffsetValue = timeOffsetProviderResult.AttemptedValue;
-            var utcValue = utcProviderResult.AttemptedValue;
+            var dateValue = dateProviderResult.FirstValue;
+            var formatValue = formatProviderResult.FirstValue;
+            var typeValue = typeProviderResult.FirstValue;
+            var timeOffsetValue = timeOffsetProviderResult.FirstValue;
+            var utcValue = utcProviderResult.FirstValue;
 
             CheckForValidFormat(formatValue, modelName);
 
@@ -96,8 +96,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             var hourProviderResult = bindingContext.ValueProvider.GetValue(hourPropertyName);
             var minuteProviderResult = bindingContext.ValueProvider.GetValue(minutePropertyName);
 
-            var hourValue = hourProviderResult != null ? hourProviderResult.AttemptedValue : string.Empty;
-            var minuteValue = minuteProviderResult != null ? minuteProviderResult.AttemptedValue : string.Empty;
+            var hourValue = hourProviderResult != ValueProviderResult.None ? hourProviderResult.FirstValue : string.Empty;
+            var minuteValue = minuteProviderResult != ValueProviderResult.None ? minuteProviderResult.FirstValue : string.Empty;
 
             DateTimeWithFormat dateTimeValue;
 
@@ -222,8 +222,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         private static void PutDateInModelState(ModelBindingContext bindingContext, string modelName, DateTimeWithFormat dateTimeValue)
         {
             bindingContext.ModelState.Remove(modelName);
-            bindingContext.ModelState.Add(modelName, new ModelState());
-            bindingContext.ModelState.SetModelValue(modelName, new ValueProviderResult(dateTimeValue, dateTimeValue.ToString(), null));
+            bindingContext.ModelState.SetModelValue(modelName, dateTimeValue.ToString(), dateTimeValue.ToString());
         }
 
         /// <summary>
