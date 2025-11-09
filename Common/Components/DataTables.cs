@@ -52,5 +52,11 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public string Url { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
         public EMenuCtrlType Type { get; set; }
+        public string ActionName { get; set; } = string.Empty;
+        public string ActionUrl { get; set; } = string.Empty;
+        public string MenuName { get; set; } = string.Empty;
+        public string MenuType { get; set; } = string.Empty;
+        public string OnclickEvent { get; set; } = string.Empty;
+        public string ReturnChildMenu { get; set; } = string.Empty;
     }
 }

@@ -16,6 +16,19 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
             get { return new ReadOnlyCollection<JsResource>(new System.Collections.Generic.List<JsResource>()); }
         }
 
+        public bool Disabled { get; set; }
+        public WeekYearWithFormat Value { get; set; } = new WeekYearWithFormat();
+        public string WeekTextId { get; set; } = string.Empty;
+
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
+
         public override void WriteHtml(TextWriter writer)
         {
             if (IsVisible)
@@ -37,11 +50,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
 
     public class WeekYearWithFormat
     {
-        public string WeekText { get; set; }
-        public string YearText { get; set; }
+        public string WeekText { get; set; } = string.Empty;
+        public string YearText { get; set; } = string.Empty;
         public WeekFormat Format { get; set; }
         public double TimeOffset { get; set; }
         public bool IsUtcMode { get; set; }
+        public System.DateTime Date { get; set; }
     }
 
     public enum WeekFormat
