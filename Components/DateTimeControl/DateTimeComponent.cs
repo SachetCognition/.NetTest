@@ -554,6 +554,47 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             "TETHYS: This input is required.")]
         public Dictionary<string, string> ConditionalAnnotations { get; set; }
 
+        public void AddValidationAttribute(string key, string value)
+        {
+            if (ConditionalAnnotations == null)
+            {
+                ConditionalAnnotations = new Dictionary<string, string>();
+            }
+            ConditionalAnnotations[key] = value;
+        }
+
+        public void AddValidationAttributeProperty(string key, object value)
+        {
+            AddValidationAttribute(key, value?.ToString() ?? string.Empty);
+        }
+
+        public void EnableValidationAttribute(string key)
+        {
+            AddValidationAttribute(key, "true");
+        }
+
+        public Dictionary<string, object> GetUnobtrusiveValidationAttributes()
+        {
+            var attributes = new Dictionary<string, object>();
+            if (ConditionalAnnotations != null)
+            {
+                foreach (var kvp in ConditionalAnnotations)
+                {
+                    attributes[$"data-val-{kvp.Key}"] = kvp.Value;
+                }
+            }
+            return attributes;
+        }
+
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
+
         /// <summary>
         /// Gets or sets the mandatory message.
         /// </summary>
