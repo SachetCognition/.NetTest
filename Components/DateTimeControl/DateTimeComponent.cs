@@ -543,6 +543,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         public bool IsMandatory { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the component is updatable.
+        /// </summary>
+        public bool IsUpdatable { get; set; }
+
+        /// <summary>
         /// Gets or sets the conditional annotations.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification =
