@@ -67,6 +67,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
         public double TimeOffset { get; set; }
         public bool IsUtcMode { get; set; }
         public System.DateTime Date { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return string.IsNullOrEmpty(this.WeekText) && string.IsNullOrEmpty(this.YearText);
+        }
     }
 
     public enum WeekFormat

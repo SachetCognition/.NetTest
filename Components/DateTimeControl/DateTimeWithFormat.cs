@@ -253,6 +253,15 @@
         }
 
         /// <summary>
+        /// Returns whether the date time is empty.
+        /// </summary>
+        /// <returns>True if empty, false otherwise.</returns>
+        public bool IsEmpty()
+        {
+            return (string.IsNullOrEmpty(this.dateText) && string.IsNullOrEmpty(this.hourValue) && string.IsNullOrEmpty(this.minuteValue));
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DateTimeWithFormat"/> class.
         /// </summary>
         public DateTimeWithFormat(string format, bool isModel)
