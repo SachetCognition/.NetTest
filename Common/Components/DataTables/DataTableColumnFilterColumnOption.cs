@@ -11,6 +11,16 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public DataTableColumnFilterColumnTypeOption Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the column type (alias for Type)
+        /// </summary>
+        public DataTableColumnFilterColumnTypeOption ColumnType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the max length for text input
+        /// </summary>
+        public int MaxLength { get; set; }
+
+        /// <summary>
         /// Gets or sets the column values
         /// </summary>
         public object Values { get; set; }

@@ -11,6 +11,16 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public bool Enabled { get; set; }
 
         /// <summary>
+        /// Gets or sets whether column reordering is allowed
+        /// </summary>
+        public bool AllowReorder { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether column resizing is allowed
+        /// </summary>
+        public bool AllowResize { get; set; }
+
+        /// <summary>
         /// Gets or sets the fixed columns count
         /// </summary>
         public int FixedColumnsLeft { get; set; }

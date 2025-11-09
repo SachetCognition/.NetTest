@@ -16,6 +16,26 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
         public string Info { get; set; }
 
         /// <summary>
+        /// Gets or sets the info empty text
+        /// </summary>
+        public string InfoEmpty { get; set; }
+
+        /// <summary>
+        /// Gets or sets the info thousands separator
+        /// </summary>
+        public string InfoThousands { get; set; }
+
+        /// <summary>
+        /// Gets or sets the loading records message
+        /// </summary>
+        public string LoadingRecords { get; set; }
+
+        /// <summary>
+        /// Gets or sets the info filtered text
+        /// </summary>
+        public string InfoFiltered { get; set; }
+
+        /// <summary>
         /// Gets or sets the pagination options
         /// </summary>
         public DataTableLanguagePaginateOption Paginate { get; set; }
