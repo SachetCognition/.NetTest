@@ -54,13 +54,13 @@
 
                 if (!string.IsNullOrEmpty(this.Title))
                 {
-                    tbAccSpan.SetInnerText(this.Title);
+                    tbAccSpan.InnerHtml.Append(this.Title);
 
                 }
                 else
                 {
                      tbAccSpan.AddCssClass("hide-access");
-                    tbAccSpan.SetInnerText(this.ToolTip);
+                    tbAccSpan.InnerHtml.Append(this.ToolTip);
                 }
 
                 var tagBuilder = new TagBuilder("input");

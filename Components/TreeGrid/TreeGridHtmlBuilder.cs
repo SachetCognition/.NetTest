@@ -78,7 +78,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
                 //if for attribute is not defined or it is empty then add component's ID itself to associated control
 
-                var sbCustomInnerHtml = new StringBuilder(tagBuilderdiv.InnerHtml);
+                var sbCustomInnerHtml = new StringBuilder();
                 sbCustomInnerHtml.Append(this.InnerulTag());
                 tagBuilderdiv.InnerHtml.AppendHtml(sbCustomInnerHtml.ToString());
                 if (  this.Component.Data == null || this.Component.Data.Rows.Count == 0)

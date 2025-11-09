@@ -458,7 +458,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                     break;
             }
 
-            return TagBuilder.CreateSanitizedId(id);
+            return TagBuilder.CreateSanitizedId(id, "_");
         }
 
         #endregion
