@@ -212,7 +212,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         {
             var sbEmptydiv = new TagBuilder("div");
             sbEmptydiv.MergeAttribute("class", "Emptytree");
-            sbEmptydiv.InnerHtml.AppendHtml(ApplicationStrings.LBL000021));
+            sbEmptydiv.InnerHtml.AppendHtml(ApplicationStrings.LBL000021);
 
             return sbEmptydiv.ToString();
         }
@@ -341,19 +341,19 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                     {
                         var spanHideAccess = new TagBuilder("Span");
                         spanHideAccess.AddCssClass("hide-access");
-                        spanHideAccess.InnerHtml.AppendHtml(drow.AccessText + " "));
+                        spanHideAccess.InnerHtml.AppendHtml(drow.AccessText + " ");
                         taglbl.InnerHtml.AppendHtml(spanHideAccess.ToString().AppendWithBuilder(drow.Text));
                     }
                     else if (!string.IsNullOrEmpty(col.AccessText))
                     {
                         var spanHideAccess = new TagBuilder("Span");
                         spanHideAccess.AddCssClass("hide-access");
-                        spanHideAccess.InnerHtml.AppendHtml(col.AccessText + " "));
+                        spanHideAccess.InnerHtml.AppendHtml(col.AccessText + " ");
                         taglbl.InnerHtml.AppendHtml(spanHideAccess.ToString().AppendWithBuilder(drow.Text));
                     }
                     else
                     {
-                        taglbl.InnerHtml.AppendHtml(drow.Text));
+                        taglbl.InnerHtml.AppendHtml(drow.Text);
 
                     }
 
