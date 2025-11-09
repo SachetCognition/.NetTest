@@ -26,7 +26,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DurationValidatorAttribute : ValidationAttribute, IClientModelValidator
+    public sealed class DurationValidatorAttribute : ValidationAttribute
     {
         #region Fields
 
@@ -205,14 +205,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
-        {
-            var durationvalidator = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "durationvalidator" };
-            durationvalidator.ValidationParameters.Add("startdateid", this.firstPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("enddateid", this.secondPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("datedurationid", this.thirdPropertyHtmlId);
-            yield return durationvalidator;
-        }
 
         #endregion
 

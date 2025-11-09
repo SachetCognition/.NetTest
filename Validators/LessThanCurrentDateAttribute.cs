@@ -25,7 +25,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
     /// This is date required attribute class
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class LessThanCurrentDateAttribute : ValidationAttribute, IClientModelValidator
+    public sealed class LessThanCurrentDateAttribute : ValidationAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LessThanCurrentDateAttribute"/> class.
@@ -56,11 +56,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
-        {
-            var validationRule = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "lessthancurrentdate" };
-            yield return validationRule;
-        }
 
         /// <summary>
         /// The is valid.

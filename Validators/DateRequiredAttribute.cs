@@ -26,7 +26,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
     /// This is date required attribute class
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DateRequiredAttribute : ValidationAttribute, IClientModelValidator
+    public sealed class DateRequiredAttribute : ValidationAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DateRequiredAttribute"/> class.
@@ -62,11 +62,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
-        {
-            var dateRequiredRule = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "daterequired" };
-            yield return dateRequiredRule;
-        }
 
         /// <summary>
         /// The is valid.

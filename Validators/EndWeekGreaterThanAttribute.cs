@@ -24,7 +24,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute, IClientModelValidator
+    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute
     {
         /// <summary>
         /// The other property name.
@@ -103,12 +103,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ClientModelValidationRule> AddValidation(ClientModelValidationContext context)
-        {
-            var dateGreaterThanRule = new ClientModelValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "endweekgreaterthan" };
-            dateGreaterThanRule.ValidationParameters.Add("lesserweekid", this.otherPropertyHtmlId);
-            yield return dateGreaterThanRule;
-        }
 
         /// <summary>
         /// The is valid.
