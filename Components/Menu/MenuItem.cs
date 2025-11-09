@@ -18,6 +18,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Menu
         public bool Hidden { get; set; }
         public EMenuCtrlType MenuType { get; set; }
         public List<MenuItem> ChildMenuItems { get; set; }
+        
+        public string ActionUrl { get; set; }
+        public string MenuName { get; set; }
+        public string OnclickEvent { get; set; }
+        public string ActionName { get; set; }
 
         public List<MenuItem> ReturnChildMenu()
         {
@@ -36,6 +41,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Menu
         Print,
         Refresh,
         Search,
-        View
+        View,
+        Linkbutton,
+        Redirect,
+        RedirectJs,
+        LinkbuttonJs,
+        Imagebutton,
+        ImagebuttonJs
     }
 }
