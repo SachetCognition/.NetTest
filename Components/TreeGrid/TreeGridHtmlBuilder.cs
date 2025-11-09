@@ -83,7 +83,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                 tagBuilderdiv.InnerHtml.AppendHtml(sbCustomInnerHtml.ToString());
                 if (  this.Component.Data == null || this.Component.Data.Rows.Count == 0)
                 {
-                    tagBuilderdiv.InnerHtml += ReturnEmptylistDiv();
+                    tagBuilderdiv.InnerHtml.AppendHtml(ReturnEmptylistDiv());
                 }
                 outerdiv.InnerHtml.AppendHtml(tagBuilderdiv.ToString());
                 strComponent.Append(outerdiv);
@@ -492,10 +492,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                     }
 
                     tagbuilderli.InnerHtml.AppendHtml(this.str.ToString());
-                    tagbuilderli.InnerHtml += this.MakeNode(foundRow);
+                    tagbuilderli.InnerHtml.AppendHtml(this.MakeNode(foundRow));
                     if ((string)foundRow["HasChild"] == "Yes")
                     {
-                        tagbuilderli.InnerHtml += this.Makechild(foundRow);
+                        tagbuilderli.InnerHtml.AppendHtml(this.Makechild(foundRow));
                     }
 
                     strChild.Append(tagbuilderli);
