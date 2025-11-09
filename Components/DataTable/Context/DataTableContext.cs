@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Components;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
 
     using Newtonsoft.Json;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     /// <summary>
     /// The data table context.

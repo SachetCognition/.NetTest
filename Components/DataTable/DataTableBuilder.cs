@@ -5,10 +5,10 @@
     using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Data;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Components;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     /// <summary>
     /// The data table builder.

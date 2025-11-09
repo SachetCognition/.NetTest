@@ -11,13 +11,13 @@
     using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Components;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     using Resources = Equant.SAV2000.ComponentLibrary.Common.Resources;
 
