@@ -54,5 +54,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
             Component.Title = title;
             return this;
         }
+
+        public HyperLinkBuilder Css(string cssClass)
+        {
+            Component.CssClass = cssClass;
+            return this;
+        }
+
+        public HyperLinkBuilder ActionUrl(string actionUrl)
+        {
+            Component.Url = actionUrl;
+            return this;
+        }
     }
 }
