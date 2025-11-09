@@ -74,7 +74,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="VerticalMenuBuilder"/>.
         /// </returns>
-        public VerticalMenuBuilder DataBind(IEnumerable<MenuItem> dataSource)
+        public VerticalMenuBuilder DataBind(IEnumerable<MenuItemClass> dataSource)
         {
             if (dataSource != null)
             {

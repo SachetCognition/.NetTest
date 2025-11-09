@@ -76,7 +76,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             var tagBuilderMenuDiv = new TagBuilder("div");
             tagBuilderMenuDiv.AddCssClass("in");
             
-            //Create MenuItem in Div based on item collection
+            //Create MenuItemClass in Div based on item collection
             tagBuilderMenuDiv.InnerHtml.AppendHtml(this.CreateHeaderMenuTemplate());
 
             var copyRightDiv = this.CreateCopyRightDiv();
@@ -151,7 +151,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             var menuBuilder = new StringBuilder();
             int itemIndex = 1;
            
-            foreach(MenuItem item in this.Component.MenuItems)
+            foreach(MenuItemClass item in this.Component.MenuItems)
             {
                 this.isMenuSelected = false;
                 if (item.Hidden)
@@ -202,7 +202,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="TagBuilder"/>.
         /// </returns>
-        private TagBuilder ChildMenuTagsUl(MenuItem item, int itemIndex)
+        private TagBuilder ChildMenuTagsUl(MenuItemClass item, int itemIndex)
         {
             TagBuilder childMenuTagsUl = null;
             var childMenus = item.ReturnChildMenu();
@@ -257,7 +257,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="TagBuilder"/>.
         /// </returns>
-        private TagBuilder ChildLiTag(MenuItem childItem, string indexLevel, int menuLevel)
+        private TagBuilder ChildLiTag(MenuItemClass childItem, string indexLevel, int menuLevel)
         {
             var childLiTag = new TagBuilder("li");
             string selectedMenuName = this.Component.SelectedMenu;
@@ -299,7 +299,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private string CreateInnerMenuHtml(MenuItem childItem, string indexLevel, int menuLevel, string cssclass)
+        private string CreateInnerMenuHtml(MenuItemClass childItem, string indexLevel, int menuLevel, string cssclass)
         {
 
             string accessText = null;
@@ -314,7 +314,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             string linkHtml;
             switch (childItem.MenuType)
             {
-                case EMenuCtrlType.Linkbutton:
+                case EMenuCtrlTypeEnum.Linkbutton:
                     actionUrl = string.IsNullOrEmpty(childItem.ActionUrl) ? "#" : childItem.ActionUrl;
                     linkHtml = this.CreateLinkHtml(Id, childItem.MenuType, cssclass, childItem.MenuName, accessText, actionUrl, "close");
                     var onClick = string.IsNullOrEmpty(childItem.OnclickEvent) ? "null" : childItem.OnclickEvent;
@@ -328,7 +328,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                             Name = string.IsNullOrEmpty(childItem.ActionName) ? childItem.MenuName : childItem.ActionName
                         });
                     break;
-                //for case EMenuCtrlType.Redirect
+                //for case EMenuCtrlTypeEnum.Redirect
                 default:
                     actionUrl = string.IsNullOrEmpty(childItem.ActionUrl) ? "#" : childItem.ActionUrl + "&" + this.Component.Name + "=" + Id;
                     linkHtml = this.CreateLinkHtml(Id, childItem.MenuType, cssclass, childItem.MenuName, accessText, actionUrl, "close");
@@ -365,7 +365,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        public string CreateLinkHtml(string id, EMenuCtrlType menuType, string cssClass, string text, string accessText, string actionUrl, string accessCss)
+        public string CreateLinkHtml(string id, EMenuCtrlTypeEnum menuType, string cssClass, string text, string accessText, string actionUrl, string accessCss)
         {
             var tagBuilderAnchor = new TagBuilder("a");
             tagBuilderAnchor.MergeAttribute("id", id);
@@ -376,7 +376,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
             switch (menuType)
             {
-                case EMenuCtrlType.Linkbutton:
+                case EMenuCtrlTypeEnum.Linkbutton:
                     tagBuilderAnchor.MergeAttribute("href", "###");
                     break;
                 default:
@@ -431,7 +431,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private static string GetMenuItemId(MenuItem childItem, string indexLevel, int menuLevel)
+        private static string GetMenuItemId(MenuItemClass childItem, string indexLevel, int menuLevel)
         {
             const string Idseperator = "_";
             string id;
@@ -439,18 +439,18 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
             switch (childItem.MenuType)
             {
-                case EMenuCtrlType.Redirect:
-                case EMenuCtrlType.RedirectJs:
+                case EMenuCtrlTypeEnum.Redirect:
+                case EMenuCtrlTypeEnum.RedirectJs:
                     id = Startvalue.AppendWithBuilder(
                         Idseperator, "hlnk", Idseperator, "I", indexLevel, Idseperator, "L", menuLevel.ToString(CultureInfo.InvariantCulture));
                     break;
-                case EMenuCtrlType.Linkbutton:
-                case EMenuCtrlType.LinkbuttonJs:
+                case EMenuCtrlTypeEnum.Linkbutton:
+                case EMenuCtrlTypeEnum.LinkbuttonJs:
                     id = Startvalue.AppendWithBuilder(
                         Idseperator, "lbtn", Idseperator, "I", indexLevel, Idseperator, "L", menuLevel.ToString(CultureInfo.InvariantCulture));
                     break;
-                case EMenuCtrlType.Imagebutton:
-                case EMenuCtrlType.ImagebuttonJs:
+                case EMenuCtrlTypeEnum.Imagebutton:
+                case EMenuCtrlTypeEnum.ImagebuttonJs:
                     id = Startvalue.AppendWithBuilder(
                         Idseperator, "imgbtn", Idseperator, "I", indexLevel, Idseperator, "L", menuLevel.ToString(CultureInfo.InvariantCulture));
                     break;
