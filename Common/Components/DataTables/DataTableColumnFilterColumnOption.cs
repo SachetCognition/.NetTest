@@ -32,6 +32,10 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables
     public enum DataTableColumnFilterColumnTypeOption
     {
         /// <summary>
+        /// </summary>
+        Null,
+
+        /// <summary>
         /// Text input filter
         /// </summary>
         Text,
