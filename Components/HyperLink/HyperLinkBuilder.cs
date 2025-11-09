@@ -1,0 +1,58 @@
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
+{
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+    /// <summary>
+    /// </summary>
+    public class HyperLinkBuilder : ComponentBuilderBase<HyperLinkComponent, HyperLinkBuilder>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HyperLinkBuilder"/> class.
+        /// </summary>
+        public HyperLinkBuilder(HyperLinkComponent component, ModelMetadata? modelMetadata)
+            : base(component, modelMetadata)
+        {
+        }
+
+        /// <summary>
+        /// </summary>
+        public HyperLinkBuilder Url(string url)
+        {
+            Component.Url = url;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public HyperLinkBuilder Text(string text)
+        {
+            Component.Text = text;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public HyperLinkBuilder Target(string target)
+        {
+            Component.Target = target;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public HyperLinkBuilder CssClass(string cssClass)
+        {
+            Component.CssClass = cssClass;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public HyperLinkBuilder Title(string title)
+        {
+            Component.Title = title;
+            return this;
+        }
+    }
+}
