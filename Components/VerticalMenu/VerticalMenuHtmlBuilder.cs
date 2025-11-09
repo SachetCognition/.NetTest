@@ -83,7 +83,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
             //Add tagBuilderMenuDiv in tagBuilderSubOuterDiv
             tagBuilderSubOuterDiv.InnerHtml.AppendHtml(tagBuilderMenuDiv.ToString()
-                .AppendWithBuilder(copyRightDiv, string.Format(CultureInfo.CurrentCulture, "<input type = 'hidden' name='{0}'>", this.Component.Name));
+                .AppendWithBuilder(copyRightDiv, string.Format(CultureInfo.CurrentCulture, "<input type = 'hidden' name='{0}'>", this.Component.Name)));
 
             //Add tagBuilderSubOuterDiv in outer Div
             tagBuilderOuterDiv.InnerHtml.AppendHtml(tagBuilderSubOuterDiv.ToString());
