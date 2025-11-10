@@ -52,7 +52,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var component = new ErrorComponents(_mockHtmlHelper.Object)
             {
                 Id = "testErrorComponent",
-                ErrorMessage = "Test Error"
+                Name = "testErrorComponentName"
             };
 
             using var writer = new StringWriter();
@@ -61,6 +61,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.UnitTests.Components
             var html = writer.ToString();
 
             Assert.Contains("testErrorComponent", html);
+            Assert.Contains("error", html);
         }
 
         [Fact]
