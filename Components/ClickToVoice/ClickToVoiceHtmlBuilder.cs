@@ -14,13 +14,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     /// <summary>
     /// The ClickToVoice HTML builder class
@@ -51,29 +49,30 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
                 throw new ArgumentException("The parameter writer cannot be null");
             }
 
-            if (this.Component.IsVisible)
+            if (this.Component != null && this.Component.IsVisible)
             {
-                // Note that in this component, AccessText is not taken into account.
-                // As per Accessibility requirements, Anchor Title and Image alt are set as per ApplicationStrings.TIP000022
                 var tagBuilderAnchor = new TagBuilder("a");
-                tagBuilderAnchor.MergeAttribute("id", this.Component.Id);
+                tagBuilderAnchor.Attributes.Add("id", this.Component.Id);
                 if (string.IsNullOrEmpty(this.Component.Title))
                 {
-                    this.Component.Title = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.TIP000022, this.Component.TelephoneNumber);
+                    this.Component.Title = string.Format(CultureInfo.CurrentCulture, "Click to call {0}", this.Component.TelephoneNumber);
                 }
 
-                tagBuilderAnchor.MergeAttribute("title", this.Component.Title);
+                tagBuilderAnchor.Attributes.Add("title", this.Component.Title);
            
-                tagBuilderAnchor.MergeAttribute("href", "###");
+                tagBuilderAnchor.Attributes.Add("href", "###");
 
-                tagBuilderAnchor.MergeAttributes(this.Component.HtmlAttributes);
+                foreach (var attr in this.Component.HtmlAttributes)
+                {
+                    tagBuilderAnchor.Attributes.Add(attr.Key, attr.Value?.ToString() ?? string.Empty);
+                }
 
                 if (!string.IsNullOrEmpty(this.Component.CssAnchorTag))
                 {
@@ -89,22 +88,26 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 
                 sbInnerHtml.Append(this.CreateImageTag());
 
-                //Span to show the telephone number if phone number is not null and "IsNumberSpanVisibal" is true.
                 if (!string.IsNullOrEmpty(this.Component.TelephoneNumber) && (this.Component.IsNumberSpanVisible))
                 {
                     var tbtelnoSpan = new TagBuilder("span");
                     if (!(String.IsNullOrEmpty(this.Component.CssTelephoneNumberSpan)))
                     {
-
                         tbtelnoSpan.AddCssClass(this.Component.CssTelephoneNumberSpan);
                     }
 
-                    tbtelnoSpan.InnerHtml = this.Component.TelephoneNumber;
-                    sbInnerHtml.Append(tbtelnoSpan);
+                    sbInnerHtml.Append($"<span class=\"{this.Component.CssTelephoneNumberSpan}\">{this.Component.TelephoneNumber}</span>");
                 }
 
-                tagBuilderAnchor.InnerHtml=tagBuilderAnchor.InnerHtml.AppendWithBuilder(sbInnerHtml.ToString());
-                writer.Write(tagBuilderAnchor.ToString());
+                using (var stringWriter = new StringWriter())
+                {
+                    tagBuilderAnchor.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                    var anchorHtml = stringWriter.ToString();
+                    var closingTag = anchorHtml.IndexOf(">");
+                    writer.Write(anchorHtml.Substring(0, closingTag + 1));
+                    writer.Write(sbInnerHtml.ToString());
+                    writer.Write("</a>");
+                }
             }
         }
 
@@ -118,8 +121,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         {
             var tagBuilderImage = new TagBuilder("img");
 
-            // As per accessibility requirement, unless the alt has been provided, it is set to the same as
-            // anchor title
             if (string.IsNullOrEmpty(this.Component.AlternateText))
             {
                 this.Component.AlternateText = this.Component.Title;
@@ -127,17 +128,21 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 
             if (!string.IsNullOrEmpty(this.Component.ImageUrl))
             {
-                tagBuilderImage.MergeAttribute("src", this.Component.ImageUrl);
+                tagBuilderImage.Attributes.Add("src", this.Component.ImageUrl);
             }
 
-            tagBuilderImage.MergeAttribute("alt",this.Component.AlternateText);
+            tagBuilderImage.Attributes.Add("alt",this.Component.AlternateText);
 
             if (!string.IsNullOrEmpty(this.Component.CssClassImage))
             {
                 tagBuilderImage.AddCssClass(this.Component.CssClassImage);
             }
 
-            return tagBuilderImage.ToString(TagRenderMode.StartTag);
+            using (var stringWriter = new StringWriter())
+            {
+                tagBuilderImage.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                return stringWriter.ToString();
+            }
         }
     }
 }

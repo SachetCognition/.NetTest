@@ -13,9 +13,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.SessionState;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Microsoft.AspNetCore.Html;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ScriptRenderer;
@@ -40,7 +40,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         ///     </see>
         ///     .
         /// </returns>
-        public static ComponentFactory<TModel> Sav2000<TModel>(this HtmlHelper<TModel> helper)
+        public static ComponentFactory<TModel> Sav2000<TModel>(this IHtmlHelper<TModel> helper)
         {
             return helper.Sav2000(false);
         }
@@ -62,13 +62,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         ///     </see>
         ///     .
         /// </returns>
-        public static ComponentFactory<TModel> Sav2000<TModel>(this HtmlHelper<TModel> helper, bool isLightRequirement)
+        public static ComponentFactory<TModel> Sav2000<TModel>(this IHtmlHelper<TModel> helper, bool isLightRequirement)
         {
             var clientDependencyScriptRendererComponent = new ClientDependencyScriptRendererComponent(helper);
             var scriptRenderer = helper.ViewContext.HttpContext.Items[ScriptRendererComponent.ContextKey] as ScriptRendererComponent ??
                 new ScriptRendererComponent(
                     helper,
-                    new ReadOnlyCollection<IScriptRendererComponent>(new List<IScriptRendererComponent>
+                    new ReadOnlyCollection<object>(new List<object>
                         {
                             clientDependencyScriptRendererComponent,
                             new BlockScriptRendererComponent(helper)
@@ -77,8 +77,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
             var clientDependencyStyleRenderComponent = new ClientDependencyStyleRenderComponent(helper);
             var styleRenderer = helper.ViewContext.HttpContext.Items[StyleRendererComponent.ContextKey] as StyleRendererComponent
                                           ?? new StyleRendererComponent(helper,
-                                              new ReadOnlyCollection<IStyleRendererComponent>(
-                                              new List<IStyleRendererComponent> { clientDependencyStyleRenderComponent }));
+                                              new ReadOnlyCollection<object>(
+                                              new List<object> { clientDependencyStyleRenderComponent }));
 
             return new ComponentFactory<TModel>(helper, new ScriptRendererBuilder(scriptRenderer, null), new StyleRendererBuilder(styleRenderer, null));
         }
@@ -97,11 +97,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         /// <typeparam name="TProperty">
         /// </typeparam>
         /// <returns>
-        /// The <see cref="MvcHtmlString"/>.
+        /// The <see cref="IHtmlContent"/>.
         /// </returns>
-        public static MvcHtmlString  Sav2000ValidationMessageFor<TModel,TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        public static IHtmlContent Sav2000ValidationMessageFor<TModel,TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
-          return   htmlHelper.ValidationMessageFor(expression,null,new {role="alert"}  );
+            return htmlHelper.ValidationMessageFor(expression, null, new { role = "alert" });
         }
     }
 }

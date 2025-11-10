@@ -19,7 +19,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDateExt;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
     using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
 
@@ -175,14 +174,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
         /// <returns>
         /// The <see cref="double"/>.
         /// </returns>
-        public static double ResolveOffset(DateTimeWithFormat dateTimeWithFormat)
+        public static double ResolveOffset(object dateTimeWithFormat)
         {
             if (dateTimeWithFormat == null)
             {
                 throw new ArgumentException("Provided dateTimeWithFormat cannot be null");
             }
 
-            return ResolveOffset(dateTimeWithFormat.TimeOffset, dateTimeWithFormat.IsUtcMode);
+            dynamic dtf = dateTimeWithFormat;
+            return ResolveOffset(dtf.TimeOffset, dtf.IsUtcMode);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
         /// <returns>
         /// The <see cref="DateTime"/>.
         /// </returns>
-        public static DateTime GetCurrentDate(DateTimeWithFormat dateTimeWithFormat)
+        public static DateTime GetCurrentDate(object dateTimeWithFormat)
         {
             var offSet = ResolveOffset(dateTimeWithFormat);
             return GetCurrentDate(offSet);

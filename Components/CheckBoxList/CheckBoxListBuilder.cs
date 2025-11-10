@@ -15,7 +15,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.SpanLabel;
@@ -32,7 +32,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public CheckBoxListBuilder(CheckBoxListComponent component, ModelMetadata modelMetadata)
+        public CheckBoxListBuilder(CheckBoxListComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
             this.spanLabelBuilder = new SpanLabelBuilder(this.Component.CheckBoxListLabel, modelMetadata);

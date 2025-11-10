@@ -15,7 +15,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
@@ -25,7 +26,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DateConditionalRequiredAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DateConditionalRequiredAttribute : ValidationAttribute
     {
         /// <summary>
         /// The other property name.
@@ -90,11 +91,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-        {
-            var conditionalRequiredRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "dateconditionalrequired" };
-            yield return conditionalRequiredRule;
-        }
 
         /// <summary>
         /// The is valid.

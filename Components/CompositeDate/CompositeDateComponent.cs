@@ -14,10 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
@@ -524,7 +522,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public CompositeDateComponent(HtmlHelper htmlHelper)
+        public CompositeDateComponent(IHtmlHelper htmlHelper)
             : this(htmlHelper, null, null, null, null)
         {
         }
@@ -539,7 +537,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="secondDateBuilder"></param>
         /// <param name="firstWeekBuilder"></param>
         /// <param name="secondWeekBuilder"></param>
-        public CompositeDateComponent(HtmlHelper htmlHelper, DateTimeBuilder firstDateBuilder, DateTimeBuilder secondDateBuilder ,
+        public CompositeDateComponent(IHtmlHelper htmlHelper, DateTimeBuilder firstDateBuilder, DateTimeBuilder secondDateBuilder ,
             WeekYearBuilder firstWeekBuilder, WeekYearBuilder secondWeekBuilder)
             : base(htmlHelper)
         {
@@ -604,7 +602,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new CompositeDateHtmlBuilder(this).Build(writer);
         }
@@ -615,7 +613,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
 
             if (writer == null)

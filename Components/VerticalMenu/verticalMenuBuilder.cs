@@ -13,12 +13,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
+    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
+    using MenuItemClass = Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem;
 
     /// <summary>
     /// The menu builder.
@@ -57,7 +59,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// </param>
         /// <param name="modelMetadata">
         /// </param>
-        public VerticalMenuBuilder(VerticalMenuComponent component, ModelMetadata modelMetadata)
+        public VerticalMenuBuilder(VerticalMenuComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
             this.copyRightImgBuilder = new ImageBuilder(this.Component.CopyRightImage, modelMetadata);
@@ -72,7 +74,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <returns>
         /// The <see cref="VerticalMenuBuilder"/>.
         /// </returns>
-        public VerticalMenuBuilder DataBind(IEnumerable<MenuItem> dataSource)
+        public VerticalMenuBuilder DataBind(IEnumerable<MenuItemClass> dataSource)
         {
             if (dataSource != null)
             {

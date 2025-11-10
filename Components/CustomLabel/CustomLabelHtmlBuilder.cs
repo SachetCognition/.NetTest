@@ -13,13 +13,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     /// <summary>
     /// The check box html builder.
@@ -43,38 +41,41 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
                 throw new ArgumentException("The parameter writer cannot be null");
             }
 
-            if (this.Component.IsVisible)
+            if (this.Component != null && this.Component.IsVisible)
             {
 #if DEBUG
                 if (this.Component.HtmlAttributes["for"] == null)
                 {
                    
-                    throw new ArgumentException("The attribute 'for' is mendatory to add with each label.");
+                    throw new ArgumentException("The attribute 'for' is mandatory to add with each label.");
 
                 }
 #endif
                 var tagBuilderCustomLabel = new TagBuilder("label");
-                //tagBuilderCustomLabel.MergeAttribute("Id",this.Component.Id );
-                tagBuilderCustomLabel.MergeAttributes(this.Component.HtmlAttributes);
+                foreach (var attr in this.Component.HtmlAttributes)
+                {
+                    tagBuilderCustomLabel.Attributes.Add(attr.Key, attr.Value?.ToString() ?? string.Empty);
+                }
 
-                var sbCustomLabelInnerHtml = new StringBuilder(tagBuilderCustomLabel.InnerHtml);
-                sbCustomLabelInnerHtml.Append(
-                    LabelHelper.InnerSpanTag(
-                        !string.IsNullOrEmpty(this.Component.Text) ? this.Component.Text : string.Empty,
-                        string.Empty,
-                        string.Empty,
-                        this.Component.IsHtmlEncode));
+                var sbCustomLabelInnerHtml = new StringBuilder();
+                
+                var textToDisplay = !string.IsNullOrEmpty(this.Component.Text) ? this.Component.Text : string.Empty;
+                if (this.Component.IsHtmlEncode)
+                {
+                    textToDisplay = System.Net.WebUtility.HtmlEncode(textToDisplay);
+                }
+                sbCustomLabelInnerHtml.Append($"<span>{textToDisplay}</span>");
 
                 if (!this.Component.IsOnlyForAccess)
                 {
-                    if (this.Component.CssClassLabel.IsEmpty())
+                    if (string.IsNullOrEmpty(this.Component.CssClassLabel))
                     {
                         this.Component.CssClassLabel = "pull-right";
                     }
@@ -87,23 +88,23 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
                     if (!string.IsNullOrEmpty(this.Component.SuperscriptText))
                     {
                         var superScriptCss = !string.IsNullOrEmpty(this.Component.SuperscriptCssClass) ? this.Component.SuperscriptCssClass : "importantfield";
-
-                        sbCustomLabelInnerHtml.Append(LabelHelper.InnerSpanTag(this.Component.SuperscriptText, superScriptCss, this.Component.SuperscriptToolTip, false));
+                        var tooltip = !string.IsNullOrEmpty(this.Component.SuperscriptToolTip) ? $" title=\"{System.Net.WebUtility.HtmlEncode(this.Component.SuperscriptToolTip)}\"" : string.Empty;
+                        sbCustomLabelInnerHtml.Append($"<span class=\"{superScriptCss}\"{tooltip}>{this.Component.SuperscriptText}</span>");
                     }
 
                     if (this.Component.DisplayStar)
                     {
-                        sbCustomLabelInnerHtml.Append(LabelHelper.InnerAbbrTag(ApplicationStrings.lblAsteriks,
-                            string.Format(CultureInfo.CurrentCulture, ApplicationStrings.TIP000010, this.Component.Text)));
+                        var asteriskTitle = string.Format(CultureInfo.CurrentCulture, "Required field: {0}", this.Component.Text);
+                        sbCustomLabelInnerHtml.Append($"<abbr title=\"{System.Net.WebUtility.HtmlEncode(asteriskTitle)}\">*</abbr>");
                     }
 
                     if (this.Component.DisplayColon)
                     {
-                        sbCustomLabelInnerHtml.Append(LabelHelper.InnerSpanTag(ApplicationStrings.lblsemiColon, "paddingColon", string.Empty, false));
+                        sbCustomLabelInnerHtml.Append("<span class=\"paddingColon\">:</span>");
                     }
                     if (!string.IsNullOrEmpty(this.Component.AccessText))
                     {
-                        sbCustomLabelInnerHtml.Append(LabelHelper.InnerSpanTag(this.Component.AccessText, "hide-access", string.Empty, false));
+                        sbCustomLabelInnerHtml.Append($"<span class=\"hide-access\">{this.Component.AccessText}</span>");
                     }
                 }
                 else
@@ -111,9 +112,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
                     tagBuilderCustomLabel.AddCssClass("hide-access");
                 }
 
-                tagBuilderCustomLabel.InnerHtml = sbCustomLabelInnerHtml.ToString();
-
-                writer.Write(tagBuilderCustomLabel);
+                using (var stringWriter = new StringWriter())
+                {
+                    tagBuilderCustomLabel.WriteTo(stringWriter, System.Text.Encodings.Web.HtmlEncoder.Default);
+                    var labelHtml = stringWriter.ToString();
+                    var closingTag = labelHtml.IndexOf(">");
+                    writer.Write(labelHtml.Substring(0, closingTag + 1));
+                    writer.Write(sbCustomLabelInnerHtml.ToString());
+                    writer.Write("</label>");
+                }
             }
         }
     }

@@ -14,9 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
@@ -32,7 +31,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public CheckBoxComponent(HtmlHelper htmlHelper)
+        public CheckBoxComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.IsChecked = false;
@@ -124,7 +123,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new CheckBoxHtmlBuilder(this).Build(writer);
         }
@@ -135,7 +134,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

@@ -13,9 +13,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -50,7 +50,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -79,7 +79,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 //GKG:Fixed for remark 218.Removed the ExternalLabelText which taken as a parameter in string.format method. 
                 this.Component.CustomLabel.AccessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.LBL000022);
 
-                var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
+                var tagBuilderLabelDiv = new TagBuilder("div");
+            tagBuilderLabelDiv.InnerHtml.AppendHtml(this.Component.CustomLabel.ToHtmlString());
                 if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
                 {
                     tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
@@ -156,11 +157,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             //include error comp here to align it with the date
             //certain controls to be added only if the component is updatable
-            if (this.Component.IsUpdatable && !MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (this.Component.IsUpdatable && this.Component.ValidationString != null && this.Component.ValidationString.Length > 0)
             {
-                this.Component.ValidationString = new MvcHtmlString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
+                this.Component.ValidationString.Clear();
+                this.Component.ValidationString.Append(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
                 this.Component.ErrorMessage = ErrorHelper.CreateErrorComponent(this.Component);
-                sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage.ToHtmlString());
+                sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage?.ToString() ?? string.Empty);
                 //  sbTagMainDivInnerHtml.Append(this.CreateErrorString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName), this.Component.HtmlHelper));
             }
 
@@ -180,9 +182,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 }
             }
 
-            tagBuilderDateDiv.InnerHtml = sbTagDateDivInnerHtml.ToString();
+            tagBuilderDateDiv.InnerHtml.AppendHtml(sbTagDateDivInnerHtml.ToString());
             sbTagMainDivInnerHtml.Append(tagBuilderDateDiv);
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
+            tagBuilderMainDiv.InnerHtml.AppendHtml(sbTagMainDivInnerHtml.ToString());
             writer.Write(tagBuilderMainDiv.ToString());
         }
 
@@ -197,7 +199,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </returns>
         private string GetValidationSpan(string forName)
         {
-            if (MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (this.Component.ValidationString == null || this.Component.ValidationString.Length == 0)
             {
                 return string.Empty;
             }
@@ -266,7 +268,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             tagBuilderDate.MergeAttributes(this.Component.HtmlAttributes);
             tagBuilderDate.MergeAttribute("maxlength", this.Component.Value.IsModel ? "5" : "10");
-            return tagBuilderDate.ToString(TagRenderMode.StartTag);
+            return tagBuilderDate.ToString();
         }
 
         /// <summary>
@@ -274,7 +276,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </summary>
         private void AddValidationAttributesForDate()
         {
-            this.Component.EnableValidationAttribute();
+            this.Component.EnableValidationAttribute("dateformat");
             //add this component's Id to call function on datetime object on client side
             this.Component.AddValidationAttribute("dateObjectId", this.Component.Id);
             this.Component.AddValidationAttribute("offset", JsonConvert.SerializeObject(this.Component.Value.TimeOffset));
@@ -285,19 +287,19 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             var format = this.Component.Value.Format == DateTimeConstants.EnglishFormat ? DateTimeConstants.JsEnglishFormat :
                 DateTimeConstants.JsFrenchFormat;
             var strType = this.Component.Value.IsModel ? "model" : "standard";
-            this.Component.AddValidationAttributeProperty(RuleName, "type", strType);
-            this.Component.AddValidationAttributeProperty(RuleName, "format", format);
-            this.Component.AddValidationAttributeProperty(RuleName, "defaultValue", DateTimeConstants.TimeDefaultValue);
-            this.Component.AddValidationAttributeProperty(RuleName, "hourDropDown", this.Component.GetHourDropDownId);
-            this.Component.AddValidationAttributeProperty(RuleName, "minuteDropDown", this.Component.GetMinuteDropDownId);
-            this.Component.AddValidationAttributeProperty(RuleName, "msgIncorrectTime",
+            this.Component.AddValidationAttributeProperty("type", strType);
+            this.Component.AddValidationAttributeProperty("format", format);
+            this.Component.AddValidationAttributeProperty("defaultValue", DateTimeConstants.TimeDefaultValue);
+            this.Component.AddValidationAttributeProperty("hourDropDown", this.Component.GetHourDropDownId);
+            this.Component.AddValidationAttributeProperty("minuteDropDown", this.Component.GetMinuteDropDownId);
+            this.Component.AddValidationAttributeProperty("msgIncorrectTime",
                 string.Format(CultureInfo.CurrentCulture, ApplicationStrings.TimeMandatory, this.Component.ExternalLabelText));
-            this.Component.AddValidationAttributeProperty(RuleName, "msgIncorrectDate",
+            this.Component.AddValidationAttributeProperty("msgIncorrectDate",
                 string.Format(CultureInfo.CurrentCulture, ApplicationStrings.ERR_DATE_INVALIDE, this.Component.ExternalLabelText));
 
             //add attribute if time is displayed or not
             var displayTime = this.Component.DisplayTime ? "true" : "false";
-            this.Component.AddValidationAttributeProperty(RuleName, "displayTime", displayTime);
+            this.Component.AddValidationAttributeProperty("displayTime", displayTime);
         }
 
         /// <summary>
@@ -367,7 +369,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             tagBuilderHidden.MergeAttribute("type", "hidden");
             tagBuilderHidden.MergeAttribute("value", value);
-            return tagBuilderHidden.ToString(TagRenderMode.StartTag);
+            return tagBuilderHidden.ToString();
         }
 
         /// <summary>

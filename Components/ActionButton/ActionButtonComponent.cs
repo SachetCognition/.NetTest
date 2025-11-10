@@ -15,10 +15,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
     using Newtonsoft.Json;
@@ -35,7 +34,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public ActionButtonComponent(HtmlHelper htmlHelper)
+        public ActionButtonComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.OnClick = "null";
@@ -169,6 +168,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
         /// The text to be displayed for button
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the access text for screen readers
+        /// </summary>
+        public string? AccessText { get; set; }
         
         /// <summary>
         /// The write html.
@@ -176,7 +180,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new ActionButtonHtmlBuilder(this).Build(writer);
         }
@@ -187,7 +191,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer != null)
             {

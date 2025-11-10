@@ -2,7 +2,7 @@
 {
     using System.Text;
     using System.Web;
-    using System.Web.UI;
+    using System.IO;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
     /// <summary>
@@ -35,7 +35,7 @@
         /// <param name="writer">
         /// The HTML writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer != null && this.Component.IsVisible)
             {

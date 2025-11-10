@@ -1,12 +1,14 @@
 ﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Collections.Generic;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using System.Data;
 
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     /// <summary>
     /// The data table builder.
@@ -20,7 +22,7 @@
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public DataTableBuilder(DataTableComponent component, ModelMetadata modelMetadata)
+        public DataTableBuilder(DataTableComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }

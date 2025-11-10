@@ -16,10 +16,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.SpanLabel;
 
@@ -36,7 +35,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public CheckBoxListComponent(HtmlHelper htmlHelper)
+        public CheckBoxListComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.SourceItems = new List<CheckBoxListItem>();
@@ -131,7 +130,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
         /// Write HTML 
         /// </summary>
         /// <param name="writer"></param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new CheckBoxListHtmlBuilder(this).Build(writer);
         }
@@ -140,7 +139,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
         /// Method for script writing.
         /// </summary>
         /// <param name="writer"></param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

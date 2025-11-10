@@ -14,14 +14,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
+    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
+    using MenuItemClass = Equant.SAV2000.ComponentLibrary.MVC.Components.Menu.MenuItem;
 
     using Newtonsoft.Json;
 
@@ -41,10 +44,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public VerticalMenuComponent(HtmlHelper htmlHelper)
+        public VerticalMenuComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
-            this.MenuItems = new List<MenuItem>();
+            this.MenuItems = new List<MenuItemClass>();
             this.CopyRightImage = new ImageComponent(htmlHelper);
             var jsRes = new List<JsResource>
                                    {
@@ -83,7 +86,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <summary>
         /// Gets or sets the items.
         /// </summary>
-        internal List<MenuItem> MenuItems { get; private set; }
+        internal List<MenuItemClass> MenuItems { get; private set; }
 
         /// <summary>
         /// Gets the outer menu div CSS class.
@@ -111,7 +114,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// </param>
         /// <exception cref="NotImplementedException">
         /// </exception>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new VerticalMenuHtmlBuilder(this).Build(writer);
         }
@@ -122,7 +125,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

@@ -12,17 +12,13 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 {
-    using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The ClickToVoice component to directly open web call interface.
@@ -35,7 +31,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public ClickToVoiceComponent(HtmlHelper htmlHelper)
+        public ClickToVoiceComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.Title = string.Empty;
@@ -58,9 +54,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                             {
                                 new JsResource(
                                          "jsQtip",
-                                         "Equant.SAV2000.ComponentLibrary.Common.Resources.Javascripts.jquery.qtip.js",
+                                         "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.jquery.qtip.js",
                                          200,
-                                         typeof(Locator)),
+                                         typeof(ClickToVoiceComponent)),
                                 new JsResource(
                                     "JsClickToVoice", "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.ClickToVoice.js", 200, typeof(ClickToVoiceComponent))
                             });
@@ -77,9 +73,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                         {
                             new CssResource(
                                 "Cssjqueryqtip",
-                                "Equant.SAV2000.ComponentLibrary.Common.Resources.Css.jquery.qtip.css",
+                                "Equant.SAV2000.ComponentLibrary.MVC.Resources.Css.jquery.qtip.css",
                                 200,
-                                typeof(Locator))
+                                typeof(ClickToVoiceComponent))
                         });
             }
         }
@@ -145,7 +141,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new ClickToVoiceHtmlBuilder(this).Build(writer);
         }
@@ -156,7 +152,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {
@@ -165,7 +161,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 
             if (!string.IsNullOrEmpty(this.RootService))
             {
-                this.ActionUrl = this.ActionUrl.Replace("{1}", HttpUtility.UrlEncode(this.RootService));
+                this.ActionUrl = this.ActionUrl.Replace("{1}", System.Net.WebUtility.UrlEncode(this.RootService));
             }
 
             var options =
@@ -176,7 +172,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                             url = this.ActionUrl,
                             telephoneNumber = this.TelephoneNumber,
                             telephoneControlId = this.TelephoneControlId,
-                            title = ApplicationStrings.TIP000022
+                            title = "Click to call"
                         });
             writer.WriteLine("$('#{0}').clickToVoice({1});", this.Id, options);
         }

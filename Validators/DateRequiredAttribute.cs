@@ -15,7 +15,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
@@ -25,7 +26,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// This is date required attribute class
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DateRequiredAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DateRequiredAttribute : ValidationAttribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DateRequiredAttribute"/> class.
@@ -61,11 +62,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-        {
-            var dateRequiredRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "daterequired" };
-            yield return dateRequiredRule;
-        }
 
         /// <summary>
         /// The is valid.

@@ -6,8 +6,9 @@
     using System;
     using System.Globalization;
     using System.Linq;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using System.IO;
 
     using Equant.SAV2000.ComponentLibrary.Common;
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
@@ -16,6 +17,8 @@
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+    using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     using Resources = Equant.SAV2000.ComponentLibrary.Common.Resources;
 
@@ -61,7 +64,7 @@
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public DataTableComponent(HtmlHelper htmlHelper)
+        public DataTableComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.Caption = string.Empty;
@@ -570,7 +573,7 @@
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             // Parameters sanity checks
             if (!string.IsNullOrEmpty(this.ServiceUri) && (this.Data != null))
@@ -615,14 +618,16 @@
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             var request = this.HtmlHelper.ViewContext.HttpContext.Request;
-            var path = request.ApplicationPath;
+            var path = request.PathBase.Value ?? string.Empty;
             if (string.IsNullOrEmpty(this.ErrorPageUrl))
             {
+                var numFen = request.Query["NumFen"].ToString();
+                var cookieName = request.Query["COOKIENAME"].ToString();
                 this.ErrorPageUrl = string.Format(CultureInfo.InvariantCulture, "{0}/Home/SubErr?NUMFEN={1}&COOKIENAME={2}",
-                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), request["NumFen"], request["COOKIENAME"]);
+                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), numFen, cookieName);
             }
 
             if (writer != null)

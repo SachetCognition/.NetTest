@@ -15,7 +15,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateDurationControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
@@ -25,7 +26,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DurationValidatorAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DurationValidatorAttribute : ValidationAttribute
     {
         #region Fields
 
@@ -204,14 +205,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
-        {
-            var durationvalidator = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "durationvalidator" };
-            durationvalidator.ValidationParameters.Add("startdateid", this.firstPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("enddateid", this.secondPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("datedurationid", this.thirdPropertyHtmlId);
-            yield return durationvalidator;
-        }
 
         #endregion
 

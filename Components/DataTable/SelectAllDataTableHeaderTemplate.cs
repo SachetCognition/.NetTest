@@ -1,7 +1,8 @@
 ﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Text;
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The select all data table header template.
@@ -11,7 +12,7 @@
         /// <summary>
         /// Gets or sets the html helper.
         /// </summary>
-        public HtmlHelper HtmlHelper { get; set; }
+        public IHtmlHelper HtmlHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the client identifier
@@ -53,13 +54,13 @@
 
                 if (!string.IsNullOrEmpty(this.Title))
                 {
-                    tbAccSpan.SetInnerText(this.Title);
+                    tbAccSpan.InnerHtml.Append(this.Title);
 
                 }
                 else
                 {
                      tbAccSpan.AddCssClass("hide-access");
-                    tbAccSpan.SetInnerText(this.ToolTip);
+                    tbAccSpan.InnerHtml.Append(this.ToolTip);
                 }
 
                 var tagBuilder = new TagBuilder("input");
@@ -68,7 +69,7 @@
                 tagBuilder.MergeAttribute("name", this.Name);
                 tagBuilder.MergeAttribute("id", this.Id);
 
-                builder.Append(tagBuilder.ToString(TagRenderMode.StartTag));
+                builder.Append(tagBuilder.ToString());
 
                 builder.AppendLine(tbAccSpan.ToString());
 

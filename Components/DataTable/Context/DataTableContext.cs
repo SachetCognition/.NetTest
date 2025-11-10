@@ -6,6 +6,7 @@
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
 
     using Newtonsoft.Json;
+    using SortDirection = Equant.SAV2000.ComponentLibrary.Common.Components.SortDirection;
 
     /// <summary>
     /// The data table context.

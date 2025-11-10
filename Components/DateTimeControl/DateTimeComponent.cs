@@ -16,12 +16,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Globalization;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
-    using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
@@ -119,7 +117,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public DateTimeComponent(HtmlHelper htmlHelper)
+        public DateTimeComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             //set default values for properties
@@ -545,11 +543,57 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         public bool IsMandatory { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the component is updatable.
+        /// </summary>
+        public bool IsUpdatable { get; set; }
+
+        /// <summary>
         /// Gets or sets the conditional annotations.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification =
             "TETHYS: This input is required.")]
         public Dictionary<string, string> ConditionalAnnotations { get; set; }
+
+        public void AddValidationAttribute(string key, string value)
+        {
+            if (ConditionalAnnotations == null)
+            {
+                ConditionalAnnotations = new Dictionary<string, string>();
+            }
+            ConditionalAnnotations[key] = value;
+        }
+
+        public void AddValidationAttributeProperty(string key, object value)
+        {
+            AddValidationAttribute(key, value?.ToString() ?? string.Empty);
+        }
+
+        public void EnableValidationAttribute(string key)
+        {
+            AddValidationAttribute(key, "true");
+        }
+
+        public Dictionary<string, object> GetUnobtrusiveValidationAttributes()
+        {
+            var attributes = new Dictionary<string, object>();
+            if (ConditionalAnnotations != null)
+            {
+                foreach (var kvp in ConditionalAnnotations)
+                {
+                    attributes[$"data-val-{kvp.Key}"] = kvp.Value;
+                }
+            }
+            return attributes;
+        }
+
+        public string ToHtmlString()
+        {
+            using (var writer = new StringWriter())
+            {
+                WriteHtml(writer);
+                return writer.ToString();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the mandatory message.
@@ -567,7 +611,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new DateTimeHtmlBuilder(this).Build(writer);
         }
@@ -578,7 +622,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

@@ -13,7 +13,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 {
     using System;
     using System.Globalization;
-    using System.Web.Mvc;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
@@ -23,7 +24,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     /// <summary>
     /// The custom model binder for the date time with format class.
     /// </summary>
-    public class DateTimeWithFormatBinder : DefaultModelBinder
+    public class DateTimeWithFormatBinder : IModelBinder
     {
         /// <summary>
         /// This method binds the model.
@@ -39,7 +40,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// </exception>
-        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext == null)
             {
@@ -71,11 +72,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 throw new DateTimeWithFormatException(exceptionMessage);
             }
 
-            var dateValue = dateProviderResult.AttemptedValue;
-            var formatValue = formatProviderResult.AttemptedValue;
-            var typeValue = typeProviderResult.AttemptedValue;
-            var timeOffsetValue = timeOffsetProviderResult.AttemptedValue;
-            var utcValue = utcProviderResult.AttemptedValue;
+            var dateValue = dateProviderResult.FirstValue;
+            var formatValue = formatProviderResult.FirstValue;
+            var typeValue = typeProviderResult.FirstValue;
+            var timeOffsetValue = timeOffsetProviderResult.FirstValue;
+            var utcValue = utcProviderResult.FirstValue;
 
             CheckForValidFormat(formatValue, modelName);
 
@@ -95,8 +96,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             var hourProviderResult = bindingContext.ValueProvider.GetValue(hourPropertyName);
             var minuteProviderResult = bindingContext.ValueProvider.GetValue(minutePropertyName);
 
-            var hourValue = hourProviderResult != null ? hourProviderResult.AttemptedValue : string.Empty;
-            var minuteValue = minuteProviderResult != null ? minuteProviderResult.AttemptedValue : string.Empty;
+            var hourValue = hourProviderResult != ValueProviderResult.None ? hourProviderResult.FirstValue : string.Empty;
+            var minuteValue = minuteProviderResult != ValueProviderResult.None ? minuteProviderResult.FirstValue : string.Empty;
 
             DateTimeWithFormat dateTimeValue;
 
@@ -110,7 +111,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
                 dateTimeValue = new DateTimeWithFormat(formatValue, isModel) { DateText = string.Empty, TimeOffset = timeOffset, IsUtcMode = isUtcMode };
                 PutDateInModelState(bindingContext, modelName, dateTimeValue);
-                return dateTimeValue;
+                bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
             }
 
             DateTime parsedDate;
@@ -133,7 +135,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 // If this is not done, then it will create dissimilarity in behavior on server side from the client side.
                 dateTimeValue = new DateTimeWithFormat(formatValue, isModel) { DateText = dateValue, TimeOffset = timeOffset, IsUtcMode = isUtcMode };
                 PutDateInModelState(bindingContext, modelName, dateTimeValue);
-                return dateTimeValue;
+                bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
             }
 
             //if date is not empty and exactly one of the time is not submit, then it is incomplete time and is a model state error
@@ -149,7 +152,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                                IsUtcMode = isUtcMode
                            };
                 PutDateInModelState(bindingContext, modelName, dateTimeValue);
-                return dateTimeValue;
+                bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
             }
 
             int hourParsed;
@@ -170,7 +174,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                                    IsUtcMode = isUtcMode
                                };
                     PutDateInModelState(bindingContext, modelName, dateTimeValue);
-                    return dateTimeValue;
+                    bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
                 }
             }
             else
@@ -185,7 +190,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                                IsUtcMode = isUtcMode
                            };
                 PutDateInModelState(bindingContext, modelName, dateTimeValue);
-                return dateTimeValue;
+                bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
             }
 
             dateTimeValue = new DateTimeWithFormat(formatValue, isModel)
@@ -197,7 +203,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                            IsUtcMode = isUtcMode
                        };
             PutDateInModelState(bindingContext, modelName, dateTimeValue);
-            return dateTimeValue;
+            bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -215,8 +222,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         private static void PutDateInModelState(ModelBindingContext bindingContext, string modelName, DateTimeWithFormat dateTimeValue)
         {
             bindingContext.ModelState.Remove(modelName);
-            bindingContext.ModelState.Add(modelName, new ModelState());
-            bindingContext.ModelState.SetModelValue(modelName, new ValueProviderResult(dateTimeValue, dateTimeValue.ToString(), null));
+            bindingContext.ModelState.SetModelValue(modelName, dateTimeValue.ToString(), dateTimeValue.ToString());
         }
 
         /// <summary>

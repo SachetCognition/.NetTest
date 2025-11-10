@@ -11,7 +11,7 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public ClickToVoiceBuilder(ClickToVoiceComponent component, ModelMetadata modelMetadata)
+        public ClickToVoiceBuilder(ClickToVoiceComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }

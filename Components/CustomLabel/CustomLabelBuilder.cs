@@ -11,7 +11,7 @@
 // -------------------------------------------------------------------------------------------------
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
-    using System.Web.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using System;
@@ -28,7 +28,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         /// The component.
         /// </param>
         /// <param name="modelMetadata"></param>
-        public CustomLabelBuilder(CustomLabelComponent component, ModelMetadata modelMetadata)
+        public CustomLabelBuilder(CustomLabelComponent component, ModelMetadata? modelMetadata)
             : base(component, modelMetadata)
         {
         }
@@ -189,17 +189,32 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         }
 
         /// <summary>
-        /// The id.
+        /// The method to set AccessText for the component.
         /// </summary>
         /// <param name="value">
-        /// The value.
+        /// AccessText for CustomLabel.
         /// </param>
         /// <returns>
         /// The <see cref="CustomLabelBuilder"/>.
         /// </returns>
-        public override CustomLabelBuilder Id(string value)
+        public CustomLabelBuilder AccessText(string value)
         {
-            this.Component.Id = value;
+            Component.AccessText = value;
+            return this;
+        }
+
+        /// <summary>
+        /// </summary>
+        public CustomLabelBuilder HtmlAttributes(object htmlAttributes)
+        {
+            if (htmlAttributes != null)
+            {
+                var properties = htmlAttributes.GetType().GetProperties();
+                foreach (var prop in properties)
+                {
+                    Component.HtmlAttributes[prop.Name] = prop.GetValue(htmlAttributes);
+                }
+            }
             return this;
         }
     }
