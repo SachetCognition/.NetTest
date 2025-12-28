@@ -52,4 +52,23 @@ public class DropDownListBuilder : ComponentBuilderBase<DropDownListComponent, D
         Component.AccessText = value;
         return this;
     }
+
+    public DropDownListBuilder DataBind(SelectList selectList)
+    {
+        Component.Items = selectList.ToList();
+        return this;
+    }
+
+    public DropDownListBuilder CustomLabel(Action<CustomLabel.CustomLabelBuilder> setup)
+    {
+        var labelBuilder = new CustomLabel.CustomLabelBuilder(Component.CustomLabel, null);
+        setup(labelBuilder);
+        return this;
+    }
+
+    public DropDownListBuilder CssClassSelectDiv(string value)
+    {
+        Component.CssClassSelectDiv = value;
+        return this;
+    }
 }

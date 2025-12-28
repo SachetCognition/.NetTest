@@ -144,7 +144,7 @@ public class DataTableBuilder : ComponentBuilderBase<DataTableComponent, DataTab
         /// <returns>
         /// The <see cref="DataTableBuilder"/>.
         /// </returns>
-        public DataTableBuilder Data(DataTable value)
+        public DataTableBuilder Data(System.Data.DataTable value)
         {
             Component.Data = value;
             return this;

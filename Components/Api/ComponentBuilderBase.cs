@@ -13,7 +13,7 @@ public abstract class ComponentBuilderBase<TComponent, TBuilder> : IHtmlContent
         ModelMetadata = modelMetadata;
     }
 
-    protected TComponent Component { get; }
+    public TComponent Component { get; }
 
     protected ModelMetadata? ModelMetadata { get; }
 

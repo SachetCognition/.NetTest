@@ -32,7 +32,7 @@
         /// Gets the html attributes.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",Justification="Tethys: Require to set this property from calling location so need to set its value")]
-        public object HtmlAttributes { get;  set; }
+        public IDictionary<string, object>? HtmlAttributes { get;  set; }
 
     }
 }

@@ -57,4 +57,40 @@ public class WeekYearBuilder : ComponentBuilderBase<WeekYearComponent, WeekYearB
         Component.YearLabel = value;
         return this;
     }
+
+    public WeekYearBuilder DisplayInformationIcon(bool value)
+    {
+        Component.DisplayInformationIcon = value;
+        return this;
+    }
+
+    public WeekYearBuilder CssMainDiv(string value)
+    {
+        Component.CssMainDiv = value;
+        return this;
+    }
+
+    public WeekYearBuilder WeekTextId(string value)
+    {
+        Component.WeekTextId = value;
+        return this;
+    }
+
+    public WeekYearBuilder AssociatedWeekYearHtmlId(string value)
+    {
+        Component.AssociatedWeekYearHtmlId = value;
+        return this;
+    }
+
+    public WeekYearBuilder CssClassWeekDiv(string value)
+    {
+        Component.CssClassWeekDiv = value;
+        return this;
+    }
+
+    public WeekYearBuilder OnWeekChange(string value)
+    {
+        Component.OnChange = value;
+        return this;
+    }
 }

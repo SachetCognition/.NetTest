@@ -45,4 +45,50 @@ public class ImageToolTipBuilder : ComponentBuilderBase<ImageToolTipComponent, I
         Component.Alt = value;
         return this;
     }
+
+    public ImageToolTipBuilder CssClassImage(string value)
+    {
+        Component.CssClassImage = value;
+        return this;
+    }
+
+    public ImageToolTipBuilder PersistanceMode(PersistanceMode value)
+    {
+        Component.PersistanceMode = value;
+        return this;
+    }
+
+    public ImageToolTipBuilder AlternateText(string value)
+    {
+        Component.Alt = value;
+        return this;
+    }
+
+    public ImageToolTipBuilder Css(string value)
+    {
+        Component.CssClass = value;
+        return this;
+    }
+
+    public ImageToolTipBuilder CssClassSpan(string value)
+    {
+        Component.CssClassSpan = value;
+        return this;
+    }
+
+    public ImageToolTipBuilder CssClassInnerSpan(string value)
+    {
+        Component.CssClassInnerSpan = value;
+        return this;
+    }
+}
+
+public enum PersistanceMode
+{
+    None,
+    InnerDefaultProperty,
+    InnerProperty,
+    Attribute,
+    EncodedInnerDefaultProperty,
+    Click
 }

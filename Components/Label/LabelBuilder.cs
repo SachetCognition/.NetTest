@@ -27,4 +27,10 @@ public class LabelBuilder : ComponentBuilderBase<LabelComponent, LabelBuilder>
         Component.For = value;
         return this;
     }
+
+    public LabelBuilder CssClassLabel(string value)
+    {
+        Component.CssClass = value;
+        return this;
+    }
 }

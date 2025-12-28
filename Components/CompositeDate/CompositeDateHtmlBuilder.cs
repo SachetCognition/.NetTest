@@ -122,7 +122,7 @@ public class CompositeDateHtmlBuilder : HtmlBuilderBase<CompositeDateComponent>
                 Component.CssClassAndLabel = "displaynone ".AppendWithBuilder(Component.CssClassAndLabel);
             }
 
-            new LabelBuilder(Component.AndLabel, Component.AndLabel.ModelMetadata).HtmlAttributes(new { Id = Component.AndLabelId })
+            new LabelBuilder(Component.AndLabel, Component.AndLabel.ModelMetadata).HtmlAttributes(new Dictionary<string, object> { { "Id", Component.AndLabelId } })
                 .Text(ApplicationStrings.LBL000385)
                 .CssClassLabel(Component.CssClassAndLabel);
             sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.AndLabel.ToHtml()));
@@ -381,7 +381,7 @@ public class CompositeDateHtmlBuilder : HtmlBuilderBase<CompositeDateComponent>
                                                                  .CssClassSelectDiv(Component.CssClassDateTypesSelectDiv)
                                                                  .CustomLabel(m => m.Text(accessText)
                                                                  .AssociatedControlId(Component.DateTypesId)
-                                                                 .HtmlAttributes(new { Id = ddlDropDownDateTypesId + "lbl" })
+                                                                 .HtmlAttributes(new Dictionary<string, object> { { "Id", ddlDropDownDateTypesId + "lbl" } })
                                                                  .IsOnlyForAccess(true));
 
         return RenderHtmlContent(Component.DropDownDateTypes.ToHtml());

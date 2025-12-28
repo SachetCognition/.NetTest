@@ -1,64 +1,187 @@
+using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables.Options;
 
+// Extended DataTableOptions for the serializer
 public class DataTableOptions
 {
-    public bool? Paging { get; set; }
-    public bool? Ordering { get; set; }
-    public bool? Info { get; set; }
-    public bool? Searching { get; set; }
-    public int? PageLength { get; set; }
+    [JsonProperty("bSort")]
+    public bool? IsMultiSelect { get; set; }
+
+    [JsonProperty("bServerSide")]
+    public bool? IsServerSide { get; set; }
+
+    [JsonProperty("sAjaxSource")]
+    public string? AjaxSource { get; set; }
+
+    [JsonProperty("bDeferRender")]
+    public bool? DeferRender { get; set; }
+
+    [JsonProperty("aoColumns")]
+    public List<DataTableColumnsOption>? Columns { get; set; }
+
+    [JsonProperty("aaData")]
+    public DataTable? Data { get; set; }
+
+    [JsonProperty("sDom")]
     public string? Dom { get; set; }
-    public bool? ScrollX { get; set; }
-    public bool? ScrollY { get; set; }
-    public string? ScrollYHeight { get; set; }
-    public List<List<object>>? Order { get; set; }
-    public List<ColumnOptions>? Columns { get; set; }
-    public AjaxOptions? Ajax { get; set; }
-    public bool? ServerSide { get; set; }
-    public bool? Processing { get; set; }
-    public bool? StateSave { get; set; }
-    public LanguageOptions? Language { get; set; }
+
+    [JsonProperty("sServerMethod")]
+    public string? ServerMethod { get; set; }
+
+    [JsonProperty("fnDrawCallback")]
+    public JRaw? DrawCallBack { get; set; }
+
+    [JsonProperty("fnServerParams")]
+    public JRaw? ServerParams { get; set; }
+
+    [JsonProperty("sPaginationType")]
+    public string? PaginationType { get; set; }
+
+    [JsonProperty("iDisplayLength")]
+    public int? DisplayLength { get; set; }
+
+    [JsonProperty("bFilter")]
+    public bool? IsFilter { get; set; }
+
+    [JsonProperty("bPaginate")]
+    public bool? IsPaginate { get; set; }
+
+    [JsonProperty("iDisplayStart")]
+    public int? DisplayStart { get; set; }
+
+    [JsonProperty("aaSorting")]
+    public JRaw? Sorting { get; set; }
+
+    [JsonProperty("sScrollX")]
+    public string? ScrollX { get; set; }
+
+    [JsonProperty("sScrollY")]
+    public string? ScrollY { get; set; }
+
+    [JsonProperty("bScrollCollapse")]
+    public bool? ScrollCollapse { get; set; }
+
+    [JsonProperty("oColReorder")]
+    public DataTableColumnsReorderOption? ColReorder { get; set; }
+
+    [JsonProperty("oLanguage")]
+    public DataTableLanguageOption? Language { get; set; }
+
+    [JsonProperty("isEncryptionRequired")]
+    public bool? IsEncryptionRequired { get; set; }
+
+    [JsonProperty("encryptedParameters")]
+    public List<string>? EncryptedParameters { get; set; }
 }
 
-public class ColumnOptions
+public class DataTableColumnsOption
 {
-    public string? Data { get; set; }
+    [JsonProperty("bVisible")]
+    public bool IsVisible { get; set; }
+
+    [JsonProperty("sClass")]
+    public string? Class { get; set; }
+
+    [JsonProperty("sName")]
     public string? Name { get; set; }
-    public bool? Orderable { get; set; }
-    public bool? Searchable { get; set; }
-    public bool? Visible { get; set; }
-    public string? ClassName { get; set; }
-    public string? Width { get; set; }
+
+    [JsonProperty("bSortable")]
+    public bool IsSortable { get; set; }
+
+    [JsonProperty("mData")]
+    public JRaw? Data { get; set; }
+
+    [JsonProperty("mRender")]
+    public JRaw? Render { get; set; }
+
+    [JsonProperty("sDefaultContent")]
     public string? DefaultContent { get; set; }
-    public string? Render { get; set; }
+
+    [JsonProperty("sType")]
+    public string? ColumnType { get; set; }
 }
 
-public class AjaxOptions
+public class DataTableColumnsReorderOption
 {
-    public string? Url { get; set; }
-    public string? Type { get; set; }
-    public string? Data { get; set; }
-    public string? DataSrc { get; set; }
+    [JsonProperty("bReorder")]
+    public bool AllowReorder { get; set; }
+
+    [JsonProperty("bResize")]
+    public bool AllowResize { get; set; }
 }
 
-public class LanguageOptions
+public class DataTableLanguageOption
 {
+    [JsonProperty("sEmptyTable")]
     public string? EmptyTable { get; set; }
+
+    [JsonProperty("sInfo")]
     public string? Info { get; set; }
+
+    [JsonProperty("sInfoEmpty")]
     public string? InfoEmpty { get; set; }
-    public string? InfoFiltered { get; set; }
-    public string? LengthMenu { get; set; }
+
+    [JsonProperty("sInfoThousands")]
+    public string? InfoThousands { get; set; }
+
+    [JsonProperty("sLoadingRecords")]
     public string? LoadingRecords { get; set; }
+
+    [JsonProperty("oPaginate")]
+    public DataTableLanguagePaginateOption? Paginate { get; set; }
+
+    [JsonProperty("oAria")]
+    public DataTableLanguageAriaOption? Aria { get; set; }
+
+    [JsonProperty("sProcessing")]
     public string? Processing { get; set; }
-    public string? Search { get; set; }
+
+    [JsonProperty("sZeroRecords")]
     public string? ZeroRecords { get; set; }
-    public PaginateOptions? Paginate { get; set; }
+
+    [JsonProperty("sInfoFiltered")]
+    public string? InfoFiltered { get; set; }
 }
 
-public class PaginateOptions
+public class DataTableLanguagePaginateOption
 {
+    [JsonProperty("sFirst")]
     public string? First { get; set; }
+
+    [JsonProperty("sLast")]
     public string? Last { get; set; }
+
+    [JsonProperty("sNext")]
     public string? Next { get; set; }
+
+    [JsonProperty("sPrevious")]
     public string? Previous { get; set; }
+}
+
+public class DataTableLanguageAriaOption
+{
+    [JsonProperty("sSortAscending")]
+    public string? SortAscending { get; set; }
+
+    [JsonProperty("sSortDescending")]
+    public string? SortDescending { get; set; }
+}
+
+public class DataTableColumnFilterColumnOption
+{
+    [JsonProperty("type")]
+    public DataTableColumnFilterColumnTypeOption ColumnType { get; set; }
+
+    [JsonProperty("maxLength")]
+    public int? MaxLength { get; set; }
+}
+
+public enum DataTableColumnFilterColumnTypeOption
+{
+    Null,
+    Text,
+    Select
 }

@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Equant.SAV2000.ComponentLibrary.Common.Resources;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink;
@@ -137,13 +138,13 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
         /// </returns>
         private string GetValidationSpan(string forName)
         {
-            if (MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (this.Component.ValidationString == null)
             {
                 return string.Empty;
             }
 
             var name = this.Component.Name;
-            var htmlString = this.Component.ValidationString.ToString();
+            var htmlString = RenderHtmlContent(this.Component.ValidationString);
             return htmlString.Replace("data-valmsg-for=\"" + name + "\"", "data-valmsg-for=\"" + forName + "\"");
         }
 
@@ -206,7 +207,8 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
 
             tagBuilderDate.MergeAttributes(this.Component.HtmlAttributes);
             tagBuilderDate.MergeAttribute("maxlength", this.Component.Value.IsModel ? "5" : "10");
-            return tagBuilderDate.ToString(TagRenderMode.StartTag);
+            tagBuilderDate.TagRenderMode = TagRenderMode.SelfClosing;
+            return RenderTagBuilder(tagBuilderDate);
         }
 
         /// <summary>
@@ -307,7 +309,8 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
 
             tagBuilderHidden.MergeAttribute("type", "hidden");
             tagBuilderHidden.MergeAttribute("value", value);
-            return tagBuilderHidden.ToString(TagRenderMode.StartTag);
+            tagBuilderHidden.TagRenderMode = TagRenderMode.SelfClosing;
+            return RenderTagBuilder(tagBuilderHidden);
         }
 
         /// <summary>
@@ -336,7 +339,7 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
         private void CreateColonLabel()
         {
             new LabelBuilder(this.Component.LabelColon, this.Component.LabelColon.ModelMetadata).CssClassLabel("seperator").Text(":")
-            .HtmlAttributes(new { Id = this.Component.Id.AppendWithBuilder("Colon") });
+            .HtmlAttributes(new Dictionary<string, object> { { "Id", this.Component.Id.AppendWithBuilder("Colon") } });
         }
 
         /// <summary>
@@ -407,7 +410,7 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
                 .DataBind(minsSelectList)
                 .CustomLabel(m => m.Text(this.Component.AccessMinText)
                 .AssociatedControlId(ddlMinId)
-                .HtmlAttributes(new { Id = ddlMinId + "lbl" })
+                .HtmlAttributes(new Dictionary<string, object> { { "Id", ddlMinId + "lbl" } })
                 .IsOnlyForAccess(true));
         }
 
@@ -456,7 +459,7 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
                 .DataBind(hoursSelectList)
                 .CustomLabel(m => m.Text(this.Component.AccessHrText)
                 .AssociatedControlId(ddlHourId)
-                .HtmlAttributes(new { Id = ddlHourId + "lbl" })
+                .HtmlAttributes(new Dictionary<string, object> { { "Id", ddlHourId + "lbl" } })
                 .IsOnlyForAccess(true));
         }
 
@@ -471,7 +474,7 @@ public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
             if (!string.IsNullOrEmpty(this.Component.ConsumingAppAreaId))
             {
                 //app Area is to be hidden initially
-                new LabelBuilder(this.Component.ConsumingAppArea, this.Component.ConsumingAppArea.ModelMetadata).HtmlAttributes(new { Id = this.Component.ConsumingAppAreaId })
+                new LabelBuilder(this.Component.ConsumingAppArea, this.Component.ConsumingAppArea.ModelMetadata).HtmlAttributes(new Dictionary<string, object> { { "Id", this.Component.ConsumingAppAreaId } })
                     .CssClassLabel("displaynone");
                 return this.Component.ConsumingAppArea.ToHtmlString();
             }

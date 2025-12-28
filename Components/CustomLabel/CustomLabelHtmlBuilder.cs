@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Equant.SAV2000.ComponentLibrary.MVC.Common.Resources;
+using Equant.SAV2000.ComponentLibrary.Common.Resources;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 

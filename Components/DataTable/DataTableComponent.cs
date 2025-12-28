@@ -143,7 +143,7 @@ public class DataTableComponent : ComponentBase
         /// <summary>
         /// Gets or sets the data.
         /// </summary>
-        public DataTable Data { get; set; }
+        public System.Data.DataTable? Data { get; set; }
 
         /// <summary>
         /// Gets or sets the dom layout.

@@ -24,6 +24,11 @@ public class WeekYearComponent : ComponentBase
     public string? AccessText { get; set; }
     public string? WeekLabel { get; set; }
     public string? YearLabel { get; set; }
+    public bool DisplayInformationIcon { get; set; }
+    public string? CssMainDiv { get; set; }
+    public string? WeekTextId { get; set; }
+    public string? AssociatedWeekYearHtmlId { get; set; }
+    public string? CssClassWeekDiv { get; set; }
 
     public override ReadOnlyCollection<JsResource> JsResources =>
         new ReadOnlyCollection<JsResource>(

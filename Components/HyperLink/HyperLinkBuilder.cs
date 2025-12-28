@@ -63,4 +63,16 @@ public class HyperLinkBuilder : ComponentBuilderBase<HyperLinkComponent, HyperLi
         Component.ImageAlt = value;
         return this;
     }
+
+    public HyperLinkBuilder Css(string value)
+    {
+        Component.CssClass = value;
+        return this;
+    }
+
+    public HyperLinkBuilder ActionUrl(string value)
+    {
+        Component.Href = value;
+        return this;
+    }
 }

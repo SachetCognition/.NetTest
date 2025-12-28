@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
 
@@ -14,6 +15,7 @@ public class DropDownListComponent : ComponentBase
     {
         Items = new List<SelectListItem>();
         OnChange = "null";
+        CustomLabel = new CustomLabelComponent(htmlHelper);
     }
 
     public List<SelectListItem> Items { get; set; }
@@ -23,6 +25,9 @@ public class DropDownListComponent : ComponentBase
     public string? OnChange { get; set; }
     public string? Title { get; set; }
     public string? AccessText { get; set; }
+    public bool IsDivNeeded { get; set; } = true;
+    public CustomLabelComponent CustomLabel { get; set; }
+    public string? CssClassSelectDiv { get; set; }
 
     public override ReadOnlyCollection<JsResource> JsResources =>
         new ReadOnlyCollection<JsResource>(

@@ -15,6 +15,9 @@ public class ErrorComponents : ComponentBase
 
     public string? Message { get; set; }
     public string? CssClass { get; set; }
+    public List<ErrorMessageModel> ErrorCollection { get; set; } = new List<ErrorMessageModel>();
+    public string? AccessibleText { get; set; }
+    public string? DivCssClass { get; set; }
 
     public override ReadOnlyCollection<JsResource> JsResources =>
         new ReadOnlyCollection<JsResource>(

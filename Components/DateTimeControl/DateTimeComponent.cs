@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
-using Equant.SAV2000.ComponentLibrary.MVC.Components.Error;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
 using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
@@ -121,6 +121,7 @@ public class DateTimeComponent : ComponentBase
     public bool DisplayInformationIcon { get; set; }
     public string? LabelCssReadOnly { get; set; }
     public bool StartFromCurrentDate { get; set; }
+    public bool IsUpdatable { get; set; } = true;
     public string? AssociatedDateHtmlId { get; set; }
     public string? AccessHrText { get; set; }
     public string? AccessMinText { get; set; }

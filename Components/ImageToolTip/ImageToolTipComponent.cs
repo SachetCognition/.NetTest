@@ -19,9 +19,13 @@ public class ImageToolTipComponent : ComponentBase
     public string? Text { get; set; }
     public string? ImageUrl { get; set; }
     public string? CssClass { get; set; }
+    public string? CssClassImage { get; set; }
     public string? ToolTipId { get; set; }
     public string? Title { get; set; }
     public string? Alt { get; set; }
+    public PersistanceMode PersistanceMode { get; set; }
+    public string? CssClassSpan { get; set; }
+    public string? CssClassInnerSpan { get; set; }
 
     public override ReadOnlyCollection<JsResource> JsResources =>
         new ReadOnlyCollection<JsResource>(
