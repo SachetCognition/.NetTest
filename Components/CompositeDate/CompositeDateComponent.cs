@@ -1,33 +1,21 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CompositeDateComponent.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//   Creation Date: 09/06/2014
-//   Author:  Sharma Siddharth (54626)
-//   Description: Component Class for the Composite Date Control
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.Common.Helper;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
+using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+using Newtonsoft.Json;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
-
-    using Newtonsoft.Json;
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate;
 
     /// <summary>
     /// This is used to set a value which will decide which of the date controls shall be rendered.
@@ -518,163 +506,126 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// </summary>
         public bool RenderAndLabel { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeDateComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        public CompositeDateComponent(HtmlHelper htmlHelper)
-            : this(htmlHelper, null, null, null, null)
+    public CompositeDateComponent(IHtmlHelper htmlHelper)
+        : this(htmlHelper, null, null, null, null)
+    {
+    }
+
+    public CompositeDateComponent(IHtmlHelper htmlHelper, DateTimeBuilder? firstDateBuilder, DateTimeBuilder? secondDateBuilder,
+        WeekYearBuilder? firstWeekBuilder, WeekYearBuilder? secondWeekBuilder)
+        : base(htmlHelper)
+    {
+        CustomLabel = new CustomLabelComponent(HtmlHelper);
+        InformationIcon = new ImageToolTipComponent(HtmlHelper);
+        DropDownDateTypes = new DropDownListComponent(HtmlHelper);
+        AndLabel = new LabelComponent(HtmlHelper);
+        
+        if (firstDateBuilder != null)
         {
+            FirstDateBuilder = firstDateBuilder;
+            FirstDate = FirstDateBuilder.Component ?? new DateTimeComponent(HtmlHelper);
+        }
+        else
+        {
+            FirstDate = new DateTimeComponent(HtmlHelper);
+            FirstDateBuilder = new DateTimeBuilder(FirstDate, ModelMetadata);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeDateComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        /// <param name="firstDateBuilder"></param>
-        /// <param name="secondDateBuilder"></param>
-        /// <param name="firstWeekBuilder"></param>
-        /// <param name="secondWeekBuilder"></param>
-        public CompositeDateComponent(HtmlHelper htmlHelper, DateTimeBuilder firstDateBuilder, DateTimeBuilder secondDateBuilder ,
-            WeekYearBuilder firstWeekBuilder, WeekYearBuilder secondWeekBuilder)
-            : base(htmlHelper)
+        if (secondDateBuilder != null)
         {
-            //initialize all components so that their JS can be included later in this method.
-            this.CustomLabel = new CustomLabelComponent(this.HtmlHelper);
-            this.InformationIcon = new ImageToolTipComponent(this.HtmlHelper);
-            this.DropDownDateTypes = new DropDownListComponent(this.HtmlHelper);
-            this.AndLabel = new LabelComponent(this.HtmlHelper);
-            if (firstDateBuilder != null)
-            {
-                this.FirstDateBuilder = firstDateBuilder;
-                this.FirstDate = this.FirstDateBuilder.Component ?? new DateTimeComponent(this.HtmlHelper);
-            }
-            else
-            {
-                this.FirstDate = new DateTimeComponent(this.HtmlHelper);
-                this.FirstDateBuilder = new DateTimeBuilder(this.FirstDate, this.ModelMetadata);
-            }
-
-            if (secondDateBuilder != null)
-            {
-                this.SecondDateBuilder = secondDateBuilder;
-                this.SecondDate = this.SecondDateBuilder.Component ?? new DateTimeComponent(this.HtmlHelper);
-            }
-            else
-            {
-                this.SecondDate = new DateTimeComponent(this.HtmlHelper);
-                this.SecondDateBuilder = new DateTimeBuilder(this.SecondDate, this.ModelMetadata);
-            }
-
-            if (firstWeekBuilder != null)
-            {
-                this.FirstWeekBuilder = firstWeekBuilder;
-                this.FirstWeek = this.FirstWeekBuilder.Component ?? new WeekYearComponent(this.HtmlHelper);
-            }
-            else
-            {
-                this.FirstWeek = new WeekYearComponent(this.HtmlHelper);
-                this.FirstWeekBuilder = new WeekYearBuilder(this.FirstWeek, this.ModelMetadata);
-            }
-
-            if (secondWeekBuilder != null)
-            {
-                this.SecondWeekBuilder = secondWeekBuilder;
-                this.SecondWeek = this.SecondWeekBuilder.Component ?? new WeekYearComponent(this.HtmlHelper);
-            }
-            else
-            {
-                this.SecondWeek = new WeekYearComponent(this.HtmlHelper);
-                this.SecondWeekBuilder = new WeekYearBuilder(this.SecondWeek, this.ModelMetadata);
-            }
-
-            this.DisplayTime = true;
-            this.DisplayEraseButton = true;
-
-            
+            SecondDateBuilder = secondDateBuilder;
+            SecondDate = SecondDateBuilder.Component ?? new DateTimeComponent(HtmlHelper);
+        }
+        else
+        {
+            SecondDate = new DateTimeComponent(HtmlHelper);
+            SecondDateBuilder = new DateTimeBuilder(SecondDate, ModelMetadata);
         }
 
-        /// <summary>
-        /// The write html.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        if (firstWeekBuilder != null)
         {
-            new CompositeDateHtmlBuilder(this).Build(writer);
+            FirstWeekBuilder = firstWeekBuilder;
+            FirstWeek = FirstWeekBuilder.Component ?? new WeekYearComponent(HtmlHelper);
+        }
+        else
+        {
+            FirstWeek = new WeekYearComponent(HtmlHelper);
+            FirstWeekBuilder = new WeekYearBuilder(FirstWeek, ModelMetadata);
         }
 
-        /// <summary>
-        /// The write initial script.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        if (secondWeekBuilder != null)
         {
-
-            if (writer == null)
-            {
-
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-           //write init script for information icon
-            if (!string.IsNullOrEmpty(this.InformationIcon.Text))
-            {
-                this.InformationIcon.WriteInitScript(writer);
-            }
-
-            //write for dropDown
-            if (this.DropDownDateTypes != null)
-            {
-                this.DropDownDateTypes.WriteInitScript(writer);
-            }
-
-            var renderFirstDate = (this.DatesToRender != DateRenderer.SkipBothDates) && (this.FirstDate != null);
-            var renderSecondDate = (this.DatesToRender == DateRenderer.RenderBothDates) && (this.SecondDate != null);
-            var renderFirstWeek = (this.WeeksToRender != WeekRenderer.SkipBothWeeks) && (this.FirstWeek != null);
-            var renderSecondWeek = (this.WeeksToRender == WeekRenderer.RenderBothWeeks) && (this.SecondWeek != null);
-            if (renderFirstDate)
-            {
-                this.FirstDate.WriteInitScript(writer);
-            }
-
-            if (renderSecondDate)
-            {
-                this.SecondDate.WriteInitScript(writer);
-            }
-
-            if (renderFirstWeek)
-            {
-                this.FirstWeek.WriteInitScript(writer);
-            }
-
-            if (renderSecondWeek)
-            {
-                this.SecondWeek.WriteInitScript(writer);
-            }
-
-            var options =
-                JsonConvert.SerializeObject(new
-                {
-                    ddlDateTypesId = this.DateTypesId,
-                    firstDateId = renderFirstDate ? this.FirstDate.Id : string.Empty,
-                    secondDateId = renderSecondDate ? this.SecondDate.Id : string.Empty,
-                    firstWeekId = renderFirstWeek ? this.FirstWeek.Id : string.Empty,
-                    secondWeekId = renderSecondWeek ? this.SecondWeek.Id : string.Empty,
-                    andLabelId = this.RenderAndLabel ? this.AndLabelId : string.Empty,
-                    controlLabelId = this.ControlLabelId,
-                    firstDateTextId = renderFirstDate ? this.FirstDate.GetDateTextId : string.Empty,
-                    firstWeekTextId = renderFirstWeek ? this.FirstWeek.WeekTextId : string.Empty
-                });
-
-            writer.WriteLine("$('#{0}').compositeDate({1});", this.Id, options);
+            SecondWeekBuilder = secondWeekBuilder;
+            SecondWeek = SecondWeekBuilder.Component ?? new WeekYearComponent(HtmlHelper);
         }
+        else
+        {
+            SecondWeek = new WeekYearComponent(HtmlHelper);
+            SecondWeekBuilder = new WeekYearBuilder(SecondWeek, ModelMetadata);
+        }
+
+        DisplayTime = true;
+        DisplayEraseButton = true;
+    }
+
+    public override IHtmlContent ToHtml()
+    {
+        return new CompositeDateHtmlBuilder(this).Build();
+    }
+
+    public override string ToInitScript()
+    {
+        var sb = new StringBuilder();
+
+        if (!string.IsNullOrEmpty(InformationIcon.Text))
+        {
+            sb.Append(InformationIcon.ToInitScript());
+        }
+
+        if (DropDownDateTypes != null)
+        {
+            sb.Append(DropDownDateTypes.ToInitScript());
+        }
+
+        var renderFirstDate = (DatesToRender != DateRenderer.SkipBothDates) && (FirstDate != null);
+        var renderSecondDate = (DatesToRender == DateRenderer.RenderBothDates) && (SecondDate != null);
+        var renderFirstWeek = (WeeksToRender != WeekRenderer.SkipBothWeeks) && (FirstWeek != null);
+        var renderSecondWeek = (WeeksToRender == WeekRenderer.RenderBothWeeks) && (SecondWeek != null);
+
+        if (renderFirstDate)
+        {
+            sb.Append(FirstDate.ToInitScript());
+        }
+
+        if (renderSecondDate)
+        {
+            sb.Append(SecondDate.ToInitScript());
+        }
+
+        if (renderFirstWeek)
+        {
+            sb.Append(FirstWeek.ToInitScript());
+        }
+
+        if (renderSecondWeek)
+        {
+            sb.Append(SecondWeek.ToInitScript());
+        }
+
+        var options = JsonConvert.SerializeObject(new
+        {
+            ddlDateTypesId = DateTypesId,
+            firstDateId = renderFirstDate ? FirstDate.Id : string.Empty,
+            secondDateId = renderSecondDate ? SecondDate.Id : string.Empty,
+            firstWeekId = renderFirstWeek ? FirstWeek.Id : string.Empty,
+            secondWeekId = renderSecondWeek ? SecondWeek.Id : string.Empty,
+            andLabelId = RenderAndLabel ? AndLabelId : string.Empty,
+            controlLabelId = ControlLabelId,
+            firstDateTextId = renderFirstDate ? FirstDate.GetDateTextId : string.Empty,
+            firstWeekTextId = renderFirstWeek ? FirstWeek.WeekTextId : string.Empty
+        });
+
+        sb.AppendLine($"$('#{Id}').compositeDate({options});");
+        return sb.ToString();
     }
 }
