@@ -1,112 +1,81 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.Common;
+using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
+using Equant.SAV2000.ComponentLibrary.Common.Helper;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+using Resources = Equant.SAV2000.ComponentLibrary.Common.Resources;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable;
+
+public class DataTableComponent : ComponentBase
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Data;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    public const string DefaultRowIdColumnName = "RowIdColumn";
+    public const string DefaultSelectColumnName = "SelectColumn";
+    public const string DefaultDeleteColumnName = "DeleteColumn";
+    public const string DefaultModifyColumnName = "ModifyColumn";
+    public const string DefaultSelectClass = "SelectClassIdentifier";
 
-    using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+    public string SelectAllName { get; private set; } = string.Empty;
 
-    using Resources = Equant.SAV2000.ComponentLibrary.Common.Resources;
-
-    /// <summary>
-    /// The data table component.
-    /// </summary>
-    public class DataTableComponent : ComponentBase
+    public DataTableComponent(IHtmlHelper htmlHelper)
+        : base(htmlHelper)
     {
-        /// <summary>
-        /// The default row id column name.
-        /// </summary>
-        public const string DefaultRowIdColumnName = "RowIdColumn";
-
-        /// <summary>
-        /// The default select column name.
-        /// </summary>
-        public const string DefaultSelectColumnName = "SelectColumn";
-
-
-        /// <summary>
-        /// The default delete column name.
-        /// </summary>
-        public const string DefaultDeleteColumnName = "DeleteColumn";
-
-        /// <summary>
-        /// The default modify column name.
-        /// </summary>
-        public const string DefaultModifyColumnName = "ModifyColumn";
-
-        /// <summary>
-        /// The default select class.
-        /// </summary>
-        public const string DefaultSelectClass = "SelectClassIdentifier";
-
-        /// <summary>
-        /// The select all id.
-        /// </summary>
-        public string SelectAllName { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataTableComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        public DataTableComponent(HtmlHelper htmlHelper)
-            : base(htmlHelper)
-        {
-            this.Caption = string.Empty;
-            this.Columns = new List<DataTableColumn>();
-            this.CssClass = "display table dataTable";
-            this.CssClassRefreshTime = "majdate";
-            this.CssClassRecordsLimit = "alert error form datatableerror";
-            this.Data = null;
-            this.DomLayout = "<\"clear\"i>rt<lp>";
-            this.IsHorizontalScrolling = true;
-            this.InitialDisplayIndex = -1;
-            this.InitialSorting = new List<KeyValuePair<string, SortDirection>>();
-            this.IsVerticalScrolling = false;
-            this.IsPaginate = true;
-            this.IsReorder = true;
-            this.IsSelect = false;
-            this.IsDisplayRefreshTime = true;
-            this.IsDisplayRecordInfo = true;
-            this.IsDeleteNeeded = false;
-            this.IsModifyNeeded = false;
-            this.IsSelectAll = true;
-            this.IsShowHeader = true;
-            this.PageSize = 10;
-            this.PaginationNumberOfPages = 17;
-            this.RefreshTimeLabelFormat = Resources.ApplicationStrings.Datatable_sRefreshTime;
-            this.RefreshTimeInverval = -1;
-            this.RowIdColumnName = DefaultRowIdColumnName;
-            this.SelectColumnName = DefaultSelectColumnName;
-            this.DeleteColumnName = DefaultDeleteColumnName;
-            this.ModifyColumnName = DefaultModifyColumnName;
-            this.SelectClassIdentifier = DefaultSelectClass;
-            this.DeleteToolTip = Resources.ApplicationStrings.LBL000029;
-            this.ModifyToolTip = Resources.ApplicationStrings.LBL000030;
-            this.SelectAllTooltip = Resources.ApplicationStrings.LBL000032;
-            this.ServiceUri = string.Empty;
-            this.TotalRecordsLimit = 0;
-            this.RecordsLimitMessage = Resources.ApplicationStrings.RecordsLimitMessageShort;
-            this.RecordsLimitMessageLong = Resources.ApplicationStrings.RecordsLimitMessageLong;
-            this.RecordLimitMessageTitle = Resources.ApplicationStrings.ErrorTitle;
-            this.AscTooltip = Resources.ApplicationStrings.TIP000021;
-            this.DescTooltip = Resources.ApplicationStrings.TIP000025;
-            this.Criteria = new List<CriteriaParameter>();
-            this.SelectColumnIndex = 0;
-            this.DeleteColumnIndex = 1;
-            this.ModifyColumnnIndex = 2;
+            Caption = string.Empty;
+            Columns = new List<DataTableColumn>();
+            CssClass = "display table dataTable";
+            CssClassRefreshTime = "majdate";
+            CssClassRecordsLimit = "alert error form datatableerror";
+            Data = null;
+            DomLayout = "<\"clear\"i>rt<lp>";
+            IsHorizontalScrolling = true;
+            InitialDisplayIndex = -1;
+            InitialSorting = new List<KeyValuePair<string, SortDirection>>();
+            IsVerticalScrolling = false;
+            IsPaginate = true;
+            IsReorder = true;
+            IsSelect = false;
+            IsDisplayRefreshTime = true;
+            IsDisplayRecordInfo = true;
+            IsDeleteNeeded = false;
+            IsModifyNeeded = false;
+            IsSelectAll = true;
+            IsShowHeader = true;
+            PageSize = 10;
+            PaginationNumberOfPages = 17;
+            RefreshTimeLabelFormat = Resources.ApplicationStrings.Datatable_sRefreshTime;
+            RefreshTimeInverval = -1;
+            RowIdColumnName = DefaultRowIdColumnName;
+            SelectColumnName = DefaultSelectColumnName;
+            DeleteColumnName = DefaultDeleteColumnName;
+            ModifyColumnName = DefaultModifyColumnName;
+            SelectClassIdentifier = DefaultSelectClass;
+            DeleteToolTip = Resources.ApplicationStrings.LBL000029;
+            ModifyToolTip = Resources.ApplicationStrings.LBL000030;
+            SelectAllTooltip = Resources.ApplicationStrings.LBL000032;
+            ServiceUri = string.Empty;
+            TotalRecordsLimit = 0;
+            RecordsLimitMessage = Resources.ApplicationStrings.RecordsLimitMessageShort;
+            RecordsLimitMessageLong = Resources.ApplicationStrings.RecordsLimitMessageLong;
+            RecordLimitMessageTitle = Resources.ApplicationStrings.ErrorTitle;
+            AscTooltip = Resources.ApplicationStrings.TIP000021;
+            DescTooltip = Resources.ApplicationStrings.TIP000025;
+            Criteria = new List<CriteriaParameter>();
+            SelectColumnIndex = 0;
+            DeleteColumnIndex = 1;
+            ModifyColumnnIndex = 2;
         }
 
         /// <summary>
@@ -501,7 +470,7 @@
                                          320,
                                          typeof(ImageToolTipComponent))
                                  };
-                if (this.IsFilter)
+                if (IsFilter)
                 {
                     jsResource.Add(
                         new JsResource(
@@ -510,7 +479,7 @@
                             240,
                             typeof(Locator)));
                 }
-                if (this.IsReorder)
+                if (IsReorder)
                 {
                     jsResource.Add(
                         new JsResource(
@@ -519,7 +488,7 @@
                             250,
                             typeof(Locator)));
                 }
-                if (this.IsSelect)
+                if (IsSelect)
                 {
                     jsResource.Add(
                         new JsResource(
@@ -528,7 +497,7 @@
                             285,
                             typeof(DataTableComponent)));
                 }
-                if (this.IsModifyNeeded || this.IsDeleteNeeded)
+                if (IsModifyNeeded || IsDeleteNeeded)
                 {
                     jsResource.Add(
                         new JsResource(
@@ -564,131 +533,111 @@
             return displayStart;
         }
 
-        /// <summary>
-        /// The write html.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+    public override IHtmlContent ToHtml()
+    {
+        if (!string.IsNullOrEmpty(ServiceUri) && (Data != null))
         {
-            // Parameters sanity checks
-            if (!string.IsNullOrEmpty(this.ServiceUri) && (this.Data != null))
-            {
-                throw new NotSupportedException(
-                    "ServiceUri (server-side processing) and Data (client-side processing) properties cannot be used at the same time");
-            }
-
-            if (this.IsSelect && !this.Columns.Any(x => x.PropertyName.Equals(this.RowIdColumnName)))
-            {
-                throw new NotSupportedException("When using select feature, a row identifier column should be specified");
-            }
-
-            var specialColumns = new Dictionary<int, Action>();
-
-            if (this.IsDeleteNeeded)
-            {
-                specialColumns.Add(this.DeleteColumnIndex, this.DeleteColumnAction);
-            }
-
-            if (this.IsSelect)
-            {
-                specialColumns.Add(this.SelectColumnIndex, this.SelectColumnAction);
-            }
-
-            if (this.IsModifyNeeded)
-            {
-                specialColumns.Add(this.ModifyColumnnIndex, this.ModifyColumnAction);
-            }
-
-            foreach (var action in specialColumns.OrderBy(x => x.Key).Select(x => x.Value))
-            {
-                action();
-            }
-
-            new DataTableHtmlBuilder(this).Build(writer);
+            throw new NotSupportedException(
+                "ServiceUri (server-side processing) and Data (client-side processing) properties cannot be used at the same time");
         }
 
-        /// <summary>
-        /// The write init script.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        if (IsSelect && !Columns.Any(x => x.PropertyName.Equals(RowIdColumnName)))
         {
-            var request = this.HtmlHelper.ViewContext.HttpContext.Request;
-            var path = request.ApplicationPath;
-            if (string.IsNullOrEmpty(this.ErrorPageUrl))
-            {
-                this.ErrorPageUrl = string.Format(CultureInfo.InvariantCulture, "{0}/Home/SubErr?NUMFEN={1}&COOKIENAME={2}",
-                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), request["NumFen"], request["COOKIENAME"]);
-            }
-
-            if (writer != null)
-            {
-                writer.WriteLine("$('#{0}').dataTableCore({1});", this.Id, new DataTableOptionsSerializer(this).Serialize());
-            }
+            throw new NotSupportedException("When using select feature, a row identifier column should be specified");
         }
 
-        private void SelectColumnAction()
-        {
-            this.SelectAllName = string.Format(CultureInfo.InvariantCulture, "{0}_selectAll", this.Id);
-            var selectColumn = new DataTableColumn
-            {
-                CssClass = this.CssClassSelect,
-                PropertyName = this.SelectColumnName,
-                IsSortable = this.IsSelectColumnSortable,
-                IsEncodeHtml = false,
-                IsSearchable = false,
-                ColumnType = DataTableColumnType.Html,
-                HeaderText = this.SelectAllText
+        var specialColumns = new Dictionary<int, Action>();
 
-            };
-            if (this.IsSelect && this.IsSelectAll)
-            {
-                selectColumn.HeaderTemplate = new SelectAllDataTableHeaderTemplate { Id = this.SelectAllName, Name = this.SelectAllName, ToolTip = this.SelectAllTooltip, Title = this.SelectAllText };
-            }
-            // Safety protection : remove already existing select columns (in case of several tables using the same columns definitions).
-            this.Columns.RemoveAll(c => c.PropertyName.Equals(this.SelectColumnName));
-            this.Columns.Insert(this.SelectColumnIndex, selectColumn);
+        if (IsDeleteNeeded)
+        {
+            specialColumns.Add(DeleteColumnIndex, DeleteColumnAction);
         }
 
-        private void DeleteColumnAction()
+        if (IsSelect)
         {
-            var deleteColumn = new DataTableColumn
-            {
-                PropertyName = this.DeleteColumnName,
-                IsSortable = false,
-                IsEncodeHtml = false,
-                IsSearchable = false,
-                CssClass = this.CssClassDelete,
-                ColumnType = DataTableColumnType.Html,
-                HeaderText = Resources.ApplicationStrings.LBL000017,
-                ShowHeaderText = false
-            };
-            // Safety protection : remove already existing delete columns (in case of several tables using the same columns definitions).
-            this.Columns.RemoveAll(c => c.PropertyName.Equals(this.DeleteColumnName));
-            this.Columns.Insert(this.DeleteColumnIndex, deleteColumn);
+            specialColumns.Add(SelectColumnIndex, SelectColumnAction);
         }
 
-        private void ModifyColumnAction()
+        if (IsModifyNeeded)
         {
-            var modifyColumn = new DataTableColumn
-            {
-                PropertyName = this.ModifyColumnName,
-                IsSortable = false,
-                IsEncodeHtml = false,
-                IsSearchable = false,
-                CssClass = this.CssClassModify,
-                ColumnType = DataTableColumnType.Html,
-                ShowHeaderText = false,
-                HeaderText = Resources.ApplicationStrings.LBL000016
-
-            };
-            // Safety protection : remove already existing modify columns (in case of several tables using the same columns definitions).
-            this.Columns.RemoveAll(c => c.PropertyName.Equals(this.ModifyColumnName));
-            this.Columns.Insert(this.ModifyColumnnIndex, modifyColumn);
+            specialColumns.Add(ModifyColumnnIndex, ModifyColumnAction);
         }
+
+        foreach (var action in specialColumns.OrderBy(x => x.Key).Select(x => x.Value))
+        {
+            action();
+        }
+
+        return new DataTableHtmlBuilder(this).Build();
+    }
+
+    public override string ToInitScript()
+    {
+        var request = HtmlHelper.ViewContext.HttpContext.Request;
+        var path = request.PathBase.Value ?? string.Empty;
+        if (string.IsNullOrEmpty(ErrorPageUrl))
+        {
+            var numFen = request.Query["NumFen"].FirstOrDefault() ?? string.Empty;
+            var cookieName = request.Query["COOKIENAME"].FirstOrDefault() ?? string.Empty;
+            ErrorPageUrl = string.Format(CultureInfo.InvariantCulture, "{0}/Home/SubErr?NUMFEN={1}&COOKIENAME={2}",
+                 string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), numFen, cookieName);
+        }
+
+        return string.Format("$('#{0}').dataTableCore({1});", Id, new DataTableOptionsSerializer(this).Serialize());
+    }
+
+    private void SelectColumnAction()
+    {
+        SelectAllName = string.Format(CultureInfo.InvariantCulture, "{0}_selectAll", Id);
+        var selectColumn = new DataTableColumn
+        {
+            CssClass = CssClassSelect,
+            PropertyName = SelectColumnName,
+            IsSortable = IsSelectColumnSortable,
+            IsEncodeHtml = false,
+            IsSearchable = false,
+            ColumnType = DataTableColumnType.Html,
+            HeaderText = SelectAllText
+        };
+        if (IsSelect && IsSelectAll)
+        {
+            selectColumn.HeaderTemplate = new SelectAllDataTableHeaderTemplate { Id = SelectAllName, Name = SelectAllName, ToolTip = SelectAllTooltip, Title = SelectAllText };
+        }
+        Columns.RemoveAll(c => c.PropertyName.Equals(SelectColumnName));
+        Columns.Insert(SelectColumnIndex, selectColumn);
+    }
+
+    private void DeleteColumnAction()
+    {
+        var deleteColumn = new DataTableColumn
+        {
+            PropertyName = DeleteColumnName,
+            IsSortable = false,
+            IsEncodeHtml = false,
+            IsSearchable = false,
+            CssClass = CssClassDelete,
+            ColumnType = DataTableColumnType.Html,
+            HeaderText = Resources.ApplicationStrings.LBL000017,
+            ShowHeaderText = false
+        };
+        Columns.RemoveAll(c => c.PropertyName.Equals(DeleteColumnName));
+        Columns.Insert(DeleteColumnIndex, deleteColumn);
+    }
+
+    private void ModifyColumnAction()
+    {
+        var modifyColumn = new DataTableColumn
+        {
+            PropertyName = ModifyColumnName,
+            IsSortable = false,
+            IsEncodeHtml = false,
+            IsSearchable = false,
+            CssClass = CssClassModify,
+            ColumnType = DataTableColumnType.Html,
+            ShowHeaderText = false,
+            HeaderText = Resources.ApplicationStrings.LBL000016
+        };
+        Columns.RemoveAll(c => c.PropertyName.Equals(ModifyColumnName));
+        Columns.Insert(ModifyColumnnIndex, modifyColumn);
     }
 }

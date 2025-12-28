@@ -1,143 +1,139 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable;
+
+public class DataTableHtmlBuilder : HtmlBuilderBase<DataTableComponent>
 {
-    using System.Globalization;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-
-    /// <summary>
-    /// The data table html builder.
-    /// </summary>
-    public class DataTableHtmlBuilder : HtmlBuilderBase<DataTableComponent>
+    public DataTableHtmlBuilder(DataTableComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataTableHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public DataTableHtmlBuilder(DataTableComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        var result = new StringBuilder();
+        
+        var errorTemplate = new DataTableErrorMessageTemplate(Component).Build();
+        result.Append(RenderHtmlContent(errorTemplate));
+
+        var tagBuilderTable = new TagBuilder("table");
+        var stringBuilderTable = new StringBuilder();
+        tagBuilderTable.MergeAttribute("id", Component.Id);
+
+        if (!string.IsNullOrEmpty(Component.Name))
         {
-            if (writer !=null && this.Component.IsVisible)
+            tagBuilderTable.MergeAttribute("name", Component.Name);
+        }
+
+        if (!string.IsNullOrEmpty(Component.CssClass))
+        {
+            tagBuilderTable.AddCssClass(Component.CssClass);
+        }
+
+        if (!Component.IsShowHeader)
+        {
+            tagBuilderTable.AddCssClass("NoHeader");
+        }
+        else
+        {
+            tagBuilderTable.AddCssClass("HeaderSpace");
+        }
+
+        tagBuilderTable.MergeAttributes(Component.HtmlAttributes);
+
+        var tagBuilderCaption = new TagBuilder("caption");
+        tagBuilderCaption.InnerHtml.Append(Component.Caption);
+        tagBuilderCaption.AddCssClass("hide-access");
+
+        var tagBuilderThead = new TagBuilder("thead");
+        var tagBuilderTr = new TagBuilder("tr");
+        var stringBuilderTr = new StringBuilder();
+
+        var tagBuilderTrFilter = new TagBuilder("tr");
+        tagBuilderTrFilter.AddCssClass("filter-search");
+        var stringBuilderTrFilter = new StringBuilder();
+        
+        foreach (var column in Component.Columns)
+        {
+            var tagBuilderTh = new TagBuilder("th");
+            tagBuilderTh.MergeAttribute("scope", "col");
+            
+            if (column.HeaderTemplate != null)
             {
-                new DataTableErrorMessageTemplate(this.Component).Build(writer);
+                var stringBuilderTh = new StringBuilder();
+                column.HeaderTemplate.HtmlHelper = Component.HtmlHelper;
+                column.HeaderTemplate.Title = column.HeaderText;
+                column.HeaderTemplate.BuildHtml(stringBuilderTh);
+                tagBuilderTh.InnerHtml.AppendHtml(stringBuilderTh.ToString());
+                stringBuilderTr.Append(RenderTagBuilder(tagBuilderTh));
+            }
+            else
+            {
+                tagBuilderTh.AddCssClass(column.CssClassHeader);
 
-                // Generate table HTML tag
-                var tagBuilderTable = new TagBuilder("table");
-                var stringBuilderTable = new StringBuilder(tagBuilderTable.InnerHtml);
-                tagBuilderTable.MergeAttribute("id", this.Component.Id);
-
-                if (!string.IsNullOrEmpty(this.Component.Name))
+                if (column.ShowHeaderText)
                 {
-                    tagBuilderTable.MergeAttribute("name", this.Component.Name);
-                }
-
-                if (!string.IsNullOrEmpty(this.Component.CssClass))
-                {
-                    tagBuilderTable.AddCssClass(this.Component.CssClass);
-                }
-
-                if (!this.Component.IsShowHeader)
-                {
-                    tagBuilderTable.AddCssClass(" NoHeader");
+                    tagBuilderTh.InnerHtml.Append(column.HeaderText);
                 }
                 else
                 {
-                    tagBuilderTable.AddCssClass(" HeaderSpace");
+                    tagBuilderTh.InnerHtml.AppendHtml(string.Format(CultureInfo.CurrentUICulture, "<span class=\"hide-access\">{0}</span>", column.HeaderText));
                 }
 
-                tagBuilderTable.MergeAttributes(this.Component.HtmlAttributes);
+                stringBuilderTr.Append(RenderTagBuilder(tagBuilderTh));
+            }
 
-                // Generate caption
-                var tagBuilderCaption = new TagBuilder("caption") { InnerHtml = this.Component.Caption };
-                tagBuilderCaption.AddCssClass("hide-access");
-
-                // Generate thead HTML tag
-                var tagBuilderThead = new TagBuilder("thead");
-                
-                // Generate tr HTML tag
-                var tagBuilderTr = new TagBuilder("tr");
-                var stringBuilderTr = new StringBuilder(tagBuilderTr.InnerHtml);
-
-                // Generate tr HTML tag for column filter
-                var tagBuilderTrFilter = new TagBuilder("tr");
-                tagBuilderTrFilter.AddCssClass("filter-search");
-                var stringBuilderTrFilter = new StringBuilder(tagBuilderTrFilter.InnerHtml);
-                
-                // Generate the column headers
-                foreach (var column in this.Component.Columns)
-                {
-                    var tagBuilderTh = new TagBuilder("th");
-                    //<Change author="Nidhi" version="Iteration1" action = "Modification">
-                    //Description : Each header must have its related scope.
-                    //</Change>
-                    tagBuilderTh.MergeAttribute("scope", "col");
-                    if (column.HeaderTemplate != null)
-                    {
-                        var stringBuilderTh = new StringBuilder();
-                        column.HeaderTemplate.HtmlHelper = this.Component.HtmlHelper;
-                        column.HeaderTemplate.Title = column.HeaderText;
-                        column.HeaderTemplate.BuildHtml(stringBuilderTh);
-                        tagBuilderTh.InnerHtml = stringBuilderTh.ToString();
-                        stringBuilderTr.Append(tagBuilderTh);
-                    }
-                    else
-                    {
-                        tagBuilderTh.AddCssClass(column.CssClassHeader);
-
-                        if (column.ShowHeaderText)
-                        {
-                            tagBuilderTh.InnerHtml = column.HeaderText;
-                        }
-                        else
-                        {
-                            tagBuilderTh.InnerHtml = string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText );
-                        }
-
-                        stringBuilderTr.Append(tagBuilderTh);
-                    }
-
-                    // Add filter th tag
-                    if (this.Component.IsFilter && this.Component.IsShowHeader)
-                    {
-                        var tagBuilderThFilter = new TagBuilder("td");
-                        tagBuilderThFilter.AddCssClass(column.CssClass);
-                        stringBuilderTrFilter.Append(tagBuilderThFilter);
-                    }
-                }
-                
-                tagBuilderTr.InnerHtml = stringBuilderTr.ToString();
-                tagBuilderThead.InnerHtml = tagBuilderTr.ToString();
-
-                if (this.Component.IsFilter && this.Component.IsShowHeader)
-                {
-                    tagBuilderTrFilter.InnerHtml = stringBuilderTrFilter.ToString();
-                    tagBuilderThead.InnerHtml = string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter);
-                }
-
-                stringBuilderTable.Append(tagBuilderCaption);
-                stringBuilderTable.Append(tagBuilderThead);
-
-                var tagBuilderTbody = new TagBuilder("tbody");
-                stringBuilderTable.Append(tagBuilderTbody);
-
-                tagBuilderTable.InnerHtml = stringBuilderTable.ToString();
-
-                writer.Write(tagBuilderTable);
+            if (Component.IsFilter && Component.IsShowHeader)
+            {
+                var tagBuilderThFilter = new TagBuilder("td");
+                tagBuilderThFilter.AddCssClass(column.CssClass);
+                stringBuilderTrFilter.Append(RenderTagBuilder(tagBuilderThFilter));
             }
         }
+        
+        tagBuilderTr.InnerHtml.AppendHtml(stringBuilderTr.ToString());
+        tagBuilderThead.InnerHtml.AppendHtml(RenderTagBuilder(tagBuilderTr));
+
+        if (Component.IsFilter && Component.IsShowHeader)
+        {
+            tagBuilderTrFilter.InnerHtml.AppendHtml(stringBuilderTrFilter.ToString());
+            tagBuilderThead.InnerHtml.AppendHtml(RenderTagBuilder(tagBuilderTrFilter));
+        }
+
+        stringBuilderTable.Append(RenderTagBuilder(tagBuilderCaption));
+        stringBuilderTable.Append(RenderTagBuilder(tagBuilderThead));
+
+        var tagBuilderTbody = new TagBuilder("tbody");
+        stringBuilderTable.Append(RenderTagBuilder(tagBuilderTbody));
+
+        tagBuilderTable.InnerHtml.AppendHtml(stringBuilderTable.ToString());
+        result.Append(RenderTagBuilder(tagBuilderTable));
+
+        return new HtmlString(result.ToString());
+    }
+
+    private static string RenderTagBuilder(TagBuilder tagBuilder)
+    {
+        using var writer = new StringWriter();
+        tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
+    }
+
+    private static string RenderHtmlContent(IHtmlContent content)
+    {
+        using var writer = new StringWriter();
+        content.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
     }
 }
