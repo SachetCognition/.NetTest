@@ -1,74 +1,55 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ButtonHtmlBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 07/04/2014
-//    Author:  Sharma Siddharth (54626) 
-//    Description: The Html Builder class for the Button component
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
+using System.Text;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button;
+
+/// <summary>
+/// The Html Builder class for the Button component.
+/// </summary>
+public class ButtonHtmlBuilder : HtmlBuilderBase<ButtonComponent>
 {
-    using System;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-
-    /// <summary>
-    /// The Html Builder class for the Button component
-    /// </summary>
-    public class ButtonHtmlBuilder : HtmlBuilderBase<ButtonComponent>
+    public ButtonHtmlBuilder(ButtonComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ButtonHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public ButtonHtmlBuilder(ButtonComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        var tagBuilder = new TagBuilder("input");
+        tagBuilder.Attributes["id"] = Component.Id;
+
+        if (!string.IsNullOrEmpty(Component.Name))
         {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-            if (this.Component.IsVisible)
-            {
-                var tagBuilderButton = new TagBuilder("input");
-                tagBuilderButton.MergeAttribute("id", this.Component.Id);
-
-                if (!string.IsNullOrEmpty(this.Component.Name))
-                {
-                    tagBuilderButton.MergeAttribute("name", this.Component.Name);
-                }
-
-                tagBuilderButton.MergeAttribute("type", "submit");
-                if (!string.IsNullOrWhiteSpace(this.Component.DialogDivId))
-                {
-                    tagBuilderButton.MergeAttribute("data-toggle", "modal"); 
-                    tagBuilderButton.MergeAttribute("data-target", "#"+this.Component.DialogDivId);
-                }
-
-                tagBuilderButton.MergeAttributes(this.Component.HtmlAttributes);
-
-                tagBuilderButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
-
-                writer.Write(tagBuilderButton.ToString(TagRenderMode.StartTag));
-            }
+            tagBuilder.Attributes["name"] = Component.Name;
         }
+
+        tagBuilder.Attributes["type"] = "submit";
+        
+        if (!string.IsNullOrWhiteSpace(Component.DialogDivId))
+        {
+            tagBuilder.Attributes["data-toggle"] = "modal";
+            tagBuilder.Attributes["data-target"] = "#" + Component.DialogDivId;
+        }
+
+        foreach (var attr in Component.HtmlAttributes)
+        {
+            tagBuilder.Attributes[attr.Key] = attr.Value?.ToString() ?? string.Empty;
+        }
+
+        var cssClass = Component.IsDisabled ? Component.CssClassReadOnly : Component.CssClass;
+        if (!string.IsNullOrEmpty(cssClass))
+        {
+            tagBuilder.AddCssClass(cssClass);
+        }
+
+        tagBuilder.TagRenderMode = TagRenderMode.SelfClosing;
+        return tagBuilder;
     }
 }

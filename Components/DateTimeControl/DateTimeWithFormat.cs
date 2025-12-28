@@ -1,18 +1,14 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
+using System;
+using System.Globalization;
+using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
+using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+
+[Serializable]
+public class DateTimeWithFormat
 {
-    using System;
-    using System.Globalization;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
-    using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
-
-    /// <summary>
-    /// The date time with format.
-    /// </summary>
-    [Serializable]
-    public class DateTimeWithFormat
-    {
         /// <summary>
         /// The format.
         /// </summary>
@@ -281,7 +277,6 @@
         {
             var hourText = this.HourValue.IsEmpty() ? string.Empty : this.HourValue.PadLeft(2, '0');
             var minuteText = this.MinuteValue.IsEmpty() ? string.Empty : this.MinuteValue.PadLeft(2, '0');
-            return "Date :".AppendWithBuilder(this.DateText, ", Time :", hourText, ":",minuteText);
-        }
+        return "Date :".AppendWithBuilder(DateText, ", Time :", hourText, ":", minuteText);
     }
 }

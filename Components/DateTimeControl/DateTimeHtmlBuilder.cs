@@ -1,190 +1,130 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="DateTimeHtmlBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 07/04/2014
-//    Author:  Sharma Siddharth (54626) 
-//    Description: The Html Builder class for the DateTime component
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
+using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+
+public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
 {
-    using System;
-    using System.Globalization;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
-    using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
-    using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
-
-    using Newtonsoft.Json;
-
-    /// <summary>
-    /// The Html Builder class for the DateTime component
-    /// </summary>
-    public class DateTimeHtmlBuilder : HtmlBuilderBase<DateTimeComponent>
+    public DateTimeHtmlBuilder(DateTimeComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DateTimeHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public DateTimeHtmlBuilder(DateTimeComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
+            return HtmlString.Empty;
+
+        var tagBuilderMainDiv = new TagBuilder("div");
+        if (!string.IsNullOrEmpty(Component.CssMainDiv))
+            tagBuilderMainDiv.AddCssClass(Component.CssMainDiv);
+
+        tagBuilderMainDiv.MergeAttribute("id", Component.MainDivId);
+        var sbTagMainDivInnerHtml = new StringBuilder();
+
+        if (!string.IsNullOrEmpty(Component.CustomLabel.Text))
         {
-            this.Component = component;
+            Component.ExternalLabelText = Component.CustomLabel.Text;
+            Component.CustomLabel.AssociatedControlId = Component.GetDateTextId;
+            Component.CustomLabel.AccessText = "Date";
+
+            var tagBuilderLabelDiv = new TagBuilder("div");
+            tagBuilderLabelDiv.InnerHtml.AppendHtml(Component.CustomLabel.ToHtml());
+            if (!string.IsNullOrEmpty(Component.CssClassLabelDiv))
+                tagBuilderLabelDiv.AddCssClass(Component.CssClassLabelDiv);
+
+            sbTagMainDivInnerHtml.Append(RenderTagBuilder(tagBuilderLabelDiv));
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        var tagBuilderDateDiv = new TagBuilder("div");
+        tagBuilderDateDiv.MergeAttribute("id", Component.Id);
+        if (!string.IsNullOrEmpty(Component.CssClassDateDiv))
+            tagBuilderDateDiv.AddCssClass(Component.CssClassDateDiv);
+
+        var sbTagDateDivInnerHtml = new StringBuilder();
+        sbTagDateDivInnerHtml.Append(CreateDateTag());
+        sbTagDateDivInnerHtml.Append(CreateHiddenFormatTag());
+        sbTagDateDivInnerHtml.Append(CreateHiddenTypeTag());
+        sbTagDateDivInnerHtml.Append(CreateHiddenTimeOffsetTag());
+        sbTagDateDivInnerHtml.Append(CreateHiddenUtcTag());
+
+        if (Component.DisplayTime)
         {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-            if (!this.Component.IsVisible)
-            {
-                return;
-            }
-
-            var tagBuilderMainDiv = new TagBuilder("div");
-
-            if (!string.IsNullOrEmpty(this.Component.CssMainDiv))
-            {
-                tagBuilderMainDiv.AddCssClass(this.Component.CssMainDiv);
-            }
-
-            tagBuilderMainDiv.MergeAttribute("id", this.Component.MainDivId);
-            var sbTagMainDivInnerHtml = new StringBuilder();
-            if (!string.IsNullOrEmpty(this.Component.CustomLabel.Text))
-            {
-                this.Component.ExternalLabelText = this.Component.CustomLabel.Text;
-                //set associated control id for label to date textbox
-                this.Component.CustomLabel.AssociatedControlId = this.Component.GetDateTextId;
-                //GKG:Fixed for remark 218.Removed the ExternalLabelText which taken as a parameter in string.format method. 
-                this.Component.CustomLabel.AccessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.LBL000022);
-
-                var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
-                if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
-                {
-                    tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
-                }
-
-                sbTagMainDivInnerHtml.Append(tagBuilderLabelDiv);
-            }
-
-            var tagBuilderDateDiv = new TagBuilder("div");
-            tagBuilderDateDiv.MergeAttribute("id", this.Component.Id);
-            if (!string.IsNullOrEmpty(this.Component.CssClassDateDiv))
-            {
-                tagBuilderDateDiv.AddCssClass(this.Component.CssClassDateDiv);
-            }
-
-            //GKG:Fixed Remark 157.Remove only fieldset & legend tag . 
-            var sbTagDateDivInnerHtml = new StringBuilder();
-
-            sbTagDateDivInnerHtml.Append(this.CreateDateTag());
-            sbTagDateDivInnerHtml.Append(this.CreateHiddenFormatTag());
-            sbTagDateDivInnerHtml.Append(this.CreateHiddenTypeTag());
-            sbTagDateDivInnerHtml.Append(this.CreateHiddenTimeOffsetTag());
-            sbTagDateDivInnerHtml.Append(this.CreateHiddenUtcTag());
-
-            if (this.Component.DisplayTime)
-            {
-                //set dropdown components for hour and minutes
-                this.SetHourMinDropDownLists();
-                //set separator label
-                this.CreateColonLabel();
-                sbTagDateDivInnerHtml.Append(this.Component.DropDownListHour.ToHtmlString());
-                sbTagDateDivInnerHtml.Append(this.Component.LabelColon.ToHtmlString());
-                sbTagDateDivInnerHtml.Append(this.Component.DropDownListMinute.ToHtmlString());
-            }
-
-            if (this.Component.IsUpdatable)
-            {
-                //add current date selector
-                if (this.Component.DisplayCurrentDateSelector)
-                {
-                    sbTagDateDivInnerHtml.Append(this.CreateCurrentDateSelectorImage());
-                }
-
-                //add erase button
-                if (this.Component.DisplayEraseButton)
-                {
-                    sbTagDateDivInnerHtml.Append(this.CreateEraseImage());
-                }
-            }
-
-            //add information icon
-            if (this.Component.DisplayInformationIcon)
-            {
-                this.Component.InformationIcon.Name = this.Component.GetInformationIconName;
-                this.Component.InformationIcon.Id = this.Component.GetInformationIconId;
-                if (this.Component.InformationIconPath.IsEmpty())
-                {
-                    this.Component.InformationIconPath = "/Images/picto-information.png";
-                }
-
-                this.Component.InformationIcon.ImageUrl = this.Component.InformationIconPath;
-                this.Component.InformationIcon.ToolTipId = this.Component.GetInformationIconToolTipId;
-                sbTagDateDivInnerHtml.Append(this.Component.InformationIcon.ToHtmlString());
-            }
-
-            if (this.Component.IsUpdatable)
-            {
-                //get consuming app area html
-                if (!string.IsNullOrEmpty(this.Component.ConsumingAppAreaId))
-                {
-                    sbTagDateDivInnerHtml.Append(this.GetConsumingAppAreaHtml());
-                }
-            }
-
-            //include error comp here to align it with the date
-            //certain controls to be added only if the component is updatable
-            if (this.Component.IsUpdatable && !MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
-            {
-                this.Component.ValidationString = new MvcHtmlString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
-                this.Component.ErrorMessage = ErrorHelper.CreateErrorComponent(this.Component);
-                sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage.ToHtmlString());
-                //  sbTagMainDivInnerHtml.Append(this.CreateErrorString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName), this.Component.HtmlHelper));
-            }
-
-            if (this.Component.IsUpdatable)
-            {
-                if (!this.Component.DisplayTime)
-                {
-                    sbTagDateDivInnerHtml.Append(this.CreateHiddenTimeInputs());
-                }
-            }
-            //if component is not updatable ,then create hidden inputs for keeping date and time as values for disabled controls is not submit
-            else
-            {
-                if (this.Component.DisplayTime)
-                {
-                    sbTagDateDivInnerHtml.Append(this.CreateHiddenTimeInputs());
-                }
-            }
-
-            tagBuilderDateDiv.InnerHtml = sbTagDateDivInnerHtml.ToString();
-            sbTagMainDivInnerHtml.Append(tagBuilderDateDiv);
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
-            writer.Write(tagBuilderMainDiv.ToString());
+            SetHourMinDropDownLists();
+            CreateColonLabel();
+            sbTagDateDivInnerHtml.Append(RenderHtmlContent(Component.DropDownListHour.ToHtml()));
+            sbTagDateDivInnerHtml.Append(RenderHtmlContent(Component.LabelColon.ToHtml()));
+            sbTagDateDivInnerHtml.Append(RenderHtmlContent(Component.DropDownListMinute.ToHtml()));
         }
+
+        if (Component.IsUpdatable)
+        {
+            if (Component.DisplayCurrentDateSelector)
+                sbTagDateDivInnerHtml.Append(CreateCurrentDateSelectorImage());
+
+            if (Component.DisplayEraseButton)
+                sbTagDateDivInnerHtml.Append(CreateEraseImage());
+        }
+
+        if (Component.DisplayInformationIcon)
+        {
+            Component.InformationIcon.Name = Component.GetInformationIconName;
+            Component.InformationIcon.Id = Component.GetInformationIconId;
+            if (string.IsNullOrEmpty(Component.InformationIconPath))
+                Component.InformationIconPath = "/Images/picto-information.png";
+
+            Component.InformationIcon.ImageUrl = Component.InformationIconPath;
+            Component.InformationIcon.ToolTipId = Component.GetInformationIconToolTipId;
+            sbTagDateDivInnerHtml.Append(RenderHtmlContent(Component.InformationIcon.ToHtml()));
+        }
+
+        if (Component.IsUpdatable && !string.IsNullOrEmpty(Component.ConsumingAppAreaId))
+            sbTagDateDivInnerHtml.Append(GetConsumingAppAreaHtml());
+
+        if (Component.IsUpdatable && Component.ValidationString != null)
+        {
+            Component.ValidationString = new HtmlString(GetValidationSpan(Component.GetUpdatableDateTextName));
+            Component.ErrorMessage = ErrorHelper.CreateErrorComponent(Component);
+            sbTagDateDivInnerHtml.Append(RenderHtmlContent(Component.ErrorMessage.ToHtml()));
+        }
+
+        if (Component.IsUpdatable && !Component.DisplayTime)
+            sbTagDateDivInnerHtml.Append(CreateHiddenTimeInputs());
+        else if (!Component.IsUpdatable && Component.DisplayTime)
+            sbTagDateDivInnerHtml.Append(CreateHiddenTimeInputs());
+
+        tagBuilderDateDiv.InnerHtml.AppendHtml(sbTagDateDivInnerHtml.ToString());
+        sbTagMainDivInnerHtml.Append(RenderTagBuilder(tagBuilderDateDiv));
+        tagBuilderMainDiv.InnerHtml.AppendHtml(sbTagMainDivInnerHtml.ToString());
+
+        return tagBuilderMainDiv;
+    }
+
+    private static string RenderTagBuilder(TagBuilder tagBuilder)
+    {
+        using var writer = new StringWriter();
+        tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
+    }
+
+    private static string RenderHtmlContent(IHtmlContent content)
+    {
+        using var writer = new StringWriter();
+        content.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
+    }
 
         /// <summary>
         /// The get validation span for Date.
@@ -720,7 +660,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             new HyperLinkBuilder(this.Component.EraseImage, this.Component.EraseImage.ModelMetadata).Id(this.Component.GetEraseButtonId)
                 .Title(this.Component.EraseButtonText).Css("cleanImage").ActionUrl("###")
                 .ImageUrl(this.Component.EraseImagePath);
-            return this.Component.EraseImage.ToHtmlString();
-        }
+            return RenderHtmlContent(Component.EraseImage.ToHtml());
     }
 }

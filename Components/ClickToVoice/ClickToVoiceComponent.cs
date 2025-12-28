@@ -1,184 +1,83 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ClickToVoiceComponent.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 23/09/2014
-//    Author:  Arun Kumar (060644) 
-//    Description: The component class for the ClickToVoice component
-// </summary>
-// -------------------------------------------------------------------------------------------------
+using System.Collections.ObjectModel;
+using System.Net;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice;
+
+public class ClickToVoiceComponent : ComponentBase
 {
-    using Equant.SAV2000.ComponentLibrary.Common;
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    /// <summary>
-    /// The ClickToVoice component to directly open web call interface.
-    /// </summary>
-    public class ClickToVoiceComponent : ComponentBase
+    public ClickToVoiceComponent(IHtmlHelper htmlHelper)
+        : base(htmlHelper)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ClickToVoiceComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        public ClickToVoiceComponent(HtmlHelper htmlHelper)
-            : base(htmlHelper)
-        {
-            this.Title = string.Empty;
-            this.TelephoneNumber = string.Empty;
-            this.ActionUrl = string.Empty;
-            this.ImageUrl = string.Empty;
-            this.AlternateText = string.Empty;
-        }
+        Title = string.Empty;
+        TelephoneNumber = string.Empty;
+        ActionUrl = string.Empty;
+        ImageUrl = string.Empty;
+        AlternateText = string.Empty;
+    }
 
-        /// <summary>
-        /// Gets the JS resources.
-        /// </summary>
-        public override ReadOnlyCollection<JsResource> JsResources
-        {
-            get
+    public override ReadOnlyCollection<JsResource> JsResources =>
+        new ReadOnlyCollection<JsResource>(
+            new List<JsResource>
             {
-                return
-                    new ReadOnlyCollection<JsResource>(
-                        new List<JsResource>
-                            {
-                                new JsResource(
-                                         "jsQtip",
-                                         "Equant.SAV2000.ComponentLibrary.Common.Resources.Javascripts.jquery.qtip.js",
-                                         200,
-                                         typeof(Locator)),
-                                new JsResource(
-                                    "JsClickToVoice", "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.ClickToVoice.js", 200, typeof(ClickToVoiceComponent))
-                            });
-            }
-        }
+                new JsResource(
+                    "jsQtip",
+                    "Equant.SAV2000.ComponentLibrary.Common.Resources.Javascripts.jquery.qtip.js",
+                    200,
+                    typeof(ClickToVoiceComponent)),
+                new JsResource(
+                    "JsClickToVoice",
+                    "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.ClickToVoice.js",
+                    200,
+                    typeof(ClickToVoiceComponent))
+            });
 
-        public override ReadOnlyCollection<CssResource> CssResources
-        {
-            get
+    public override ReadOnlyCollection<CssResource> CssResources =>
+        new ReadOnlyCollection<CssResource>(
+            new List<CssResource>
             {
-                return
-                    new ReadOnlyCollection<CssResource>(
-                        new List<CssResource>
-                        {
-                            new CssResource(
-                                "Cssjqueryqtip",
-                                "Equant.SAV2000.ComponentLibrary.Common.Resources.Css.jquery.qtip.css",
-                                200,
-                                typeof(Locator))
-                        });
-            }
-        }
+                new CssResource(
+                    "Cssjqueryqtip",
+                    "Equant.SAV2000.ComponentLibrary.Common.Resources.Css.jquery.qtip.css",
+                    200,
+                    typeof(ClickToVoiceComponent))
+            });
 
-        /// <summary>
-        /// Gets or sets the CSS class of the anchor tag
-        /// </summary>
-        public string CssAnchorTag { get; set; }
+    public string? CssAnchorTag { get; set; }
+    public string? CssClassImage { get; set; }
+    public string? CssTelephoneNumberSpan { get; set; }
+    public string? Title { get; set; }
+    public string? ActionUrl { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? AlternateText { get; set; }
+    public string? TelephoneNumber { get; set; }
+    public bool IsNumberSpanVisible { get; set; }
+    public string? TelephoneControlId { get; set; }
+    public string? RootService { get; set; }
 
-        /// <summary>
-        /// CSS class for the image tag
-        /// </summary>
-        public string CssClassImage { get; set; }
+    public override IHtmlContent ToHtml()
+    {
+        return new ClickToVoiceHtmlBuilder(this).Build();
+    }
 
-        /// <summary>
-        /// CSS class for the TelephoneNumber Span
-        /// </summary>
-        public string CssTelephoneNumberSpan { get; set; }
-
-        /// <summary>
-        /// The anchor title
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// The anchor action method
-        /// </summary>
-        public string ActionUrl { get; set; }
-
-        /// <summary>
-        /// The  image url
-        /// </summary>
-        public string ImageUrl { get; set; }
-
-        /// <summary>
-        /// The alternate text for the image
-        /// </summary>
-        public string AlternateText { get; set; }
-
-        /// <summary>
-        /// This will hold the Telephone Number to give the call.
-        /// </summary>
-        public string TelephoneNumber { get; set; }
-
-        /// <summary>
-        /// Boolean to set the visibility of the TelephoneNumber Span.
-        /// </summary>
-        public bool IsNumberSpanVisible { get; set; }
-
-        /// <summary>
-        /// This will hold the ControlId of the Control that have the Phone Number.
-        /// </summary>
-        public string TelephoneControlId { get; set; }
-
-        /// <summary>
-        /// This will hold the root service to give the call.
-        /// </summary>
-        public string RootService { get; set; }
-
-        /// <summary>
-        /// The write html.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+    public override string ToInitScript()
+    {
+        if (!string.IsNullOrEmpty(RootService))
         {
-            new ClickToVoiceHtmlBuilder(this).Build(writer);
+            ActionUrl = ActionUrl?.Replace("{1}", WebUtility.UrlEncode(RootService));
         }
 
-        /// <summary>
-        /// It writes initial JavaScript.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        var options = JsonConvert.SerializeObject(new
         {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-            if (!string.IsNullOrEmpty(this.RootService))
-            {
-                this.ActionUrl = this.ActionUrl.Replace("{1}", HttpUtility.UrlEncode(this.RootService));
-            }
-
-            var options =
-                JsonConvert.SerializeObject(
-                    new
-                        {
-                            id = this.Id,
-                            url = this.ActionUrl,
-                            telephoneNumber = this.TelephoneNumber,
-                            telephoneControlId = this.TelephoneControlId,
-                            title = ApplicationStrings.TIP000022
-                        });
-            writer.WriteLine("$('#{0}').clickToVoice({1});", this.Id, options);
-        }
+            id = Id,
+            url = ActionUrl,
+            telephoneNumber = TelephoneNumber,
+            telephoneControlId = TelephoneControlId,
+            title = "Click to call"
+        });
+        return $"$('#{Id}').clickToVoice({options});";
     }
 }

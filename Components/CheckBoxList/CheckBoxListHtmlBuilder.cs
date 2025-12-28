@@ -1,190 +1,142 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="CheckBoxListHtmlBuilder.cs" company="OBS">
-// </copyright>
-// <summary>
-//    Creation Date: 24/06/2014
-//    Author:  Joshi Mukesh 
-//    Description: Defines the HTML builder for check-box list. 
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList;
+
+public class CheckBoxListHtmlBuilder : HtmlBuilderBase<CheckBoxListComponent>
 {
-    using System;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
-
-    /// <summary>
-    /// HTML builder for a check-box list.
-    /// </summary>
-    public class CheckBoxListHtmlBuilder : HtmlBuilderBase<CheckBoxListComponent>
+    public CheckBoxListHtmlBuilder(CheckBoxListComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckBoxListHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public CheckBoxListHtmlBuilder(CheckBoxListComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
-        }
-        /// <summary>
-        /// Builds the complete component HTML.
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void Build(HtmlTextWriter writer)
-        {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-            if (this.Component.IsVisible)
-            {
-                var controlStringBuiler = new StringBuilder();
-                if (!string.IsNullOrEmpty(Component.CheckBoxListLabel.Text))
-                {
-                    controlStringBuiler.Append(this.Component.CheckBoxListLabel.ToHtmlString());
-                }
-
-                // Generate the CheckBoxList only if it is not empty, else generate only the label (done above
-                //<field set>
-                var tagBuilderFieldSet = new TagBuilder("fieldset");
-                if (!String.IsNullOrEmpty(this.Component.CssClassFieldSet))
-                {
-                    tagBuilderFieldSet.AddCssClass(this.Component.CssClassFieldSet);
-                }
-                //</field set>
-                //<UL>
-                //set the UL attributes.
-                var tagBuilderUl = new TagBuilder("ul");
-                if (!String.IsNullOrEmpty(this.Component.CssClass))
-                {
-                    tagBuilderUl.AddCssClass("checkboxpadding " + this.Component.CssClass);
-                }
-
-                tagBuilderUl.MergeAttribute("id", this.Component.Id);
-                tagBuilderUl.MergeAttributes(this.Component.HtmlAttributes);
-                //li control will be created through string builder as it will have inner html for the checkbox and label.
-                var liStringBuilder = new StringBuilder();
-                //Used for creating the complete html for  individual checkbox
-                var chkBoxBuilder = new StringBuilder();
-                if (this.Component.IsDisabled)
-                {
-                    this.Component.CssClass = this.Component.CssClassDisabled;
-                    tagBuilderFieldSet.MergeAttribute("disabled", "disabled");
-                }
-                //Generate the checkbox list.
-
-                foreach (var item in this.Component.SourceItems)
-                {
-                    //<Change author="Nidhi" version="Iteration1" action = "Modification">
-                    //Description : If ID is missing from checkbox implementation then this will throw an error.
-                    //</Change>
-#if DEBUG
-                    if (item.Value == null)
-                    {
-
-                        throw new ArgumentException("The attribute 'Value' is mandatory to add with each button.");
-
-                    }
-#endif                        
-                    var tagBuilderLi = new TagBuilder("li");
-                    if (!string.IsNullOrEmpty(item.Text))
-                    {
-                        this.GenerateCheckBox(item, chkBoxBuilder);
-                        tagBuilderLi.InnerHtml = chkBoxBuilder.ToString();
-                        chkBoxBuilder.Clear();
-                    }
-                    liStringBuilder.Append(tagBuilderLi);
-                }
-                //the complete LI will be placed in the UL's inner html.
-                if (liStringBuilder.Length == 0)
-                {
-                    liStringBuilder.Append(new TagBuilder("li"));
-                }
-
-                //the complete LI will be placed in the UL's inner html.
-                tagBuilderUl.InnerHtml = liStringBuilder.ToString();
-                if (!string.IsNullOrEmpty(this.Component.Title))
-                {
-                    tagBuilderUl.MergeAttribute("title", this.Component.Title);
-                }
-
-                var legend = new TagBuilder("legend");
-                // Add a hidden span with legend title for reading software.
-                legend.MergeAttribute("class", "hide-access");
-                var hiddenSpan = new TagBuilder("span");
-                hiddenSpan.InnerHtml = this.Component.Title;
-                legend.InnerHtml = hiddenSpan.ToString();
-
-                var div = new TagBuilder("div");
-
-                var divCssClass = string.IsNullOrEmpty(this.Component.CssClassCheckBoxDiv) ? "checkbox-list-scroll" : "checkbox-list-scroll " + this.Component.CssClassCheckBoxDiv;
-                div.MergeAttribute("class", divCssClass);
-                var sbinnerHtml = string.Empty;
-
-                tagBuilderFieldSet.InnerHtml = sbinnerHtml.AppendWithBuilder(
-                    legend.ToString(TagRenderMode.Normal),
-                    div.ToString(TagRenderMode.StartTag),
-                    tagBuilderUl.ToString(),
-                    div.ToString(TagRenderMode.EndTag));
-                if (this.Component.IsOuterDivNeeded)
-                {
-                    var tagBuilderOuterDiv = new TagBuilder("div");
-                    if (!String.IsNullOrEmpty(this.Component.CssClassOuterDiv))
-                    {
-                        tagBuilderOuterDiv.AddCssClass(this.Component.CssClassOuterDiv);
-                    }
-                    controlStringBuiler.Append(sbinnerHtml.AppendWithBuilder(
-                        tagBuilderOuterDiv.ToString(TagRenderMode.StartTag),
-                        tagBuilderFieldSet.ToString(),
-                        tagBuilderOuterDiv.ToString(TagRenderMode.EndTag)));
-                }
-                else
-                {
-                    controlStringBuiler.Append(tagBuilderFieldSet);
-                }
-                writer.Write(controlStringBuiler.ToString());
-            }
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The method generates checkbox with label.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="chkBoxBuilder"></param>
-        private void GenerateCheckBox(CheckBoxListItem item, StringBuilder chkBoxBuilder)
-        {
-            var compId = this.Component.Id + item.Value;
-            var tagBuilderCheckBox = new TagBuilder("input");
-            tagBuilderCheckBox.MergeAttribute("id", compId);
-            tagBuilderCheckBox.MergeAttribute("type", "checkbox");
-            tagBuilderCheckBox.MergeAttribute("value", item.Value);
-            if (!string.IsNullOrEmpty(this.Component.Name))
-            {
-                tagBuilderCheckBox.MergeAttribute("name", this.Component.Name);
-            }
+        using var writer = new StringWriter();
 
-            if (item.Disabled)
-            {
-                this.Component.CssClass = this.Component.CssClassDisabled;
-                tagBuilderCheckBox.MergeAttribute("disabled", "disabled");
-            }
-            //Generate checked checkbox.
-            if (item.Selected)
-            {
-                tagBuilderCheckBox.MergeAttribute("checked", "checked");
-            }
-            //tagbuilder for individual label's for each checkbox.
-            var tagBuilderLabel = new TagBuilder("label");
-            tagBuilderLabel.MergeAttribute("for", compId);
-            tagBuilderLabel.SetInnerText(item.Text);
-            chkBoxBuilder.Append(tagBuilderCheckBox.ToString(TagRenderMode.StartTag)).Append(tagBuilderLabel);
+        if (!string.IsNullOrEmpty(Component.CheckBoxListLabel.Text))
+        {
+            Component.CheckBoxListLabel.ToHtml().WriteTo(writer, HtmlEncoder.Default);
         }
+
+        var tagBuilderFieldSet = new TagBuilder("fieldset");
+        if (!string.IsNullOrEmpty(Component.CssClassFieldSet))
+        {
+            tagBuilderFieldSet.AddCssClass(Component.CssClassFieldSet);
+        }
+
+        var tagBuilderUl = new TagBuilder("ul");
+        if (!string.IsNullOrEmpty(Component.CssClass))
+        {
+            tagBuilderUl.AddCssClass("checkboxpadding " + Component.CssClass);
+        }
+
+        tagBuilderUl.Attributes["id"] = Component.Id;
+        foreach (var attr in Component.HtmlAttributes)
+        {
+            tagBuilderUl.Attributes[attr.Key] = attr.Value?.ToString() ?? string.Empty;
+        }
+
+        if (Component.IsDisabled)
+        {
+            Component.CssClass = Component.CssClassDisabled;
+            tagBuilderFieldSet.Attributes["disabled"] = "disabled";
+        }
+
+        foreach (var item in Component.SourceItems)
+        {
+            var tagBuilderLi = new TagBuilder("li");
+            if (!string.IsNullOrEmpty(item.Text))
+            {
+                GenerateCheckBox(item, tagBuilderLi);
+            }
+            tagBuilderUl.InnerHtml.AppendHtml(tagBuilderLi);
+        }
+
+        if (Component.SourceItems.Count == 0)
+        {
+            tagBuilderUl.InnerHtml.AppendHtml(new TagBuilder("li"));
+        }
+
+        if (!string.IsNullOrEmpty(Component.Title))
+        {
+            tagBuilderUl.Attributes["title"] = Component.Title;
+        }
+
+        var legend = new TagBuilder("legend");
+        legend.AddCssClass("hide-access");
+        var hiddenSpan = new TagBuilder("span");
+        hiddenSpan.InnerHtml.AppendHtml(Component.Title ?? string.Empty);
+        legend.InnerHtml.AppendHtml(hiddenSpan);
+
+        var div = new TagBuilder("div");
+        var divCssClass = string.IsNullOrEmpty(Component.CssClassCheckBoxDiv) 
+            ? "checkbox-list-scroll" 
+            : "checkbox-list-scroll " + Component.CssClassCheckBoxDiv;
+        div.AddCssClass(divCssClass);
+        div.InnerHtml.AppendHtml(tagBuilderUl);
+
+        tagBuilderFieldSet.InnerHtml.AppendHtml(legend);
+        tagBuilderFieldSet.InnerHtml.AppendHtml(div);
+
+        if (Component.IsOuterDivNeeded)
+        {
+            var tagBuilderOuterDiv = new TagBuilder("div");
+            if (!string.IsNullOrEmpty(Component.CssClassOuterDiv))
+            {
+                tagBuilderOuterDiv.AddCssClass(Component.CssClassOuterDiv);
+            }
+            tagBuilderOuterDiv.InnerHtml.AppendHtml(tagBuilderFieldSet);
+            tagBuilderOuterDiv.WriteTo(writer, HtmlEncoder.Default);
+        }
+        else
+        {
+            tagBuilderFieldSet.WriteTo(writer, HtmlEncoder.Default);
+        }
+
+        return new HtmlString(writer.ToString());
+    }
+
+    private void GenerateCheckBox(CheckBoxListItem item, TagBuilder tagBuilderLi)
+    {
+        var compId = Component.Id + item.Value;
+        var tagBuilderCheckBox = new TagBuilder("input");
+        tagBuilderCheckBox.Attributes["id"] = compId;
+        tagBuilderCheckBox.Attributes["type"] = "checkbox";
+        tagBuilderCheckBox.Attributes["value"] = item.Value ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(Component.Name))
+        {
+            tagBuilderCheckBox.Attributes["name"] = Component.Name;
+        }
+
+        if (item.Disabled)
+        {
+            Component.CssClass = Component.CssClassDisabled;
+            tagBuilderCheckBox.Attributes["disabled"] = "disabled";
+        }
+
+        if (item.Selected)
+        {
+            tagBuilderCheckBox.Attributes["checked"] = "checked";
+        }
+
+        tagBuilderCheckBox.TagRenderMode = TagRenderMode.SelfClosing;
+
+        var tagBuilderLabel = new TagBuilder("label");
+        tagBuilderLabel.Attributes["for"] = compId;
+        tagBuilderLabel.InnerHtml.AppendHtml(item.Text ?? string.Empty);
+
+        tagBuilderLi.InnerHtml.AppendHtml(tagBuilderCheckBox);
+        tagBuilderLi.InnerHtml.AppendHtml(tagBuilderLabel);
     }
 }

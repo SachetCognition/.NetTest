@@ -1,24 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringExtension.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//   Creation Date: 12/05/2014
-//   Author:  Sharma Siddharth (54626)
-//   Description: This class defines extension methods for string objects.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System.Globalization;
+using System.Text;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
+namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+
+/// <summary>
+/// Extension methods for string operations.
+/// </summary>
+public static class StringExtension
 {
-    using System.Globalization;
-    using System.Text;
-
-    /// <summary>
-    /// This class defines extension methods for string objects.
-    /// </summary>
-    public static class StringExtension
-    {
         /// <summary>
         /// This method appends to the given string using string builder.
         /// </summary>
@@ -121,5 +110,4 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
 
             return stringBuilder.ToString();
         }
-    }
 }
