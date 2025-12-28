@@ -1,46 +1,12 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="VerticalMenuItemInfo.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//   Creation Date: 04/02/2016
-//   Author:  Siddharth Sharma
-//   Description: Vertical Menu's menu item information.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using Newtonsoft.Json.Linq;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu;
+
+public class VerticalMenuItemInfo
 {
-    using Newtonsoft.Json.Linq;
-
-    /// <summary>
-    /// The menu item information class.
-    /// </summary>
-    public class VerticalMenuItemInfo
-    {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the action url.
-        /// </summary>
-        public string ActionUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the on click.
-        /// </summary>
-        public JRaw OnClick { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether causes validation.
-        /// </summary>
-        public bool CausesValidation { get; set; }
-    }
+    public string? Id { get; set; }
+    public string? Name { get; set; }
+    public string? ActionUrl { get; set; }
+    public JRaw? OnClick { get; set; }
+    public bool CausesValidation { get; set; }
 }

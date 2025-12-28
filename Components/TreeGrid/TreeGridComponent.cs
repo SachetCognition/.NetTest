@@ -1,207 +1,110 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Equant.SAV2000.ComponentLibrary.Common.Helper;
+using Equant.SAV2000.ComponentLibrary.Common.Resources;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid;
+
+public class TreeGridComponent : ComponentBase
 {
-    using System.Web.Mvc;
-    using System.Web.UI;
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "TETHYS: This input is required."),
+    System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification = "TETHYS: The list values are to be provided by the user.")]
+    public List<TreeViewColumn> Columns { get; set; } = new List<TreeViewColumn>();
 
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using System.Collections.ObjectModel;
+    private readonly ReadOnlyCollection<JsResource> _jsResources;
 
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-
-    /// <summary>
-    /// The multi column tree view component.
-    /// </summary>
-    public class TreeGridComponent : ComponentBase
+    public TreeGridComponent(IHtmlHelper htmlHelper, System.Data.DataTable treeData)
+        : base(htmlHelper)
     {
-        /// <summary>
-        /// Gets or sets the columns.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification ="TETHYS: This input is required."),
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Justification =
-            "TETHYS: The list values are to be provided by the user.")]
-        public List<TreeViewColumn> Columns { get; set; }
-        /// <summary>
-        /// The JS resources.
-        /// </summary>
-        private readonly ReadOnlyCollection<JsResource> jsResources;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TreeGridComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        /// <param name="treeData">
-        /// The tree data.
-        /// </param>
-        public TreeGridComponent(HtmlHelper htmlHelper, System.Data.DataTable treeData)
-            : base(htmlHelper)
+        var jsRes = new List<JsResource>
         {
-            var jsRes = new List<JsResource>
-                            {
-                                   new JsResource(
-                                    "JsTreeCommon",
-                                    "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.TreeCommon.js",
-                                    200,
-                                    typeof(TreeGridComponent)),
-                                      
-                            };
+            new JsResource(
+                "JsTreeCommon",
+                "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.TreeCommon.js",
+                200,
+                typeof(TreeGridComponent)),
+        };
 
-            this.jsResources = new ReadOnlyCollection<JsResource>(jsRes);
-            this.Data = treeData;
+        _jsResources = new ReadOnlyCollection<JsResource>(jsRes);
+        Data = treeData;
+    }
 
-        }
+    public System.Data.DataTable? Data { get; set; }
 
-        /// <summary>
-        /// Gets or sets the DT.
-        /// </summary>
-        public System.Data.DataTable Data { get; set; }
+    public override ReadOnlyCollection<JsResource> JsResources => _jsResources;
 
-        /// <summary>
-        /// Gets the JS resources.
-        /// </summary>
-        public override ReadOnlyCollection<JsResource> JsResources
+    public override IHtmlContent ToHtml()
+    {
+        return new TreeGridHtmlBuilder(this).Build();
+    }
+
+    public string? WidthCss { get; set; }
+    public string? ColorToHighlightRow { get; set; }
+    public IEnumerable<int>? IdsToHighlight { get; set; }
+    public IEnumerable<string>? CheckedValues { get; set; }
+    public string? KeyColumnName { get; set; }
+
+    public override string ToInitScript()
+    {
+        var columns = new List<TreeCustomColumnData>();
+
+        foreach (var column in Columns.Where(x => x.TreeColumnType == ColumnType.Custom).ToList())
         {
-            get
-            {
-                return this.jsResources;
-            }
-        }
-
-        /// <summary>
-        /// The write html.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
-        {
-            new TreeGridHtmlBuilder(this).Build(writer);
-        }
-
-        /// <summary>
-        /// Gets or sets the width of tree grid from CSS.
-        /// </summary>
-        public string WidthCss { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color to highlight row.
-        /// </summary>
-        public string ColorToHighlightRow { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ids to highlight.
-        /// </summary>
-        public IEnumerable<int> IdsToHighlight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the checked values.
-        /// </summary>
-        public IEnumerable<string> CheckedValues { get; set; }
-
-        /// <summary>
-        /// Gets or sets the id col.
-        /// </summary>
-        public string KeyColumnName { get; set; }
-
-        /// <summary>
-        /// This writes initial start up script.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
-        {
-            if (writer == null)
-            {
-                throw new ArgumentNullException("writer");
-            }
-            var columns = new List<TreeCustomColumnData>();
-
-            foreach (var column in this.Columns.Where(x => x.TreeColumnType == ColumnType.Custom).ToList())
-            {
-                columns.Add(
-                    new TreeCustomColumnData
-                    {
-                        PropertyName = column.PropertyName,
-                        Data = string.IsNullOrEmpty(column.Render) ? null : new JRaw(column.Render),
-                    });
-            }
-
-            string options;
-
-            if (this.Columns.Any(x => x.TreeColumnType == ColumnType.CheckBox) && this.Columns.Any(x => x.TreeColumnType == ColumnType.Custom))
-            {
-                options =
-                    JsonConvert.SerializeObject(
-                        new
-                            {
-                                hasCheckBoxColumn = true,
-                                id = this.Id,
-                                data = this.Data,
-                                IdColumn = this.KeyColumnName,
-                                Columns = columns,
-                                checkedValuesId = "hdn" + this.Id,
-                                //Title = ApplicationStrings.ACCESS000005,
-                                //close = ApplicationStrings.LBL000011,
-                                //open = ApplicationStrings.ACCESS000002,
-                                //CloseTitle = ApplicationStrings.ACCESS000006
-                            });
-            }
-            else if (this.Columns.Any(x => x.TreeColumnType == ColumnType.CheckBox))
-            {
-                options =
-                  JsonConvert.SerializeObject(
-                      new
-                          {
-                              hasCheckBoxColumn = true,
-                              id = this.Id,
-                              data = this.Data,
-                              checkedValuesId = "hdn" + this.Id,
-                              //Title = ApplicationStrings.ACCESS000005,
-                              //close = ApplicationStrings.LBL000011,
-                              //open = ApplicationStrings.ACCESS000002,
-                              //CloseTitle = ApplicationStrings.ACCESS000006
-                          });
-            }
-            else if (this.Columns.Any(x => x.TreeColumnType == ColumnType.Custom))
-            {
-                options =
-                    JsonConvert.SerializeObject(
-                        new
-                        {
-                            hasCheckBoxColumn = false,
-                            id = this.Id,
-                            data = this.Data,
-                            IdColumn = this.KeyColumnName,
-                            Columns = columns,
-                            //Title = ApplicationStrings.ACCESS000005,
-                            //close = ApplicationStrings.LBL000011,
-                            //open = ApplicationStrings.ACCESS000002,
-                            //CloseTitle = ApplicationStrings.ACCESS000006
-                        });
-            }
-            else
-            {
-                options = JsonConvert.SerializeObject(new
+            columns.Add(
+                new TreeCustomColumnData
                 {
-                    id = this.Id,
-                    //Title = ApplicationStrings.ACCESS000005,
-                    //close = ApplicationStrings.LBL000011,
-                    //open = ApplicationStrings.ACCESS000002,
-                    //CloseTitle = ApplicationStrings.ACCESS000006
+                    PropertyName = column.PropertyName,
+                    Data = string.IsNullOrEmpty(column.Render) ? null : new JRaw(column.Render),
                 });
-            }
-
-            writer.WriteLine("$('#{0}').treegrid({1});", this.Id, options);
         }
+
+        string options;
+
+        if (Columns.Any(x => x.TreeColumnType == ColumnType.CheckBox) && Columns.Any(x => x.TreeColumnType == ColumnType.Custom))
+        {
+            options = JsonConvert.SerializeObject(new
+            {
+                hasCheckBoxColumn = true,
+                id = Id,
+                data = Data,
+                IdColumn = KeyColumnName,
+                Columns = columns,
+                checkedValuesId = "hdn" + Id,
+            });
+        }
+        else if (Columns.Any(x => x.TreeColumnType == ColumnType.CheckBox))
+        {
+            options = JsonConvert.SerializeObject(new
+            {
+                hasCheckBoxColumn = true,
+                id = Id,
+                data = Data,
+                checkedValuesId = "hdn" + Id,
+            });
+        }
+        else if (Columns.Any(x => x.TreeColumnType == ColumnType.Custom))
+        {
+            options = JsonConvert.SerializeObject(new
+            {
+                hasCheckBoxColumn = false,
+                id = Id,
+                data = Data,
+                IdColumn = KeyColumnName,
+                Columns = columns,
+            });
+        }
+        else
+        {
+            options = JsonConvert.SerializeObject(new { id = Id });
+        }
+
+        return string.Format("$('#{0}').treegrid({1});", Id, options);
     }
 }
