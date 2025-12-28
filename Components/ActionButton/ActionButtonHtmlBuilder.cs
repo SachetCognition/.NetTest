@@ -1,92 +1,77 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ActionButtonHtmlBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 07/04/2014
-//    Author:  Ankur Kumar
-//    Description: The Html Builder class for the ActionButton component
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton;
+
+/// <summary>
+/// The Html Builder class for the ActionButton component.
+/// </summary>
+public class ActionButtonHtmlBuilder : HtmlBuilderBase<ActionButtonComponent>
 {
-    using System;
-    using System.Web.Mvc;
-    using System.Web.UI;
-    using System.Text;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-
-    /// <summary>
-    /// The Html Builder class for the ActionButton component
-    /// </summary>
-    public class ActionButtonHtmlBuilder : HtmlBuilderBase<ActionButtonComponent>
+    public ActionButtonHtmlBuilder(ActionButtonComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionButtonHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public ActionButtonHtmlBuilder(ActionButtonComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        var tbActionButton = new TagBuilder("button");
+        tbActionButton.Attributes["id"] = Component.Id;
+
+        if (!string.IsNullOrEmpty(Component.Name))
         {
-            if (writer == null)
-            {
-                throw new ArgumentNullException("writer"); 
-            }
+            tbActionButton.Attributes["name"] = Component.Name;
+        }
 
-            if (this.Component.IsVisible)
-            {
-                var tbActionButton = new TagBuilder("button");
-                tbActionButton.MergeAttribute("id", this.Component.Id);
+        if (!string.IsNullOrWhiteSpace(Component.DialogBoxId))
+        {
+            tbActionButton.Attributes["data-toggle"] = "modal";
+            tbActionButton.Attributes["data-target"] = "#" + Component.DialogBoxId;
+        }
 
-                if (!string.IsNullOrEmpty(this.Component.Name))
-                {
-                    tbActionButton.MergeAttribute("name", this.Component.Name);
-                }
+        tbActionButton.Attributes["type"] = "submit";
+        
+        foreach (var attr in Component.HtmlAttributes)
+        {
+            tbActionButton.Attributes[attr.Key] = attr.Value?.ToString() ?? string.Empty;
+        }
 
-                if (!string.IsNullOrWhiteSpace(this.Component.DialogBoxId))
-                {
-                    tbActionButton.MergeAttribute("data-toggle","modal");
-                    tbActionButton.MergeAttribute("data-target", "#"+ this.Component.DialogBoxId);
-                }
+        var cssClass = Component.IsDisabled ? Component.CssClassReadOnly : Component.CssClass;
+        if (!string.IsNullOrEmpty(cssClass))
+        {
+            tbActionButton.AddCssClass(cssClass);
+        }
 
-                tbActionButton.MergeAttribute("type", "submit");
-                tbActionButton.MergeAttributes(this.Component.HtmlAttributes);
-                tbActionButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
+        if (!string.IsNullOrEmpty(Component.AccessText))
+        {
+            var tbAccSpan = new TagBuilder("span");
+            tbAccSpan.AddCssClass("hide-access");
+            tbAccSpan.InnerHtml.AppendHtml(Component.AccessText);
+            tbActionButton.InnerHtml.AppendHtml(tbAccSpan);
+        }
 
-                var sbInnerHtml = new StringBuilder();
-                if (!string.IsNullOrEmpty(this.Component.AccessText))
-                {
-                    var tbAccSpan = new TagBuilder("span");
-                    tbAccSpan.AddCssClass("hide-access");
-                    tbAccSpan.InnerHtml = this.Component.AccessText;
-                    sbInnerHtml.Append(tbAccSpan);
-                }
-                
-                var tbTextSpan = new TagBuilder("span");
-                if (!string.IsNullOrEmpty(this.Component.CssSpan))
-                {
-                    tbTextSpan.AddCssClass(this.Component.CssSpan);
-                }
+        var tbTextSpan = new TagBuilder("span");
+        if (!string.IsNullOrEmpty(Component.CssSpan))
+        {
+            tbTextSpan.AddCssClass(Component.CssSpan);
+        }
 
-                tbTextSpan.InnerHtml = this.Component.Text;
-                sbInnerHtml.Append(tbTextSpan);
-                tbActionButton.InnerHtml = sbInnerHtml.ToString();
-                writer.Write(tbActionButton.ToString());
-            }
+        tbTextSpan.InnerHtml.AppendHtml(Component.Text ?? string.Empty);
+        tbActionButton.InnerHtml.AppendHtml(tbTextSpan);
+
+        using (var writer = new StringWriter())
+        {
+            tbActionButton.WriteTo(writer, HtmlEncoder.Default);
+            return new HtmlString(writer.ToString());
         }
     }
 }

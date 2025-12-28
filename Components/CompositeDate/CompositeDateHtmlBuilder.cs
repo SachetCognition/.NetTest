@@ -1,722 +1,510 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CompositeDateHtmlBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//   Creation Date: 09/06/2014
-//   Author:  Sharma Siddharth (54626)
-//   Description: Composite DateTime Html builder
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.Common.Resources;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
+using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate;
+
+public class CompositeDateHtmlBuilder : HtmlBuilderBase<CompositeDateComponent>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
-    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
-    using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
-
-    /// <summary>
-    /// The composite date html builder.
-    /// </summary>
-    public class CompositeDateHtmlBuilder : HtmlBuilderBase<CompositeDateComponent>
+    public CompositeDateHtmlBuilder(CompositeDateComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeDateHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public CompositeDateHtmlBuilder(CompositeDateComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        EnumDateTypes parsedDateType;
+        var isDateType = Enum.TryParse(Component.DateTypesValue, true, out parsedDateType);
+        if (!isDateType)
         {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
-
-            if (!this.Component.IsVisible)
-            {
-                return;
-            }
-
-            #region Check Selected Date Types value
-
-            EnumDateTypes parsedDateType;
-            var isDateType = Enum.TryParse(this.Component.DateTypesValue, true, out parsedDateType);
-            if (!isDateType)
-            {
-                throw new ArgumentException("The given selected DateTypesValue :".AppendWithBuilder(this.Component.DateTypesValue,
-                    "is not a valid EnumDateTypes"));
-            }
-
-            var isSelectedDateTypeInGivenList = this.Component.DateTypesIncluded.Contains(parsedDateType);
-            if (!isSelectedDateTypeInGivenList)
-            {
-                throw new ArgumentException("The given selected DateTypesValue :".AppendWithBuilder(this.Component.DateTypesValue,
-                    " is not in the given DateTypesIncluded list"));
-            }
-
-            #endregion
-            var tagBuilderMainDiv = new TagBuilder("div");
-            if (!string.IsNullOrEmpty(this.Component.CssMainDiv))
-            {
-                tagBuilderMainDiv.AddCssClass(this.Component.CssMainDiv);
-            }
-
-            tagBuilderMainDiv.MergeAttribute("id", this.Component.Id);
-
-            #region Dates and Week to Render or not to Render
-            this.Component.DatesToRender = this.CheckWhichDateToRender();
-            this.Component.WeeksToRender = this.CheckWhichWeekToRender();
-            this.Component.RenderAndLabel = RenderAndLabel(this.Component.DatesToRender, this.Component.WeeksToRender);
-            #endregion
-
-            #region Dates and Week to Hide or Show
-            var weeksToShow = CheckWhichWeekToShow(parsedDateType);
-            var datesToShow = CheckWhichDateToShow(parsedDateType);
-            var showAndLabel = ShowAndLabel(datesToShow, weeksToShow);
-            #endregion
-
-            //check consistency of date with provided values.
-            this.ConsistencyCheckOfProvidedValues(datesToShow, weeksToShow);
-
-            //set associated control id for label to first date textbox
-            this.Component.CustomLabel.AssociatedControlId = this.GetForAttribute(datesToShow, weeksToShow);
-            var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
-
-            if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
-            {
-                tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
-            }
-
-            var sbTagMainDivInnerHtml = new StringBuilder(tagBuilderLabelDiv.ToString());
-
-            //add dropdown list here
-            sbTagMainDivInnerHtml.Append(this.DateTypesHtml());
-
-            if (this.Component.DatesToRender != DateRenderer.SkipBothDates)
-            {
-                //Set remaining properties for first Date and render it
-                this.Component.FirstDateBuilder.DisplayTime(this.Component.DisplayTime)
-                    .DisplayEraseButton(this.Component.DisplayEraseButton)
-                    .DisplayInformationIcon(false)
-                    .StartFromCurrentDate(false)
-                    .AssociatedDateHtmlId(this.Component.SecondDate.Id)
-                    .CssClassDateDiv(this.Component.CssClassFirstDateDateDiv)
-                    .CssMainDiv(this.Component.CssFirstDateMainDiv)
-                    .OnDateChange(this.Component.OnFirstDateChange).ExternalLabelText(this.Component.CustomLabel.Text);
-                if (datesToShow == DateVisibility.HideBothDates)
-                {
-                    this.Component.FirstDateBuilder.CssMainDiv("displaynone");
-                }
-
-                sbTagMainDivInnerHtml.Append(this.Component.FirstDate.ToHtmlString());
-            }
-
-            if (this.Component.WeeksToRender != WeekRenderer.SkipBothWeeks)
-            {
-                // set remaining properties for first week and render it
-                this.Component.FirstWeekBuilder.DisplayInformationIcon(false)
-                    .AssociatedWeekYearHtmlId(this.Component.SecondWeek.Id)
-                    .CssClassWeekDiv(this.Component.CssClassFirstWeekWeekDiv)
-                    .CssMainDiv(this.Component.CssFirstWeekMainDiv)
-                    .OnWeekChange(this.Component.OnFirstWeekChange);
-                if (weeksToShow == WeekVisibility.HideBothWeeks)
-                {
-                    this.Component.FirstWeekBuilder.CssMainDiv("displaynone");
-                }
-
-                sbTagMainDivInnerHtml.Append(this.Component.FirstWeek.ToHtmlString());
-            }
-
-            if (this.Component.RenderAndLabel)
-            {
-                if (this.Component.CssClassAndLabel.IsNull())
-                {
-                    this.Component.CssClassAndLabel = "andLabel";
-                }
-
-                if (!showAndLabel)
-                {
-                    this.Component.CssClassAndLabel = "displaynone ".AppendWithBuilder(this.Component.CssClassAndLabel);
-                }
-
-                new LabelBuilder(this.Component.AndLabel, this.Component.AndLabel.ModelMetadata).HtmlAttributes(new { Id = this.Component.AndLabelId })
-                    .Text(ApplicationStrings.LBL000385)
-                    .CssClassLabel(this.Component.CssClassAndLabel);
-                sbTagMainDivInnerHtml.Append(this.Component.AndLabel.ToHtmlString());
-            }
-
-            if (this.Component.DatesToRender == DateRenderer.RenderBothDates)
-            {
-                //Set remaining properties for second Date and render it
-                this.Component.SecondDateBuilder.DisplayTime(this.Component.DisplayTime)
-                    .DisplayEraseButton(this.Component.DisplayEraseButton)
-                    .DisplayInformationIcon(false)
-                    .StartFromCurrentDate(false)
-                    .AssociatedDateHtmlId(this.Component.FirstDate.Id)
-                    .CssClassDateDiv(this.Component.CssClassSecondDateDateDiv)
-                    .CssMainDiv(this.Component.CssSecondDateMainDiv)
-                    .OnDateChange(this.Component.OnSecondDateChange).ExternalLabelText(this.Component.CustomLabel.Text);
-
-                if (datesToShow == DateVisibility.HideBothDates || datesToShow == DateVisibility.HideSecondDate)
-                {
-                    this.Component.SecondDateBuilder.CssMainDiv("displaynone");
-                }
-
-                sbTagMainDivInnerHtml.Append(this.Component.SecondDate.ToHtmlString());
-            }
-
-            if (this.Component.WeeksToRender == WeekRenderer.RenderBothWeeks)
-            {
-                // set remaining properties for second week and render it
-                this.Component.SecondWeekBuilder.DisplayInformationIcon(false)
-                    .AssociatedWeekYearHtmlId(this.Component.FirstWeek.Id)
-                    .CssClassWeekDiv(this.Component.CssClassSecondWeekWeekDiv)
-                    .CssMainDiv(this.Component.CssSecondWeekMainDiv)
-                    .OnWeekChange(this.Component.OnSecondWeekChange);
-                if (weeksToShow == WeekVisibility.HideSecondWeek || weeksToShow == WeekVisibility.HideBothWeeks)
-                {
-                    this.Component.SecondWeekBuilder.CssMainDiv("displaynone");
-                }
-
-                sbTagMainDivInnerHtml.Append(this.Component.SecondWeek.ToHtmlString());
-            }
-
-            //add information icon
-            if (!string.IsNullOrEmpty(this.Component.InformationIcon.Text))
-            {
-                this.Component.InformationIcon.Name = this.Component.Id.AppendWithBuilder("Name", "InformationIcon");
-                this.Component.InformationIcon.Id = this.Component.Id.AppendWithBuilder("InformationIcon");
-                this.Component.InformationIcon.ToolTipId = this.Component.Id.AppendWithBuilder("InformationIconToolTip");
-                sbTagMainDivInnerHtml.Append(this.Component.InformationIcon.ToHtmlString());
-            }
-
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
-            writer.Write(tagBuilderMainDiv.ToString());
+            throw new ArgumentException("The given selected DateTypesValue :".AppendWithBuilder(Component.DateTypesValue,
+                "is not a valid EnumDateTypes"));
         }
 
-        /// <summary>
-        /// This detects which of the two weeks to render.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="WeekRenderer"/>.
-        /// </returns>
-        private WeekRenderer CheckWhichWeekToRender()
+        var isSelectedDateTypeInGivenList = Component.DateTypesIncluded.Contains(parsedDateType);
+        if (!isSelectedDateTypeInGivenList)
         {
-            var doubleWeekTypes = DoubleWeekTypes();
-            var renderSecondWeek = this.Component.DateTypesIncluded.Any(x => doubleWeekTypes.Any(y => y == x));
-
-            if (renderSecondWeek)
-            {
-                return WeekRenderer.RenderBothWeeks;
-            }
-
-            var singleWeekTypes = SingleWeekTypes();
-            var renderFirstDate = this.Component.DateTypesIncluded.Any(x => singleWeekTypes.Any(y => y == x));
-
-            if (renderFirstDate)
-            {
-                return WeekRenderer.SkipSecondWeek;
-            }
-
-            return WeekRenderer.SkipBothWeeks;
+            throw new ArgumentException("The given selected DateTypesValue :".AppendWithBuilder(Component.DateTypesValue,
+                " is not in the given DateTypesIncluded list"));
         }
 
-        /// <summary>
-        /// This detects which of the two dates to render.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="DateRenderer"/>.
-        /// </returns>
-        private DateRenderer CheckWhichDateToRender()
+        var tagBuilderMainDiv = new TagBuilder("div");
+        if (!string.IsNullOrEmpty(Component.CssMainDiv))
         {
-            var doubleDateTypes = DoubleDateTypes();
-            var renderSecondDate = this.Component.DateTypesIncluded.Any(x => doubleDateTypes.Any(y => y == x));
-
-            if (renderSecondDate)
-            {
-                return DateRenderer.RenderBothDates;
-            }
-
-            var singleDateTypes = SingleDateTypes();
-            var renderFirstDate = this.Component.DateTypesIncluded.Any(x => singleDateTypes.Any(y => y == x));
-
-            if (renderFirstDate)
-            {
-                return DateRenderer.SkipSecondDate;
-            }
-
-            return DateRenderer.SkipBothDates;
+            tagBuilderMainDiv.AddCssClass(Component.CssMainDiv);
         }
 
-        /// <summary>
-        /// This decides whether to render the and label.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private static bool RenderAndLabel(DateRenderer dateToRender, WeekRenderer weekToRender)
-        {
-            if ((dateToRender == DateRenderer.RenderBothDates) || (weekToRender == WeekRenderer.RenderBothWeeks))
-            {
-                return true;
-            }
+        tagBuilderMainDiv.MergeAttribute("id", Component.Id);
 
-            return false;
+        Component.DatesToRender = CheckWhichDateToRender();
+        Component.WeeksToRender = CheckWhichWeekToRender();
+        Component.RenderAndLabel = RenderAndLabel(Component.DatesToRender, Component.WeeksToRender);
+
+        var weeksToShow = CheckWhichWeekToShow(parsedDateType);
+        var datesToShow = CheckWhichDateToShow(parsedDateType);
+        var showAndLabel = ShowAndLabel(datesToShow, weeksToShow);
+
+        ConsistencyCheckOfProvidedValues(datesToShow, weeksToShow);
+
+        Component.CustomLabel.AssociatedControlId = GetForAttribute(datesToShow, weeksToShow);
+        var tagBuilderLabelDiv = new TagBuilder("div");
+        tagBuilderLabelDiv.InnerHtml.AppendHtml(Component.CustomLabel.ToHtml());
+
+        if (!string.IsNullOrEmpty(Component.CssClassLabelDiv))
+        {
+            tagBuilderLabelDiv.AddCssClass(Component.CssClassLabelDiv);
         }
 
-        /// <summary>
-        /// This detects which of the two weeks to display.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="WeekVisibility"/>.
-        /// </returns>
-        private static WeekVisibility CheckWhichWeekToShow(EnumDateTypes parsedDateType)
+        var sbTagMainDivInnerHtml = new StringBuilder();
+        sbTagMainDivInnerHtml.Append(RenderTagBuilder(tagBuilderLabelDiv));
+
+        sbTagMainDivInnerHtml.Append(DateTypesHtml());
+
+        if (Component.DatesToRender != DateRenderer.SkipBothDates)
         {
-            var singleWeekTypes = SingleWeekTypes();
-            var singleWeekTypesIsSelected = singleWeekTypes.Contains(parsedDateType);
-            if (singleWeekTypesIsSelected)
+            Component.FirstDateBuilder.DisplayTime(Component.DisplayTime)
+                .DisplayEraseButton(Component.DisplayEraseButton)
+                .DisplayInformationIcon(false)
+                .StartFromCurrentDate(false)
+                .AssociatedDateHtmlId(Component.SecondDate.Id)
+                .CssClassDateDiv(Component.CssClassFirstDateDateDiv)
+                .CssMainDiv(Component.CssFirstDateMainDiv)
+                .OnDateChange(Component.OnFirstDateChange).ExternalLabelText(Component.CustomLabel.Text);
+            if (datesToShow == DateVisibility.HideBothDates)
             {
-                return WeekVisibility.HideSecondWeek;
+                Component.FirstDateBuilder.CssMainDiv("displaynone");
             }
 
-            var doubleWeekTypes = DoubleWeekTypes();
-            var doubleWeekTypesIsSelected = doubleWeekTypes.Contains(parsedDateType);
-            if (doubleWeekTypesIsSelected)
-            {
-                return WeekVisibility.ShowBothWeeks;
-            }
-
-            return WeekVisibility.HideBothWeeks;
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.FirstDate.ToHtml()));
         }
 
-        /// <summary>
-        /// This detects which of the two dates to display.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="DateVisibility"/>.
-        /// </returns>
-        private static DateVisibility CheckWhichDateToShow(EnumDateTypes parsedDateType)
+        if (Component.WeeksToRender != WeekRenderer.SkipBothWeeks)
         {
-            var singleDateTypes = SingleDateTypes();
-            var singleDateTypesIsSelected = singleDateTypes.Contains(parsedDateType);
-            if (singleDateTypesIsSelected)
+            Component.FirstWeekBuilder.DisplayInformationIcon(false)
+                .AssociatedWeekYearHtmlId(Component.SecondWeek.Id)
+                .CssClassWeekDiv(Component.CssClassFirstWeekWeekDiv)
+                .CssMainDiv(Component.CssFirstWeekMainDiv)
+                .OnWeekChange(Component.OnFirstWeekChange);
+            if (weeksToShow == WeekVisibility.HideBothWeeks)
             {
-                return DateVisibility.HideSecondDate;
+                Component.FirstWeekBuilder.CssMainDiv("displaynone");
             }
 
-            var doubleDateTypes = DoubleDateTypes();
-            var doubleDateTypesIsSelected = doubleDateTypes.Contains(parsedDateType);
-            if (doubleDateTypesIsSelected)
-            {
-                return DateVisibility.ShowBothDates;
-            }
-
-            return DateVisibility.HideBothDates;
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.FirstWeek.ToHtml()));
         }
 
-        /// <summary>
-        /// This detects if the and label shall be displayed or not.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
-        private static bool ShowAndLabel(DateVisibility dateToShow, WeekVisibility weekToShow)
+        if (Component.RenderAndLabel)
         {
-            return (dateToShow == DateVisibility.ShowBothDates) || (weekToShow == WeekVisibility.ShowBothWeeks);
+            if (Component.CssClassAndLabel.IsNull())
+            {
+                Component.CssClassAndLabel = "andLabel";
+            }
+
+            if (!showAndLabel)
+            {
+                Component.CssClassAndLabel = "displaynone ".AppendWithBuilder(Component.CssClassAndLabel);
+            }
+
+            new LabelBuilder(Component.AndLabel, Component.AndLabel.ModelMetadata).HtmlAttributes(new Dictionary<string, object> { { "Id", Component.AndLabelId } })
+                .Text(ApplicationStrings.LBL000385)
+                .CssClassLabel(Component.CssClassAndLabel);
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.AndLabel.ToHtml()));
         }
 
-        /// <summary>
-        /// The get for attribute.
-        /// </summary>
-        /// <param name="dateToShow">
-        /// The date visibility.
-        /// </param>
-        /// <param name="weekToShow">
-        /// The week visibility.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        private string GetForAttribute(DateVisibility dateToShow, WeekVisibility weekToShow)
+        if (Component.DatesToRender == DateRenderer.RenderBothDates)
         {
-            if (dateToShow == DateVisibility.HideBothDates && weekToShow == WeekVisibility.HideBothWeeks)
+            Component.SecondDateBuilder.DisplayTime(Component.DisplayTime)
+                .DisplayEraseButton(Component.DisplayEraseButton)
+                .DisplayInformationIcon(false)
+                .StartFromCurrentDate(false)
+                .AssociatedDateHtmlId(Component.FirstDate.Id)
+                .CssClassDateDiv(Component.CssClassSecondDateDateDiv)
+                .CssMainDiv(Component.CssSecondDateMainDiv)
+                .OnDateChange(Component.OnSecondDateChange).ExternalLabelText(Component.CustomLabel.Text);
+
+            if (datesToShow == DateVisibility.HideBothDates || datesToShow == DateVisibility.HideSecondDate)
             {
-                return this.Component.DateTypesId;
+                Component.SecondDateBuilder.CssMainDiv("displaynone");
             }
 
-            return dateToShow != DateVisibility.HideBothDates ? this.Component.FirstDate.GetDateTextId : this.Component.FirstWeek.WeekTextId;
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.SecondDate.ToHtml()));
         }
 
-        /// <summary>
-        /// This checks for consistency of provided date and week values with the provided dates.
-        /// </summary>
-        /// <param name="dateToShow">
-        /// The date visibility.
-        /// </param>
-        /// <param name="weekToShow">
-        /// The week visibility.
-        /// </param>
-        private void ConsistencyCheckOfProvidedValues(DateVisibility dateToShow, WeekVisibility weekToShow)
+        if (Component.WeeksToRender == WeekRenderer.RenderBothWeeks)
         {
-            if (dateToShow == DateVisibility.HideBothDates)
+            Component.SecondWeekBuilder.DisplayInformationIcon(false)
+                .AssociatedWeekYearHtmlId(Component.FirstWeek.Id)
+                .CssClassWeekDiv(Component.CssClassSecondWeekWeekDiv)
+                .CssMainDiv(Component.CssSecondWeekMainDiv)
+                .OnWeekChange(Component.OnSecondWeekChange);
+            if (weeksToShow == WeekVisibility.HideSecondWeek || weeksToShow == WeekVisibility.HideBothWeeks)
             {
-                if (!this.Component.SecondDate.Value.IsEmpty || !this.Component.FirstDate.Value.IsEmpty)
-                {
-                    throw new ArgumentException(
-                        "The value provided for both date and format should be empty for the selected date type value:".AppendWithBuilder(
-                            this.Component.DateTypesValue));
-                }
+                Component.SecondWeekBuilder.CssMainDiv("displaynone");
             }
 
-            if (dateToShow == DateVisibility.HideSecondDate)
-            {
-                if (!this.Component.SecondDate.Value.IsEmpty)
-                {
-                    throw new ArgumentException(
-                        "The value provided for second date and format should be empty for the selected date type value:".AppendWithBuilder(
-                            this.Component.DateTypesValue));
-                }
-            }
-
-            if (weekToShow == WeekVisibility.HideBothWeeks)
-            {
-                if (!this.Component.SecondWeek.Value.IsEmpty || !this.Component.FirstWeek.Value.IsEmpty)
-                {
-                    throw new ArgumentException(
-                        "The value provided for both week and format should be empty for the selected date type value:".AppendWithBuilder(
-                            this.Component.DateTypesValue));
-                }
-            }
-
-            if (weekToShow == WeekVisibility.HideSecondWeek)
-            {
-                if (!this.Component.SecondWeek.Value.IsEmpty)
-                {
-                    throw new ArgumentException(
-                        "The value provided for second week and format should be empty for the selected date type value:".AppendWithBuilder(
-                            this.Component.DateTypesValue));
-                }
-            }
-
-            //check if the provided date values are of model type and selected type is also a model type
-            this.DateTypeSameAsModel();
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.SecondWeek.ToHtml()));
         }
 
-        /// <summary>
-        /// This checks if the date type to be selected and those of the date format match.
-        /// </summary>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        private void DateTypeSameAsModel()
+        if (!string.IsNullOrEmpty(Component.InformationIcon.Text))
         {
-            var standardTypes = DateComponentHelper.StandardDateTypes();
+            Component.InformationIcon.Name = Component.Id.AppendWithBuilder("Name", "InformationIcon");
+            Component.InformationIcon.Id = Component.Id.AppendWithBuilder("InformationIcon");
+            Component.InformationIcon.ToolTipId = Component.Id.AppendWithBuilder("InformationIconToolTip");
+            sbTagMainDivInnerHtml.Append(RenderHtmlContent(Component.InformationIcon.ToHtml()));
+        }
 
-            if (standardTypes.Contains(this.Component.DateTypesValue))
-            {
-                if (this.Component.FirstDateAndFormat.IsModel || this.Component.SecondDateAndFormat.IsModel)
-                {
-                    throw new ArgumentException("The selected DateTypesValue is not Model but one or both of the provided dates are of Model Type");
-                }
-            }
+        tagBuilderMainDiv.InnerHtml.AppendHtml(sbTagMainDivInnerHtml.ToString());
+        return tagBuilderMainDiv;
+    }
 
-            var modelTypes = DateComponentHelper.ModelDateTypes();
-            if (modelTypes.Contains(this.Component.DateTypesValue))
+    private static string RenderTagBuilder(TagBuilder tagBuilder)
+    {
+        using var writer = new StringWriter();
+        tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
+    }
+
+    private static string RenderHtmlContent(IHtmlContent content)
+    {
+        using var writer = new StringWriter();
+        content.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
+    }
+
+    private WeekRenderer CheckWhichWeekToRender()
+    {
+        var doubleWeekTypes = DoubleWeekTypes();
+        var renderSecondWeek = Component.DateTypesIncluded.Any(x => doubleWeekTypes.Any(y => y == x));
+
+        if (renderSecondWeek)
+        {
+            return WeekRenderer.RenderBothWeeks;
+        }
+
+        var singleWeekTypes = SingleWeekTypes();
+        var renderFirstDate = Component.DateTypesIncluded.Any(x => singleWeekTypes.Any(y => y == x));
+
+        if (renderFirstDate)
+        {
+            return WeekRenderer.SkipSecondWeek;
+        }
+
+        return WeekRenderer.SkipBothWeeks;
+    }
+
+    private DateRenderer CheckWhichDateToRender()
+    {
+        var doubleDateTypes = DoubleDateTypes();
+        var renderSecondDate = Component.DateTypesIncluded.Any(x => doubleDateTypes.Any(y => y == x));
+
+        if (renderSecondDate)
+        {
+            return DateRenderer.RenderBothDates;
+        }
+
+        var singleDateTypes = SingleDateTypes();
+        var renderFirstDate = Component.DateTypesIncluded.Any(x => singleDateTypes.Any(y => y == x));
+
+        if (renderFirstDate)
+        {
+            return DateRenderer.SkipSecondDate;
+        }
+
+        return DateRenderer.SkipBothDates;
+    }
+
+    private static bool RenderAndLabel(DateRenderer dateToRender, WeekRenderer weekToRender)
+    {
+        return (dateToRender == DateRenderer.RenderBothDates) || (weekToRender == WeekRenderer.RenderBothWeeks);
+    }
+
+    private static WeekVisibility CheckWhichWeekToShow(EnumDateTypes parsedDateType)
+    {
+        var singleWeekTypes = SingleWeekTypes();
+        var singleWeekTypesIsSelected = singleWeekTypes.Contains(parsedDateType);
+        if (singleWeekTypesIsSelected)
+        {
+            return WeekVisibility.HideSecondWeek;
+        }
+
+        var doubleWeekTypes = DoubleWeekTypes();
+        var doubleWeekTypesIsSelected = doubleWeekTypes.Contains(parsedDateType);
+        if (doubleWeekTypesIsSelected)
+        {
+            return WeekVisibility.ShowBothWeeks;
+        }
+
+        return WeekVisibility.HideBothWeeks;
+    }
+
+    private static DateVisibility CheckWhichDateToShow(EnumDateTypes parsedDateType)
+    {
+        var singleDateTypes = SingleDateTypes();
+        var singleDateTypesIsSelected = singleDateTypes.Contains(parsedDateType);
+        if (singleDateTypesIsSelected)
+        {
+            return DateVisibility.HideSecondDate;
+        }
+
+        var doubleDateTypes = DoubleDateTypes();
+        var doubleDateTypesIsSelected = doubleDateTypes.Contains(parsedDateType);
+        if (doubleDateTypesIsSelected)
+        {
+            return DateVisibility.ShowBothDates;
+        }
+
+        return DateVisibility.HideBothDates;
+    }
+
+    private static bool ShowAndLabel(DateVisibility dateToShow, WeekVisibility weekToShow)
+    {
+        return (dateToShow == DateVisibility.ShowBothDates) || (weekToShow == WeekVisibility.ShowBothWeeks);
+    }
+
+    private string GetForAttribute(DateVisibility dateToShow, WeekVisibility weekToShow)
+    {
+        if (dateToShow == DateVisibility.HideBothDates && weekToShow == WeekVisibility.HideBothWeeks)
+        {
+            return Component.DateTypesId;
+        }
+
+        return dateToShow != DateVisibility.HideBothDates ? Component.FirstDate.GetDateTextId : Component.FirstWeek.WeekTextId;
+    }
+
+    private void ConsistencyCheckOfProvidedValues(DateVisibility dateToShow, WeekVisibility weekToShow)
+    {
+        if (dateToShow == DateVisibility.HideBothDates)
+        {
+            if (!Component.SecondDate.Value.IsEmpty || !Component.FirstDate.Value.IsEmpty)
             {
-                if (!this.Component.FirstDateAndFormat.IsModel || !this.Component.SecondDateAndFormat.IsModel)
-                {
-                    throw new ArgumentException("The selected DateTypesValue is Model but the one or both of the provided dates are of non-Model Type");
-                }
+                throw new ArgumentException(
+                    "The value provided for both date and format should be empty for the selected date type value:".AppendWithBuilder(
+                        Component.DateTypesValue));
             }
         }
 
-        /// <summary>
-        /// The date types html.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        private string DateTypesHtml()
+        if (dateToShow == DateVisibility.HideSecondDate)
         {
-            if (this.Component.DateTypesIncluded == null || this.Component.DateTypesIncluded.Count == 0)
+            if (!Component.SecondDate.Value.IsEmpty)
             {
-                throw new ArgumentException("DateTypesIncluded cannot be null or empty");
-            }
-
-            if (string.IsNullOrEmpty(this.Component.DateTypesName))
-            {
-                throw new ArgumentException("DateTypesName cannot be null or empty");
-            }
-
-            if (this.Component.DateTypesValue.IsNull())
-            {
-                throw new ArgumentException("DateTypesValue cannot be null");
-            }
-            var ddlDropDownDateTypesId = this.Component.DateTypesId;
-            var dateTypes = this.GetDateTypeItems();
-            var dateTypesSelectList = new SelectList(dateTypes, "Value", "Text", this.Component.DateTypesValue);
-            var accessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.ACCESS000007, this.Component.CustomLabel.Text);
-            new DropDownListBuilder(this.Component.DropDownDateTypes, this.Component.DropDownDateTypes.ModelMetadata).Name(this.Component.DateTypesName)
-                                                                     .Id(this.Component.DateTypesId)
-                                                                     .DataBind(dateTypesSelectList)
-                                                                     .CssClassSelectDiv(this.Component.CssClassDateTypesSelectDiv)
-                                                                     .CustomLabel(m => m.Text(accessText)
-                                                                     .AssociatedControlId(this.Component.DateTypesId)
-                                                                     .HtmlAttributes(new { Id = ddlDropDownDateTypesId + "lbl" })
-                                                                     .IsOnlyForAccess(true));
-
-            return this.Component.DropDownDateTypes.ToHtmlString();
-        }
-
-        /// <summary>
-        /// This adds date type item.
-        /// </summary>
-        /// <returns>
-        /// The <see>
-        ///         <cref>List</cref>
-        ///     </see>
-        ///     .
-        /// </returns>
-        private IEnumerable<SelectListItem> GetDateTypeItems()
-        {
-            var dateTypes = new List<SelectListItem>();
-            this.CheckDateTypesForNullAndDuplicates();
-            var textForDateTypes = DateComponentHelper.TextValuesForDateTypes();
-
-            foreach (var dateTypeItem in this.Component.DateTypesIncluded)
-            {
-                switch (dateTypeItem)
-                {
-                    case EnumDateTypes.Between:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.Between],
-                            Value = EnumDateTypes.Between.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.Empty:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.Empty],
-                            Value = EnumDateTypes.Empty.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.Equal:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.Equal],
-                            Value = EnumDateTypes.Equal.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.EqualCurrentDate:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.EqualCurrentDate],
-                            Value = EnumDateTypes.EqualCurrentDate.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.LessThan:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.LessThan],
-                            Value = EnumDateTypes.LessThan.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.GreaterThan:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.GreaterThan],
-                            Value = EnumDateTypes.GreaterThan.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.LessThanOrEqual:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.LessThanOrEqual],
-                            Value = EnumDateTypes.LessThanOrEqual.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelBetween:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelBetween],
-                            Value = EnumDateTypes.ModelBetween.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelEqual:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelEqual],
-                            Value = EnumDateTypes.ModelEqual.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelGreaterThan:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelGreaterThan],
-                            Value = EnumDateTypes.ModelGreaterThan.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelGreaterThanOrEqual:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelGreaterThanOrEqual],
-                            Value = EnumDateTypes.ModelGreaterThanOrEqual.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelLessThan:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelLessThan],
-                            Value = EnumDateTypes.ModelLessThan.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.ModelLessThanOrEqual:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.ModelLessThanOrEqual],
-                            Value = EnumDateTypes.ModelLessThanOrEqual.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.GreaternThanOrEqual:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.GreaternThanOrEqual],
-                            Value = EnumDateTypes.GreaternThanOrEqual.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.Week:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.Week],
-                            Value = EnumDateTypes.Week.ToString()
-                        });
-                        break;
-                    case EnumDateTypes.WeekBetween:
-                        dateTypes.Add(new SelectListItem
-                        {
-                            Text = textForDateTypes[EnumDateTypes.WeekBetween],
-                            Value = EnumDateTypes.WeekBetween.ToString()
-                        });
-                        break;
-                }
-            }
-
-            return dateTypes;
-        }
-
-        /// <summary>
-        /// This checks date types for null and duplicates.
-        /// </summary>
-        /// <exception cref="ArgumentException">
-        /// </exception>
-        private void CheckDateTypesForNullAndDuplicates()
-        {
-            if (this.Component.DateTypesIncluded == null || this.Component.DateTypesIncluded.Count == 0)
-            {
-                throw new ArgumentException("The provided DateTypes is empty");
-            }
-
-            var checkForDuplicates = this.Component.DateTypesIncluded.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
-            if (checkForDuplicates.Count >= 1)
-            {
-                throw new ArgumentException("The provided DateTypes have got duplicate values");
+                throw new ArgumentException(
+                    "The value provided for second date and format should be empty for the selected date type value:".AppendWithBuilder(
+                        Component.DateTypesValue));
             }
         }
 
-        /// <summary>
-        /// This returns single date types.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable<EnumDateTypes>"/>.
-        /// </returns>
-        private static IEnumerable<EnumDateTypes> SingleDateTypes()
+        if (weekToShow == WeekVisibility.HideBothWeeks)
         {
-            return new List<EnumDateTypes>
-                   {
-                       //Standard Dates
-                       EnumDateTypes.Empty,
-                       EnumDateTypes.Equal,
-                       EnumDateTypes.GreaterThan,
-                       EnumDateTypes.GreaternThanOrEqual,
-                       EnumDateTypes.LessThan,
-                       EnumDateTypes.LessThanOrEqual,
-                       //Model Dates
-                       EnumDateTypes.ModelEqual,
-                       EnumDateTypes.ModelGreaterThan,
-                       EnumDateTypes.ModelGreaterThanOrEqual,
-                       EnumDateTypes.ModelLessThan,
-                       EnumDateTypes.ModelLessThanOrEqual,
-                   };
+            if (!Component.SecondWeek.Value.IsEmpty || !Component.FirstWeek.Value.IsEmpty)
+            {
+                throw new ArgumentException(
+                    "The value provided for both week and format should be empty for the selected date type value:".AppendWithBuilder(
+                        Component.DateTypesValue));
+            }
         }
 
-        /// <summary>
-        /// This returns double date types.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable"/>.
-        /// </returns>
-        private static IEnumerable<EnumDateTypes> DoubleDateTypes()
+        if (weekToShow == WeekVisibility.HideSecondWeek)
         {
-            return new List<EnumDateTypes>
-                   {
-                       //standard types
-                       EnumDateTypes.Between,
-                       //model types
-                       EnumDateTypes.ModelBetween
-                   };
+            if (!Component.SecondWeek.Value.IsEmpty)
+            {
+                throw new ArgumentException(
+                    "The value provided for second week and format should be empty for the selected date type value:".AppendWithBuilder(
+                        Component.DateTypesValue));
+            }
         }
 
-        /// <summary>
-        /// This returns single week types.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable"/>.
-        /// </returns>
-        private static IEnumerable<EnumDateTypes> SingleWeekTypes()
+        DateTypeSameAsModel();
+    }
+
+    private void DateTypeSameAsModel()
+    {
+        var standardTypes = DateComponentHelper.StandardDateTypes();
+
+        if (standardTypes.Contains(Component.DateTypesValue))
         {
-            return new List<EnumDateTypes>
-                   {
-                       EnumDateTypes.Week
-                   };
+            if (Component.FirstDateAndFormat.IsModel || Component.SecondDateAndFormat.IsModel)
+            {
+                throw new ArgumentException("The selected DateTypesValue is not Model but one or both of the provided dates are of Model Type");
+            }
         }
 
-        /// <summary>
-        /// This returns double week types.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable"/>.
-        /// </returns>
-        private static IEnumerable<EnumDateTypes> DoubleWeekTypes()
+        var modelTypes = DateComponentHelper.ModelDateTypes();
+        if (modelTypes.Contains(Component.DateTypesValue))
         {
-            return new List<EnumDateTypes>
-                   {
-                       EnumDateTypes.WeekBetween
-                   };
+            if (!Component.FirstDateAndFormat.IsModel || !Component.SecondDateAndFormat.IsModel)
+            {
+                throw new ArgumentException("The selected DateTypesValue is Model but the one or both of the provided dates are of non-Model Type");
+            }
         }
+    }
+
+    private string DateTypesHtml()
+    {
+        if (Component.DateTypesIncluded == null || Component.DateTypesIncluded.Count == 0)
+        {
+            throw new ArgumentException("DateTypesIncluded cannot be null or empty");
+        }
+
+        if (string.IsNullOrEmpty(Component.DateTypesName))
+        {
+            throw new ArgumentException("DateTypesName cannot be null or empty");
+        }
+
+        if (Component.DateTypesValue.IsNull())
+        {
+            throw new ArgumentException("DateTypesValue cannot be null");
+        }
+        var ddlDropDownDateTypesId = Component.DateTypesId;
+        var dateTypes = GetDateTypeItems();
+        var dateTypesSelectList = new SelectList(dateTypes, "Value", "Text", Component.DateTypesValue);
+        var accessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.ACCESS000007, Component.CustomLabel.Text);
+        new DropDownListBuilder(Component.DropDownDateTypes, Component.DropDownDateTypes.ModelMetadata).Name(Component.DateTypesName)
+                                                                 .Id(Component.DateTypesId)
+                                                                 .DataBind(dateTypesSelectList)
+                                                                 .CssClassSelectDiv(Component.CssClassDateTypesSelectDiv)
+                                                                 .CustomLabel(m => m.Text(accessText)
+                                                                 .AssociatedControlId(Component.DateTypesId)
+                                                                 .HtmlAttributes(new Dictionary<string, object> { { "Id", ddlDropDownDateTypesId + "lbl" } })
+                                                                 .IsOnlyForAccess(true));
+
+        return RenderHtmlContent(Component.DropDownDateTypes.ToHtml());
+    }
+
+    private IEnumerable<SelectListItem> GetDateTypeItems()
+    {
+        var dateTypes = new List<SelectListItem>();
+        CheckDateTypesForNullAndDuplicates();
+        var textForDateTypes = DateComponentHelper.TextValuesForDateTypes();
+
+        foreach (var dateTypeItem in Component.DateTypesIncluded)
+        {
+            switch (dateTypeItem)
+            {
+                case EnumDateTypes.Between:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.Between], Value = EnumDateTypes.Between.ToString() });
+                    break;
+                case EnumDateTypes.Empty:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.Empty], Value = EnumDateTypes.Empty.ToString() });
+                    break;
+                case EnumDateTypes.Equal:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.Equal], Value = EnumDateTypes.Equal.ToString() });
+                    break;
+                case EnumDateTypes.EqualCurrentDate:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.EqualCurrentDate], Value = EnumDateTypes.EqualCurrentDate.ToString() });
+                    break;
+                case EnumDateTypes.LessThan:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.LessThan], Value = EnumDateTypes.LessThan.ToString() });
+                    break;
+                case EnumDateTypes.GreaterThan:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.GreaterThan], Value = EnumDateTypes.GreaterThan.ToString() });
+                    break;
+                case EnumDateTypes.LessThanOrEqual:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.LessThanOrEqual], Value = EnumDateTypes.LessThanOrEqual.ToString() });
+                    break;
+                case EnumDateTypes.ModelBetween:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelBetween], Value = EnumDateTypes.ModelBetween.ToString() });
+                    break;
+                case EnumDateTypes.ModelEqual:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelEqual], Value = EnumDateTypes.ModelEqual.ToString() });
+                    break;
+                case EnumDateTypes.ModelGreaterThan:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelGreaterThan], Value = EnumDateTypes.ModelGreaterThan.ToString() });
+                    break;
+                case EnumDateTypes.ModelGreaterThanOrEqual:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelGreaterThanOrEqual], Value = EnumDateTypes.ModelGreaterThanOrEqual.ToString() });
+                    break;
+                case EnumDateTypes.ModelLessThan:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelLessThan], Value = EnumDateTypes.ModelLessThan.ToString() });
+                    break;
+                case EnumDateTypes.ModelLessThanOrEqual:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.ModelLessThanOrEqual], Value = EnumDateTypes.ModelLessThanOrEqual.ToString() });
+                    break;
+                case EnumDateTypes.GreaternThanOrEqual:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.GreaternThanOrEqual], Value = EnumDateTypes.GreaternThanOrEqual.ToString() });
+                    break;
+                case EnumDateTypes.Week:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.Week], Value = EnumDateTypes.Week.ToString() });
+                    break;
+                case EnumDateTypes.WeekBetween:
+                    dateTypes.Add(new SelectListItem { Text = textForDateTypes[EnumDateTypes.WeekBetween], Value = EnumDateTypes.WeekBetween.ToString() });
+                    break;
+            }
+        }
+
+        return dateTypes;
+    }
+
+    private void CheckDateTypesForNullAndDuplicates()
+    {
+        if (Component.DateTypesIncluded == null || Component.DateTypesIncluded.Count == 0)
+        {
+            throw new ArgumentException("The provided DateTypes is empty");
+        }
+
+        var checkForDuplicates = Component.DateTypesIncluded.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+        if (checkForDuplicates.Count >= 1)
+        {
+            throw new ArgumentException("The provided DateTypes have got duplicate values");
+        }
+    }
+
+    private static IEnumerable<EnumDateTypes> SingleDateTypes()
+    {
+        return new List<EnumDateTypes>
+        {
+            EnumDateTypes.Empty,
+            EnumDateTypes.Equal,
+            EnumDateTypes.GreaterThan,
+            EnumDateTypes.GreaternThanOrEqual,
+            EnumDateTypes.LessThan,
+            EnumDateTypes.LessThanOrEqual,
+            EnumDateTypes.ModelEqual,
+            EnumDateTypes.ModelGreaterThan,
+            EnumDateTypes.ModelGreaterThanOrEqual,
+            EnumDateTypes.ModelLessThan,
+            EnumDateTypes.ModelLessThanOrEqual,
+        };
+    }
+
+    private static IEnumerable<EnumDateTypes> DoubleDateTypes()
+    {
+        return new List<EnumDateTypes>
+        {
+            EnumDateTypes.Between,
+            EnumDateTypes.ModelBetween
+        };
+    }
+
+    private static IEnumerable<EnumDateTypes> SingleWeekTypes()
+    {
+        return new List<EnumDateTypes>
+        {
+            EnumDateTypes.Week
+        };
+    }
+
+    private static IEnumerable<EnumDateTypes> DoubleWeekTypes()
+    {
+        return new List<EnumDateTypes>
+        {
+            EnumDateTypes.WeekBetween
+        };
     }
 }

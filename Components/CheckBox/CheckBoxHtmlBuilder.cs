@@ -1,102 +1,83 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="CheckBoxHtmlBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 13/03/2014
-//    Author:  Sharma Siddharth (54626) 
-//    Description: Contains methods to build HTML for the checkbox component
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
+using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox;
+
+/// <summary>
+/// The check box html builder.
+/// </summary>
+public class CheckBoxHtmlBuilder : HtmlBuilderBase<CheckBoxComponent>
 {
-    using System;
-    using System.Globalization;
-    using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-
-    /// <summary>
-    /// The check box html builder.
-    /// </summary>
-    public class CheckBoxHtmlBuilder : HtmlBuilderBase<CheckBoxComponent>
+    public CheckBoxHtmlBuilder(CheckBoxComponent component)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CheckBoxHtmlBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        public CheckBoxHtmlBuilder(CheckBoxComponent component)
+        Component = component;
+    }
+
+    public override IHtmlContent Build()
+    {
+        if (!Component.IsVisible)
         {
-            this.Component = component;
+            return HtmlString.Empty;
         }
 
-        /// <summary>
-        /// The build.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void Build(HtmlTextWriter writer)
+        var sb = new StringBuilder();
+
+        var tagBuilderHidden = new TagBuilder("input");
+        tagBuilderHidden.Attributes["id"] = string.Format(CultureInfo.InvariantCulture, "{0}Hidden", Component.Id);
+
+        if (!string.IsNullOrEmpty(Component.Name))
         {
-            if (writer == null)
-            {
-                throw new ArgumentException("The parameter writer cannot be null");
-            }
+            tagBuilderHidden.Attributes["name"] = Component.Name;
+        }
 
-            if (this.Component.IsVisible)
-            {
-                // This hidden field is used to bind the value of the checkbox to a boolean
-                // It handles unchecked and disabled states
-                var tagBuilderHidden = new TagBuilder("input");
-                tagBuilderHidden.MergeAttribute("id", string.Format(CultureInfo.InvariantCulture, "{0}Hidden", this.Component.Id));
+        tagBuilderHidden.Attributes["type"] = "hidden";
+        tagBuilderHidden.Attributes["value"] = Component.IsChecked ? "true" : "false";
+        tagBuilderHidden.TagRenderMode = TagRenderMode.SelfClosing;
 
-                if (!string.IsNullOrEmpty(this.Component.Name))
-                {
-                    tagBuilderHidden.MergeAttribute("name", this.Component.Name);
-                }
+        var tagBuilderCheckBox = new TagBuilder("input");
+        tagBuilderCheckBox.Attributes["id"] = Component.Id;
+        
+        if (!string.IsNullOrEmpty(Component.Name))
+        {
+            tagBuilderCheckBox.Attributes["name"] = Component.Name;
+        }
+        
+        tagBuilderCheckBox.Attributes["type"] = "checkbox";
+        tagBuilderCheckBox.Attributes["value"] = Component.IsChecked ? "true" : "false";
 
+        foreach (var attr in Component.HtmlAttributes)
+        {
+            tagBuilderCheckBox.Attributes[attr.Key] = attr.Value?.ToString() ?? string.Empty;
+        }
 
-                tagBuilderHidden.MergeAttribute("type", "hidden");
-                tagBuilderHidden.MergeAttribute("value", this.Component.IsChecked ? "true" : "false");
+        if (Component.IsDisabled)
+        {
+            Component.CssClass = Component.CssClassDisabled;
+            tagBuilderCheckBox.Attributes["disabled"] = "disabled";
+        }
 
-                var tagBuilderCheckBox = new TagBuilder("input");
-                tagBuilderCheckBox.MergeAttribute("id", this.Component.Id);
-                if (!string.IsNullOrEmpty(this.Component.Name))
-                {
-                    tagBuilderCheckBox.MergeAttribute("name", this.Component.Name);
-                }
-                tagBuilderCheckBox.MergeAttribute("type", "checkbox");
-                tagBuilderCheckBox.MergeAttribute("value", this.Component.IsChecked ? "true" : "false");
-               
-                
-                tagBuilderCheckBox.MergeAttributes(this.Component.HtmlAttributes);
+        if (!string.IsNullOrEmpty(Component.CssClass))
+        {
+            tagBuilderCheckBox.AddCssClass(Component.CssClass);
+        }
 
-                if (this.Component.IsDisabled)
-                {
-                    this.Component.CssClass = this.Component.CssClassDisabled;
-                    tagBuilderCheckBox.MergeAttribute("disabled", "disabled");
-                }
+        if (!string.IsNullOrEmpty(Component.Title))
+        {
+            tagBuilderCheckBox.Attributes["title"] = Component.Title;
+        }
 
-                if (!string.IsNullOrEmpty(this.Component.CssClass))
-                {
-                    tagBuilderCheckBox.AddCssClass(this.Component.CssClass);
-                }
+        tagBuilderCheckBox.TagRenderMode = TagRenderMode.SelfClosing;
 
-                if (!string.IsNullOrEmpty(this.Component.Title))
-                {
-                    tagBuilderCheckBox.MergeAttribute("title", this.Component.Title);
-                }
-
-                var sbHtml = new StringBuilder();
-                sbHtml.Append(tagBuilderHidden.ToString(TagRenderMode.StartTag));
-                sbHtml.Append(tagBuilderCheckBox.ToString(TagRenderMode.StartTag));
-                writer.Write(sbHtml);
-            }
+        using (var writer = new StringWriter())
+        {
+            tagBuilderHidden.WriteTo(writer, HtmlEncoder.Default);
+            tagBuilderCheckBox.WriteTo(writer, HtmlEncoder.Default);
+            return new HtmlString(writer.ToString());
         }
     }
 }

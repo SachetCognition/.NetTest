@@ -1,79 +1,52 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable;
+
+public class SelectAllDataTableHeaderTemplate : IDataTableHeaderTemplate
 {
-    using System.Text;
-    using System.Web.Mvc;
+    public IHtmlHelper? HtmlHelper { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
+    public string ToolTip { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string CssClass { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The select all data table header template.
-    /// </summary>
-    public class SelectAllDataTableHeaderTemplate : IDataTableHeaderTemplate
+    public void BuildHtml(StringBuilder builder)
     {
-        /// <summary>
-        /// Gets or sets the html helper.
-        /// </summary>
-        public HtmlHelper HtmlHelper { get; set; }
-
-        /// <summary>
-        /// Gets or sets the client identifier
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        public string ToolTip { get; set; }
-
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the css class.
-        /// </summary>
-        public string CssClass { get; set; }
-
-        /// <summary>
-        /// The build html.
-        /// </summary>
-        /// <param name="builder">
-        /// The string builder.
-        /// </param>
-        public void BuildHtml(StringBuilder builder)
+        if (builder != null)
         {
-            if (builder != null)
+            var tbAccSpan = new TagBuilder("label");
+            tbAccSpan.MergeAttribute("for", Id);
+
+            if (!string.IsNullOrEmpty(Title))
             {
-                var tbAccSpan = new TagBuilder("label");
-                tbAccSpan.MergeAttribute("for", this.Id);
-
-                if (!string.IsNullOrEmpty(this.Title))
-                {
-                    tbAccSpan.SetInnerText(this.Title);
-
-                }
-                else
-                {
-                     tbAccSpan.AddCssClass("hide-access");
-                    tbAccSpan.SetInnerText(this.ToolTip);
-                }
-
-                var tagBuilder = new TagBuilder("input");
-                tagBuilder.MergeAttribute("type", "checkbox");
-                tagBuilder.MergeAttribute("title", this.ToolTip);
-                tagBuilder.MergeAttribute("name", this.Name);
-                tagBuilder.MergeAttribute("id", this.Id);
-
-                builder.Append(tagBuilder.ToString(TagRenderMode.StartTag));
-
-                builder.AppendLine(tbAccSpan.ToString());
-
-
+                tbAccSpan.InnerHtml.Append(Title);
             }
+            else
+            {
+                tbAccSpan.AddCssClass("hide-access");
+                tbAccSpan.InnerHtml.Append(ToolTip);
+            }
+
+            var tagBuilder = new TagBuilder("input");
+            tagBuilder.MergeAttribute("type", "checkbox");
+            tagBuilder.MergeAttribute("title", ToolTip);
+            tagBuilder.MergeAttribute("name", Name);
+            tagBuilder.MergeAttribute("id", Id);
+            tagBuilder.TagRenderMode = TagRenderMode.SelfClosing;
+
+            builder.Append(RenderTagBuilder(tagBuilder));
+            builder.AppendLine(RenderTagBuilder(tbAccSpan));
         }
+    }
+
+    private static string RenderTagBuilder(TagBuilder tagBuilder)
+    {
+        using var writer = new StringWriter();
+        tagBuilder.WriteTo(writer, HtmlEncoder.Default);
+        return writer.ToString();
     }
 }

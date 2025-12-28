@@ -1,463 +1,198 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="DateTimeBuilder.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 07/04/2014
-//    Author:  Sharma Siddharth (54626) 
-//    Description: The Builder class for the DateTime component
-// </summary>
-// -------------------------------------------------------------------------------------------------
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+
+public class DateTimeBuilder : ComponentBuilderBase<DateTimeComponent, DateTimeBuilder>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Web.Mvc;
+    private readonly CustomLabelBuilder _customLabelBuilder;
+    private readonly ImageToolTipBuilder _informationIconBuilder;
 
-    using Equant.SAV2000.ComponentLibrary.Common.Resources;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
-
-    /// <summary>
-    /// The Builder class for the DateTime component
-    /// </summary>
-    public class DateTimeBuilder : ComponentBuilderBase<DateTimeComponent, DateTimeBuilder>
+    public DateTimeBuilder(DateTimeComponent component, ModelMetadata? modelMetadata)
+        : base(component, modelMetadata)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DateTimeBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        /// <param name="modelMetadata"></param>
-        public DateTimeBuilder(DateTimeComponent component, ModelMetadata modelMetadata)
-            : base(component, modelMetadata)
-        {
-            this.customLabelBuilder = new CustomLabelBuilder(this.Component.CustomLabel, modelMetadata);
-            this.informationIconBuilder = new ImageToolTipBuilder(this.Component.InformationIcon, modelMetadata)
-                .ImageUrl("/Images/picto-information.png").CssClassImage("img15").PersistanceMode(PersistanceMode.Click)
-                .Text(ApplicationStrings.DateImageToolTip).Title(ApplicationStrings.TIP000024)
-                .AlternateText(ApplicationStrings.TIP000024).Css("fortooltipclick").CssClassSpan("help").CssClassInnerSpan("tooltip");
-        }
+        _customLabelBuilder = new CustomLabelBuilder(Component.CustomLabel, modelMetadata);
+        _informationIconBuilder = new ImageToolTipBuilder(Component.InformationIcon, modelMetadata)
+            .ImageUrl("/Images/picto-information.png")
+            .CssClassImage("img15")
+            .PersistanceMode(PersistanceMode.Click)
+            .Text("Date information tooltip")
+            .Title("Information")
+            .AlternateText("Information")
+            .Css("fortooltipclick")
+            .CssClassSpan("help")
+            .CssClassInnerSpan("tooltip");
+    }
 
-        /// <summary>
-        /// The custom label builder.
-        /// </summary>
-        private readonly CustomLabelBuilder customLabelBuilder;
+    public DateTimeBuilder CustomLabel(Action<CustomLabelBuilder> setup)
+    {
+        if (setup == null) return this;
+        setup(_customLabelBuilder);
+        return this;
+    }
 
-        /// <summary>
-        /// The information icon builder.
-        /// </summary>
-        private readonly ImageToolTipBuilder informationIconBuilder;
+    public DateTimeBuilder ConsumingAppAreaId(string appAreaId)
+    {
+        Component.ConsumingAppAreaId = appAreaId;
+        return this;
+    }
 
-        /// <summary>
-        /// The custom label.
-        /// </summary>
-        /// <param name="setup">
-        /// The setup.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CustomLabel(Action<CustomLabelBuilder> setup)
-        {
-            if (setup == null)
-            {
-                return this;
-            }
+    public DateTimeBuilder InformationIcon(Action<ImageToolTipBuilder> setup)
+    {
+        if (setup == null) return this;
+        setup(_informationIconBuilder);
+        return this;
+    }
 
-            setup(this.customLabelBuilder);
-            return this;
-        }
+    public DateTimeBuilder CssMainDiv(string value)
+    {
+        Component.CssMainDiv = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The consuming app area id.
-        /// </summary>
-        /// <param name="appAreaId">
-        /// The app area id.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder ConsumingAppAreaId(string appAreaId)
-        {
-            this.Component.ConsumingAppAreaId = appAreaId;
-            return this;
-        }
+    public DateTimeBuilder OnDateChange(string value)
+    {
+        Component.OnDateChange = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The information icon.
-        /// </summary>
-        /// <param name="setup">
-        /// The setup.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder InformationIcon(Action<ImageToolTipBuilder> setup)
-        {
-            if (setup == null)
-            {
-                return this;
-            }
+    public DateTimeBuilder Value(DateTimeWithFormat date)
+    {
+        Component.Value = date;
+        return this;
+    }
 
-            setup(this.informationIconBuilder);
-            return this;
-        }
+    public DateTimeBuilder DisplayTime(bool value)
+    {
+        Component.DisplayTime = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The method to set CSS for the component.
-        /// </summary>
-        /// <param name="value">
-        /// CSS class.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CssMainDiv(string value)
-        {
-            Component.CssMainDiv = value;
-            return this;
-        }
+    public DateTimeBuilder EraseButtonText(string value)
+    {
+        Component.EraseButtonText = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The method to set date change event for component.
-        /// </summary>
-        /// <param name="value">
-        /// Date Change Event.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder OnDateChange(string value)
-        {
-            Component.OnDateChange = value;
-            return this;
-        }
+    public DateTimeBuilder DisplayEraseButton(bool value)
+    {
+        Component.DisplayEraseButton = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The method to set value for component.
-        /// </summary>
-        /// <param name="date">
-        /// Title text for component.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder Value(DateTimeWithFormat date)
-        {
-            Component.Value = date;
-            return this;
-        }
-        
-        /// <summary>
-        /// The display time.
-        /// </summary>
-        /// <param name="value">
-        /// This is used to display time.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder DisplayTime(bool value)
-        {
-            this.Component.DisplayTime = value;
-            return this;
-        }
+    public DateTimeBuilder DisplayInformationIcon(bool value)
+    {
+        Component.DisplayInformationIcon = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Set the text to assign to erase button.
-        /// </summary>
-        /// <param name="value">
-        /// The erase button text.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder EraseButtonText(string value)
-        {
-            this.Component.EraseButtonText = value;
-            return this;
-        }
+    public DateTimeBuilder CssClassLabelDiv(string value)
+    {
+        Component.CssClassLabelDiv = value;
+        return this;
+    }
 
-        /// <summary>
-        /// This sets the display erase button.
-        /// </summary>
-        /// <param name="value">
-        /// The display erase button.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder DisplayEraseButton(bool value)
-        {
-            this.Component.DisplayEraseButton = value;
-            return this;
-        }
+    public DateTimeBuilder CssClassDateDiv(string value)
+    {
+        Component.CssClassDateDiv = value;
+        return this;
+    }
 
-        /// <summary>
-        /// This sets the display information icon.
-        /// </summary>
-        /// <param name="value">
-        /// The display information icon.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder DisplayInformationIcon(bool value)
-        {
-            this.Component.DisplayInformationIcon = value;
-            return this;
-        }
+    public DateTimeBuilder CssClassDateInput(string value)
+    {
+        Component.CssClassDateInput = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Sets The CSS class label div.
-        /// </summary>
-        /// <param name="value">
-        /// The CSS class label div.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CssClassLabelDiv(string value)
-        {
-            this.Component.CssClassLabelDiv = value;
-            return this;
-        }
+    public DateTimeBuilder LabelCssReadOnly(string value)
+    {
+        Component.LabelCssReadOnly = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Sets The CSS class date div.
-        /// </summary>
-        /// <param name="value">
-        /// The CSS class date div.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CssClassDateDiv(string value)
-        {
-            this.Component.CssClassDateDiv = value;
-            return this;
-        }
+    public DateTimeBuilder StartFromCurrentDate(bool value)
+    {
+        Component.StartFromCurrentDate = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The CSS class date input.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CssClassDateInput(string value)
-        {
-            this.Component.CssClassDateInput = value;
-            return this;
-        }
+    public DateTimeBuilder AssociatedDateHtmlId(string value)
+    {
+        Component.AssociatedDateHtmlId = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Sets the label CSS for readonly mode.
-        /// </summary>
-        /// <param name="value">
-        /// The label CSS read only.
-        /// </param>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
-        public DateTimeBuilder LabelCssReadOnly(string value)
-        {
-            this.Component.LabelCssReadOnly = value;
-            return this;
-        }
+    public DateTimeBuilder CalendarImagePath(string value)
+    {
+        Component.CalendarImagePath = value;
+        return this;
+    }
 
-        /// <summary>
-        /// This sets if date shall start from current date.
-        /// </summary>
-        /// <param name="value">
-        /// The start from current date.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder StartFromCurrentDate(bool value)
-        {
-            this.Component.StartFromCurrentDate = value;
-            return this;
-        }
+    public DateTimeBuilder ExternalLabelText(string value)
+    {
+        Component.ExternalLabelText = value;
+        return this;
+    }
 
-        /// <summary>
-        /// This sets associated date html id.
-        /// </summary>
-        /// <param name="value">
-        /// The associated date html id.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder AssociatedDateHtmlId(string value)
-        {
-            this.Component.AssociatedDateHtmlId = value;
-            return this;
-        }
+    public DateTimeBuilder EraseImagePath(string value)
+    {
+        Component.EraseImagePath = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The calendar image path.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder CalendarImagePath(string value)
-        {
-            this.Component.CalendarImagePath = value;
-            return this;
-        }
+    public DateTimeBuilder InformationIconPath(string value)
+    {
+        Component.InformationIconPath = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The tool tip text.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder ExternalLabelText(string value)
-        {
-            this.Component.ExternalLabelText = value;
-            return this;
-        }
+    public DateTimeBuilder ConditionalAnnotations(Dictionary<string, string> value)
+    {
+        Component.ConditionalAnnotations = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The erase image path.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder EraseImagePath(string value)
-        {
-            this.Component.EraseImagePath = value;
-            return this;
-        }
+    public DateTimeBuilder Mandatory(bool value)
+    {
+        Component.IsMandatory = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The information icon path.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder InformationIconPath(string value)
-        {
-            this.Component.InformationIconPath = value;
-            return this;
-        }
+    public DateTimeBuilder MandatoryMessage(string value)
+    {
+        Component.MandatoryMessage = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The conditional annotations.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder ConditionalAnnotations(Dictionary<string, string> value)
-        {
-            this.Component.ConditionalAnnotations = value;
-            return this;
-        }
+    public DateTimeBuilder AccessHrText(string value)
+    {
+        Component.AccessHrText = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The mandatory.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder Mandatory(bool value)
-        {
-            this.Component.IsMandatory = value;
-            return this;
-        }
+    public DateTimeBuilder AccessMinText(string value)
+    {
+        Component.AccessMinText = value;
+        return this;
+    }
 
-        /// <summary>
-        /// The mandatory message.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTimeBuilder"/>.
-        /// </returns>
-        public DateTimeBuilder MandatoryMessage(string value)
-        {
-            this.Component.MandatoryMessage = value;
-            return this;
-        }
+    public DateTimeBuilder CurrentDateSelectionImageUrl(string value)
+    {
+        Component.CurrentDateSelectionImageUrl = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Text of hour hidden span.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public DateTimeBuilder AccessHrText(string value)
-        {
-            this.Component.AccessHrText = value;
-            return this;
-        }
+    public DateTimeBuilder CurrentDateSelectionTitle(string value)
+    {
+        Component.CurrentDateSelectionTitle = value;
+        return this;
+    }
 
-        /// <summary>
-        /// Text of minute text.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public DateTimeBuilder AccessMinText(string value)
-        {
-            this.Component.AccessMinText = value;
-            return this;
-        }
-
-        /// <summary>
-        /// This sets the path of the current date selection image url.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public DateTimeBuilder CurrentDateSelectionImageUrl(string value)
-        {
-            this.Component.CurrentDateSelectionImageUrl = value;
-            return this;
-        }
-
-        /// <summary>
-        /// This sets the path of the current date selection title.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public DateTimeBuilder CurrentDateSelectionTitle(string value)
-        {
-            this.Component.CurrentDateSelectionTitle = value;
-            return this;
-        }
-
-        /// <summary>
-        /// This sets the value to display current date selector.
-        /// </summary>
-        public DateTimeBuilder DisplayCurrentDateSelector(bool value)
-        {
-            this.Component.DisplayCurrentDateSelector = value;
-            return this;
-        }
+    public DateTimeBuilder DisplayCurrentDateSelector(bool value)
+    {
+        Component.DisplayCurrentDateSelector = value;
+        return this;
     }
 }

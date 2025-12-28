@@ -1,199 +1,104 @@
-﻿// -------------------------------------------------------------------------------------------------
-// <copyright file="ActionButtonComponent.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//    
-//    Creation Date: 07/04/2014
-//    Author:  Sharma Siddharth (54626) 
-//    Description: The component class for the ActionButton component
-// </summary>
-// -------------------------------------------------------------------------------------------------
+using System.Collections.ObjectModel;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton;
+
+/// <summary>
+/// The component class for the ActionButton component.
+/// </summary>
+public class ActionButtonComponent : ComponentBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Helper;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-
-    /// <summary>
-    /// The component class for the ActionButton component
-    /// </summary>
-    public class ActionButtonComponent : ComponentBase
+    public ActionButtonComponent(IHtmlHelper htmlHelper)
+        : base(htmlHelper)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionButtonComponent"/> class.
-        /// </summary>
-        /// <param name="htmlHelper">
-        /// The html helper.
-        /// </param>
-        public ActionButtonComponent(HtmlHelper htmlHelper)
-            : base(htmlHelper)
-        {
-            this.OnClick = "null";
-            this.Title = string.Empty;
-            this.Value = string.Empty;
-        }
+        OnClick = "null";
+        Title = string.Empty;
+        Value = string.Empty;
+    }
 
-        /// <summary>
-        /// Gets the JS resources.
-        /// </summary>
-        public override ReadOnlyCollection<JsResource> JsResources
-        {
-            get
+    public override ReadOnlyCollection<JsResource> JsResources =>
+        new ReadOnlyCollection<JsResource>(
+            new List<JsResource>
             {
-                return
-                    new ReadOnlyCollection<JsResource>(
-                        new List<JsResource>
-                            {
-                                new JsResource(
-                                    "JsActionButton",
-                                    "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.ActionButton.js",
-                                    200,
-                                    typeof(ActionButtonComponent))
-                            });
+                new JsResource(
+                    "JsActionButton",
+                    "Equant.SAV2000.ComponentLibrary.MVC.Resources.Javascripts.ActionButton.js",
+                    200,
+                    typeof(ActionButtonComponent))
+            });
+
+    public string? CssClass { get; set; }
+
+    public string? DialogBoxId { get; set; }
+
+    public string? CssClassReadOnly { get; set; }
+
+    public string? CssSpan { get; set; }
+
+    public string OnClick { get; set; }
+
+    public string? AccessText { get; set; }
+
+    public bool IsDisabled
+    {
+        get => HtmlAttributes.ContainsKey("disabled");
+        set
+        {
+            if (value)
+            {
+                HtmlAttributes["disabled"] = "disabled";
             }
-        }
-        
-        /// <summary>
-        /// Gets or sets the CSS class of the ActionButton
-        /// </summary>
-        public string CssClass { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Dialog DIV id
-        /// </summary>
-        public string DialogBoxId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the CSS class of the ActionButton when disabled
-        /// </summary>
-        public string CssClassReadOnly { get; set; }
-
-        /// <summary>
-        /// CSS class for the span containing the text of the button
-        /// </summary>
-        public string CssSpan { get; set; }
-
-        /// <summary>
-        /// Gets or sets the on click.
-        /// </summary>
-        public string OnClick { get; set; }
-
-        /// <summary>
-        /// The disabled status
-        /// </summary>
-        public bool IsDisabled
-        {
-            get
+            else
             {
-                return this.HtmlAttributes.ContainsKey("disabled");
-            }
-
-            set
-            {
-                if (value)
+                if (HtmlAttributes.ContainsKey("disabled"))
                 {
-                    this.HtmlAttributes["disabled"] = "disabled";
-                }
-                else
-                {
-                    if (this.HtmlAttributes.ContainsKey("disabled"))
-                    {
-                        this.HtmlAttributes.Remove("disabled");
-                    }
+                    HtmlAttributes.Remove("disabled");
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// The anchor title
-        /// </summary>
-        public string Title 
+    public string? Title
+    {
+        get => HtmlAttributes.TryGetValue("title", out var title) ? title?.ToString() : null;
+        set
         {
-            get
+            if (value != null)
             {
-                if (this.HtmlAttributes.ContainsKey("title"))
-                {
-                    return this.HtmlAttributes["title"].ToString();
-                }
-
-                return null;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    this.HtmlAttributes["title"] = value;
-                }
+                HtmlAttributes["title"] = value;
             }
         }
+    }
 
-        /// <summary>
-        /// The value to be submit to controller if it is a ActionButton mode
-        /// </summary>
-        public string Value
+    public string? Value
+    {
+        get
         {
-            get
+            if (!HtmlAttributes.ContainsKey("value") ||
+               string.IsNullOrEmpty(HtmlAttributes["value"]?.ToString()))
             {
-                if (!(this.HtmlAttributes.ContainsKey("value")) ||
-                   string.IsNullOrEmpty(this.HtmlAttributes["value"].ToString()))
-                {
-                    throw new ArgumentException("The attribute 'value' is mandatory for submit button ");
-                }
-
-                if (this.HtmlAttributes.ContainsKey("value"))
-                {
-                    return this.HtmlAttributes["value"].ToString();
-                }
-
-                return null;
+                throw new ArgumentException("The attribute 'value' is mandatory for submit button");
             }
 
-            set
-            {
-                this.HtmlAttributes["value"] = value;
-            }
+            return HtmlAttributes.TryGetValue("value", out var val) ? val?.ToString() : null;
         }
+        set => HtmlAttributes["value"] = value!;
+    }
 
-        /// <summary>
-        /// The text to be displayed for button
-        /// </summary>
-        public string Text { get; set; }
-        
-        /// <summary>
-        /// The write html.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
-        {
-            new ActionButtonHtmlBuilder(this).Build(writer);
-        }
+    public string? Text { get; set; }
 
-        /// <summary>
-        /// This writes initial start-up script.
-        /// </summary>
-        /// <param name="writer">
-        /// The writer.
-        /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
-        {
-            if (writer != null)
-            {
-                string options = JsonConvert.SerializeObject(new { onClick = new JRaw(this.OnClick) });
-                writer.WriteLine("$('#{0}').actionButton({1});", this.Id, options);
-            }
-        }
+    public override IHtmlContent ToHtml()
+    {
+        return new ActionButtonHtmlBuilder(this).Build();
+    }
+
+    public override string ToInitScript()
+    {
+        var options = JsonConvert.SerializeObject(new { onClick = new JRaw(OnClick) });
+        return $"$('#{Id}').actionButton({options});";
     }
 }

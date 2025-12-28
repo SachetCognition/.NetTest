@@ -1,104 +1,71 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LessThanCurrentDateAttribute.cs" company="OBS">
-//   OBS
-// </copyright>
-// <summary>
-//   Creation Date: 25/05/2014
-//   Author:  Sharma Siddharth (54626)
-//   Description: This defines the Date Less Than Current Date Attribute Class
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
+namespace Equant.SAV2000.ComponentLibrary.MVC.Validators;
+
+/// <summary>
+/// The date required attribute.
+/// This is date required attribute class
+/// </summary>
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+public sealed class LessThanCurrentDateAttribute : ValidationAttribute, IClientModelValidator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
-
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
-    using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
-
-    /// <summary>
-    /// The date required attribute.
-    /// This is date required attribute class
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class LessThanCurrentDateAttribute : ValidationAttribute, IClientValidatable
+    public LessThanCurrentDateAttribute(string errorMessage) : base(errorMessage)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LessThanCurrentDateAttribute"/> class.
-        /// </summary>
-        /// <param name="errorMessage">
-        /// The error message.
-        /// </param>
-        public LessThanCurrentDateAttribute(string errorMessage) : base(errorMessage)
+    }
+
+    public LessThanCurrentDateAttribute()
+    {
+    }
+
+    public void AddValidation(ClientModelValidationContext context)
+    {
+        if (context == null)
         {
+            throw new ArgumentNullException(nameof(context));
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LessThanCurrentDateAttribute"/> class.
-        /// </summary>
-        public LessThanCurrentDateAttribute()
+        MergeAttribute(context.Attributes, "data-val", "true");
+        MergeAttribute(context.Attributes, "data-val-lessthancurrentdate", ErrorMessageString);
+    }
+
+    private static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
+    {
+        if (attributes.ContainsKey(key))
         {
+            return false;
         }
+        attributes.Add(key, value);
+        return true;
+    }
 
-        /// <summary>
-        /// The get client validation rules.
-        /// </summary>
-        /// <param name="metadata">
-        /// The metadata.
-        /// </param>
-        /// <param name="context">
-        /// The context.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IEnumerable{T}"/>.
-        /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    {
+        var validationResult = ValidationResult.Success;
+        if (value == null)
         {
-            var validationRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "lessthancurrentdate" };
-            yield return validationRule;
-        }
-
-        /// <summary>
-        /// The is valid.
-        /// </summary>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <param name="validationContext">
-        /// The validation context.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ValidationResult"/>.
-        /// </returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var validationResult = ValidationResult.Success;
-            if (value == null)
-            {
-                return validationResult;
-            }
-
-            var dateTimeValue = value as DateTimeWithFormat;
-            
-            if (dateTimeValue == null)
-            {
-                validationResult = new ValidationResult("An error occurred while validating the property. Property is not of type DateTimeWithFormat");
-                return validationResult;
-            }
-
-            if (dateTimeValue.Date != null)
-            {
-                var currentDate = DateComponentHelper.GetCurrentDate(dateTimeValue);
-                if (dateTimeValue.Date.Value < currentDate)
-                {
-                    validationResult = new ValidationResult(this.ErrorMessageString);
-                }
-            }
-
             return validationResult;
         }
+
+        var dateTimeValue = value as DateTimeWithFormat;
+        
+        if (dateTimeValue == null)
+        {
+            validationResult = new ValidationResult("An error occurred while validating the property. Property is not of type DateTimeWithFormat");
+            return validationResult;
+        }
+
+        if (dateTimeValue.Date != null)
+        {
+            var currentDate = DateComponentHelper.GetCurrentDate(dateTimeValue);
+            if (dateTimeValue.Date.Value < currentDate)
+            {
+                validationResult = new ValidationResult(ErrorMessageString);
+            }
+        }
+
+        return validationResult;
     }
 }

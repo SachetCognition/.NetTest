@@ -1,57 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
+namespace Equant.SAV2000.ComponentLibrary.MVC.Validators;
+
+/// <summary>
+/// Specifies the minimum and maximum length of characters that are allowed in a data field
+/// </summary>
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientModelValidator
 {
-    using System.Globalization;
-
-    /// <summary>
-    /// Specifies the minimum and maximum length of characters that are allowed in a data field
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientValidatable
+    public CustomStringLengthAttribute(int maximumLength)
+        : base(maximumLength)
     {
+    }
+  
+    public override bool IsValid(object? value)
+    {
+        return base.IsValid(Convert.ToString(value, CultureInfo.CurrentCulture));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomStringLengthAttribute"/> class. 
-        /// </summary>
-        /// <param name="maximumLength">The other property name.</param>
-        public CustomStringLengthAttribute(int maximumLength)
-            : base(maximumLength)
+    public void AddValidation(ClientModelValidationContext context)
+    {
+        if (context == null)
         {
-        }
-      
-        /// <summary>
-        /// Determines whether a specified object is valid.
-        /// </summary>
-        /// <param name="value">object</param>
-        /// <returns>value</returns>
-        public override bool IsValid(object value)
-        {
-
-            return base.IsValid(Convert.ToString(value, CultureInfo.CurrentCulture));
-
+            throw new ArgumentNullException(nameof(context));
         }
 
-        /// <summary>
-        /// The get client validation rules.
-        /// </summary>
-        /// <param name="metadata">
-        /// The metadata.
-        /// </param>
-        /// <param name="context">
-        /// The context.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IEnumerable{T}"/>.
-        /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        MergeAttribute(context.Attributes, "data-val", "true");
+        MergeAttribute(context.Attributes, "data-val-length", ErrorMessageString);
+        MergeAttribute(context.Attributes, "data-val-length-max", MaximumLength.ToString(CultureInfo.InvariantCulture));
+        if (MinimumLength > 0)
         {
-            var adapt = new StringLengthAttributeAdapter(metadata, context, this);
-            return adapt.GetClientValidationRules();
-
+            MergeAttribute(context.Attributes, "data-val-length-min", MinimumLength.ToString(CultureInfo.InvariantCulture));
         }
+    }
+
+    private static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
+    {
+        if (attributes.ContainsKey(key))
+        {
+            return false;
+        }
+        attributes.Add(key, value);
+        return true;
     }
 }

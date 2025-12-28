@@ -1,29 +1,18 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+using System.Collections.Generic;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
+
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable;
+
+public class DataTableBuilder : ComponentBuilderBase<DataTableComponent, DataTableBuilder>
 {
-    using System.Collections.Generic;
-    using System.Web.Mvc;
-    using System.Data;
-
-    using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
-
-    /// <summary>
-    /// The data table builder.
-    /// </summary>
-    public class DataTableBuilder : ComponentBuilderBase<DataTableComponent, DataTableBuilder>
+    public DataTableBuilder(DataTableComponent component, ModelMetadata? modelMetadata)
+        : base(component, modelMetadata)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataTableBuilder"/> class.
-        /// </summary>
-        /// <param name="component">
-        /// The component.
-        /// </param>
-        /// <param name="modelMetadata"></param>
-        public DataTableBuilder(DataTableComponent component, ModelMetadata modelMetadata)
-            : base(component, modelMetadata)
-        {
-        }
+    }
 
         /// <summary>
         /// Sets the table caption
@@ -33,7 +22,7 @@
         /// </returns>
         public DataTableBuilder Caption(string value)
         {
-            this.Component.Caption = value;
+            Component.Caption = value;
             return this;
         }
 
@@ -45,7 +34,7 @@
         /// </returns>
         public DataTableBuilder ErrorPageUrl(string value)
         {
-            this.Component.ErrorPageUrl = value;
+            Component.ErrorPageUrl = value;
             return this;
         }
 
@@ -57,7 +46,7 @@
         /// </returns>
         public DataTableBuilder CssClass(string value)
         {
-            this.Component.CssClass = value;
+            Component.CssClass = value;
             return this;
         }
 
@@ -69,7 +58,7 @@
         /// </returns>
         public DataTableBuilder CssClassRefreshTime(string value)
         {
-            this.Component.CssClassRefreshTime = value;
+            Component.CssClassRefreshTime = value;
             return this;
         }
 
@@ -84,7 +73,7 @@
         /// </returns>
         public DataTableBuilder CssClassSelect(string value)
         {
-            this.Component.CssClassSelect = value;
+            Component.CssClassSelect = value;
             return this;
         }
 
@@ -99,7 +88,7 @@
         /// </returns>
         public DataTableBuilder CssClassDelete(string value)
         {
-            this.Component.CssClassDelete = value;
+            Component.CssClassDelete = value;
             return this;
         }
 
@@ -114,7 +103,7 @@
         /// </returns>
         public DataTableBuilder CssClassModify(string value)
         {
-            this.Component.CssClassModify = value;
+            Component.CssClassModify = value;
             return this;
         }
 
@@ -128,7 +117,7 @@
             Justification = "Columns property just use the list as a simple container, it does not require any features that a collection will provide and is not intended to be extended")]
         public DataTableBuilder Columns(List<DataTableColumn> value)
         {
-            this.Component.Columns = value;
+            Component.Columns = value;
             return this;
         }
 
@@ -142,7 +131,7 @@
             Justification = "Criteria property just use the list as a simple container, it does not require any features that a collection will provide and is not intended to be extended")]
         public DataTableBuilder Criteria(List<CriteriaParameter> value)
         {
-            this.Component.Criteria = value;
+            Component.Criteria = value;
             return this;
         }
 
@@ -155,9 +144,9 @@
         /// <returns>
         /// The <see cref="DataTableBuilder"/>.
         /// </returns>
-        public DataTableBuilder Data(DataTable value)
+        public DataTableBuilder Data(System.Data.DataTable value)
         {
-            this.Component.Data = value;
+            Component.Data = value;
             return this;
         }
 
@@ -168,7 +157,7 @@
         /// <returns></returns>
         public DataTableBuilder OnDeleteClick(string value)
         {
-            this.Component.OnDeleteClick = value;
+            Component.OnDeleteClick = value;
             return this;
         }
 
@@ -179,7 +168,7 @@
         /// <returns></returns>
         public DataTableBuilder OnModifyClick(string value)
         {
-            this.Component.OnModifyClick = value;
+            Component.OnModifyClick = value;
             return this;
         }
 
@@ -190,7 +179,7 @@
         /// <returns></returns>
         public DataTableBuilder ModifyTooltip(string value)
         {
-            this.Component.ModifyToolTip = value;
+            Component.ModifyToolTip = value;
             return this;
         }
 
@@ -201,7 +190,7 @@
         /// <returns></returns>
         public DataTableBuilder DeleteToolTip(string value)
         {
-            this.Component.DeleteToolTip = value;
+            Component.DeleteToolTip = value;
             return this;
         }
 
@@ -213,7 +202,7 @@
         /// </returns>
         public DataTableBuilder DomLayout(string value)
         {
-            this.Component.DomLayout = value;
+            Component.DomLayout = value;
             return this;
         }
 
@@ -226,12 +215,12 @@
         {
             if (context != null)
             {
-                this.Component.DataContext = context;
-                this.Component.InitialDisplayIndex = context.DisplayStart;
-                this.Component.InitialSelectState = context.SelectState;
+                Component.DataContext = context;
+                Component.InitialDisplayIndex = context.DisplayStart;
+                Component.InitialSelectState = context.SelectState;
                 if (context.Sorting != null)
                 {
-                    this.Component.InitialSorting = context.Sorting;
+                    Component.InitialSorting = context.Sorting;
                 }
             }
 
@@ -249,7 +238,7 @@
         /// </returns>
         public DataTableBuilder IsHorizontalScrolling(bool value)
         {
-            this.Component.IsHorizontalScrolling = value;
+            Component.IsHorizontalScrolling = value;
             return this;
         }
 
@@ -264,7 +253,7 @@
         /// </returns>
         public DataTableBuilder IsFilter(bool value)
         {
-            this.Component.IsFilter = value;
+            Component.IsFilter = value;
             return this;
         }
 
@@ -279,7 +268,7 @@
         /// </returns>
         public DataTableBuilder IsPaginate(bool value)
         {
-            this.Component.IsPaginate = value;
+            Component.IsPaginate = value;
             return this;
         }
 
@@ -294,7 +283,7 @@
         /// </returns>
         public DataTableBuilder IsReorder(bool value)
         {
-            this.Component.IsReorder = value;
+            Component.IsReorder = value;
             return this;
         }
 
@@ -309,7 +298,7 @@
         /// </returns>
         public DataTableBuilder IsSelect(bool value)
         {
-            this.Component.IsSelect = value;
+            Component.IsSelect = value;
             return this;
         }
 
@@ -324,7 +313,7 @@
         /// </returns>
         public DataTableBuilder IsSelectSortable(bool value)
         {
-            this.Component.IsSelectColumnSortable = value;
+            Component.IsSelectColumnSortable = value;
             return this;
         }
 
@@ -336,8 +325,8 @@
         /// <returns></returns>
         public DataTableBuilder IsSelect(bool value, int index)
         {
-            this.IsSelect(value);
-            this.Component.SelectColumnIndex = index;
+            IsSelect(value);
+            Component.SelectColumnIndex = index;
             return this;
         }
 
@@ -348,7 +337,7 @@
         /// <returns></returns>
         public DataTableBuilder IsDelete(bool value)
         {
-            this.Component.IsDeleteNeeded = value;
+            Component.IsDeleteNeeded = value;
             return this;
         }
 
@@ -364,8 +353,8 @@
         /// </returns>
         public DataTableBuilder IsDelete(bool value, int index)
         {
-            this.IsDelete(value);
-            this.Component.DeleteColumnIndex = index;
+            IsDelete(value);
+            Component.DeleteColumnIndex = index;
             return this;
         }
 
@@ -376,7 +365,7 @@
         /// <returns></returns>
         public DataTableBuilder IsModify(bool value)
         {
-            this.Component.IsModifyNeeded = value;
+            Component.IsModifyNeeded = value;
             return this;
         }
 
@@ -392,8 +381,8 @@
         /// </returns>
         public DataTableBuilder IsModify(bool value, int index)
         {
-            this.IsModify(value);
-            this.Component.ModifyColumnnIndex = index;
+            IsModify(value);
+            Component.ModifyColumnnIndex = index;
             return this;
         }
         /// <summary>
@@ -407,7 +396,7 @@
         /// </returns>
         public DataTableBuilder IsSelectAll(bool value)
         {
-            this.Component.IsSelectAll = value;
+            Component.IsSelectAll = value;
             return this;
         }
 
@@ -422,7 +411,7 @@
         /// </returns>
         public DataTableBuilder IsShowHeader(bool value)
         {
-            this.Component.IsShowHeader = value;
+            Component.IsShowHeader = value;
             return this;
         }
 
@@ -437,7 +426,7 @@
         /// </returns>
         public DataTableBuilder IsVerticalScrolling(bool value)
         {
-            this.Component.IsVerticalScrolling = value;
+            Component.IsVerticalScrolling = value;
             return this;
         }
 
@@ -452,7 +441,7 @@
         /// </returns>
         public DataTableBuilder IsDisplayRefreshTime(bool value)
         {
-            this.Component.IsDisplayRefreshTime = value;
+            Component.IsDisplayRefreshTime = value;
             return this;
         }
 
@@ -467,7 +456,7 @@
         /// </returns>
         public DataTableBuilder IsDisplayRecordInfo(bool value)
         {
-            this.Component.IsDisplayRecordInfo = value;
+            Component.IsDisplayRecordInfo = value;
             return this;
         }
 
@@ -482,7 +471,7 @@
         /// </returns>
         public DataTableBuilder InitialDisplayIndex(int value)
         {
-            this.Component.InitialDisplayIndex = value;
+            Component.InitialDisplayIndex = value;
             return this;
         }
 
@@ -497,7 +486,7 @@
         /// </returns>
         public DataTableBuilder InitialSelectState(Dictionary<string, bool> value)
         {
-            this.Component.InitialSelectState = value;
+            Component.InitialSelectState = value;
             return this;
         }
 
@@ -514,7 +503,7 @@
             Justification = "InitialSorting property just use the list as a simple container, it does not require any features that a collection will provide and is not intended to be extended")]
         public DataTableBuilder InitialSorting(List<KeyValuePair<string, SortDirection>> value)
         {
-            this.Component.InitialSorting = value;
+            Component.InitialSorting = value;
             return this;
         }
 
@@ -529,7 +518,7 @@
         /// </returns>
         public DataTableBuilder OnAjaxError(string value)
         {
-            this.Component.OnAjaxError = value;
+            Component.OnAjaxError = value;
             return this;
         }
 
@@ -544,7 +533,7 @@
         /// </returns>
         public DataTableBuilder OnDraw(string value)
         {
-            this.Component.OnDraw = value;
+            Component.OnDraw = value;
             return this;
         }
 
@@ -559,7 +548,7 @@
         /// </returns>
         public DataTableBuilder OnServerParams(string value)
         {
-            this.Component.OnServerParams = value;
+            Component.OnServerParams = value;
             return this;
         }
 
@@ -574,7 +563,7 @@
         /// </returns>
         public DataTableBuilder OnSort(string value)
         {
-            this.Component.OnSort = value;
+            Component.OnSort = value;
             return this;
         }
 
@@ -589,7 +578,7 @@
         /// </returns>
         public DataTableBuilder PageSize(int value)
         {
-            this.Component.PageSize = value;
+            Component.PageSize = value;
             return this;
         }
 
@@ -604,7 +593,7 @@
         /// </returns>
         public DataTableBuilder RefreshTimeInverval(int value)
         {
-            this.Component.RefreshTimeInverval = value;
+            Component.RefreshTimeInverval = value;
             return this;
         }
 
@@ -619,7 +608,7 @@
         /// </returns>
         public DataTableBuilder RefreshTimeLabelFormat(string value)
         {
-            this.Component.RefreshTimeLabelFormat = value;
+            Component.RefreshTimeLabelFormat = value;
             return this;
         }
 
@@ -634,7 +623,7 @@
         /// </returns>
         public DataTableBuilder SelectAllToolTip(string value)
         {
-            this.Component.SelectAllTooltip = value;
+            Component.SelectAllTooltip = value;
             return this;
         }
         /// <summary>
@@ -648,7 +637,7 @@
         /// </returns>
         public DataTableBuilder OnSelectColumnClick(string value)
         {
-            this.Component.OnSelectColumnClick = value;
+            Component.OnSelectColumnClick = value;
             return this;
         }
 
@@ -660,7 +649,7 @@
         /// <returns></returns>
         public DataTableBuilder SelectAllText(string value)
         {
-            this.Component.SelectAllText = value;
+            Component.SelectAllText = value;
             return this;
         }
 
@@ -675,7 +664,7 @@
         /// </returns>
         public DataTableBuilder ServiceUri(string value)
         {
-            this.Component.ServiceUri = value;
+            Component.ServiceUri = value;
             return this;
         }
 
@@ -690,7 +679,7 @@
         /// </returns>
         public DataTableBuilder TotalRecordsLimit(int value)
         {
-            this.Component.TotalRecordsLimit = value;
+            Component.TotalRecordsLimit = value;
             return this;
         }
 
@@ -701,22 +690,21 @@
         /// <returns>return the object of data table builder</returns>
         public DataTableBuilder IsMultiSortRequired(bool value)
         {
-            this.Component.IsMultiSortRequired = value;
+            Component.IsMultiSortRequired = value;
             return this;
         }
 
         public DataTableBuilder IsEncryptionRequired(bool value)
         {
-            this.Component.IsEncryptionRequired = value;
+            Component.IsEncryptionRequired = value;
             return this;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
-            Justification = "This property just use the list as a simple container, it does not require any features that a collection will provide and is not intended to be extended")]
-        public DataTableBuilder EncryptedParameters(List<string> value)
-        {
-            this.Component.EncryptedParameters = value;
-            return this;
-        }
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+        Justification = "This property just use the list as a simple container, it does not require any features that a collection will provide and is not intended to be extended")]
+    public DataTableBuilder EncryptedParameters(List<string> value)
+    {
+        Component.EncryptedParameters = value;
+        return this;
     }
 }
