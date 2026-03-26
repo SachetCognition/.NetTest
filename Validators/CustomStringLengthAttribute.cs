@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
 {
+    using System.Collections.Generic;
     using System.Globalization;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -48,22 +49,29 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// </returns>
         public void AddValidation(ClientModelValidationContext context)
         {
-            if (!context.Attributes.ContainsKey("data-val"))
+            if (context == null)
             {
-                context.Attributes.Add("data-val", "true");
+                throw new ArgumentNullException(nameof(context));
             }
-            if (!context.Attributes.ContainsKey("data-val-length"))
+
+            MergeAttribute(context.Attributes, "data-val", "true");
+            MergeAttribute(context.Attributes, "data-val-length", FormatErrorMessage(context.ModelMetadata.GetDisplayName()));
+            MergeAttribute(context.Attributes, "data-val-length-max", MaximumLength.ToString(CultureInfo.InvariantCulture));
+            if (MinimumLength > 0)
             {
-                context.Attributes.Add("data-val-length", ErrorMessage ?? string.Empty);
+                MergeAttribute(context.Attributes, "data-val-length-min", MinimumLength.ToString(CultureInfo.InvariantCulture));
             }
-            if (!context.Attributes.ContainsKey("data-val-length-max"))
+        }
+
+        private static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
+        {
+            if (attributes.ContainsKey(key))
             {
-                context.Attributes.Add("data-val-length-max", this.MaximumLength.ToString());
+                return false;
             }
-            if (this.MinimumLength > 0 && !context.Attributes.ContainsKey("data-val-length-min"))
-            {
-                context.Attributes.Add("data-val-length-min", this.MinimumLength.ToString());
-            }
+
+            attributes.Add(key, value);
+            return true;
         }
     }
 }
