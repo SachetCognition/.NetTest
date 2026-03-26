@@ -50,7 +50,7 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Resources
 
         public static string TIP000022
         {
-            get { return ResourceManager.GetString("TIP000022", resourceCulture) ?? "Call {0}"; }
+            get { return ResourceManager.GetString("TIP000022", resourceCulture) ?? "Click to call {0}"; }
         }
 
         public static string lblAsteriks

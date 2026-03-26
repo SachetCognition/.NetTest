@@ -11,6 +11,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     public class ClickToVoiceComponent : ComponentBase
     {
@@ -101,7 +102,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                 telephoneControlId = this.TelephoneControlId,
                 title = string.Format(System.Globalization.CultureInfo.CurrentCulture, ApplicationStrings.TIP000022, this.TelephoneNumber)
             });
-            return string.Format("$('#{0}').clickToVoice({1});", this.Id, options);
+            return string.Format("$('#{0}').clickToVoice({1});", this.Id.JQuerySelectorEscape(), options);
         }
     }
 }

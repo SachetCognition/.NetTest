@@ -3,6 +3,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Communicator
     using Microsoft.AspNetCore.Html;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     public class CommunicatorComponent : ComponentBase
     {
@@ -22,7 +23,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Communicator
         {
             if (string.IsNullOrEmpty(this.Id))
                 return string.Empty;
-            return string.Format("$('#{0}').communicator();", this.Id);
+            return string.Format("$('#{0}').communicator();", this.Id.JQuerySelectorEscape());
         }
     }
 }

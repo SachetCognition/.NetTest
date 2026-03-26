@@ -3,6 +3,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.PopOver
     using Microsoft.AspNetCore.Html;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     public class PopOverComponent : ComponentBase
     {
@@ -24,7 +25,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.PopOver
         {
             if (string.IsNullOrEmpty(this.Id))
                 return string.Empty;
-            return string.Format("$('#{0}').popover();", this.Id);
+            return string.Format("$('#{0}').popover();", this.Id.JQuerySelectorEscape());
         }
     }
 }

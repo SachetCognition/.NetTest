@@ -11,7 +11,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.HyperLink
         public HyperLinkBuilder Href(string url) { Component.Href = url; return this; }
         public HyperLinkBuilder Text(string text) { Component.Text = text; return this; }
         public HyperLinkBuilder CssClass(string cssClass) { Component.CssClass = cssClass; return this; }
-        public HyperLinkBuilder Css(string css) { return this; }
+        public HyperLinkBuilder Css(string css) { Component.CssClass = css; return this; }
         public HyperLinkBuilder Target(string target) { Component.Target = target; return this; }
         public HyperLinkBuilder Title(string title) { Component.Title = title; return this; }
         public HyperLinkBuilder ActionUrl(string url) { Component.ActionUrl = url; return this; }
