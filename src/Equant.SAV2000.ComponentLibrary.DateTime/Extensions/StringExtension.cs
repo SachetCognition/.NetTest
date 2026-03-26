@@ -48,7 +48,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
             {
                 foreach (var c in value)
                 {
-                    if (CharsToEscape.IndexOf(c) > 0)
+                    if (CharsToEscape.IndexOf(c) >= 0)
                     {
                         stringBuilder.Append(@"\\");
                     }

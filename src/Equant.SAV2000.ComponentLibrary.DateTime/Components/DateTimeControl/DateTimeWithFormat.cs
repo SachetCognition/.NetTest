@@ -108,11 +108,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 int hour = 0, minute = 0;
                 if (!string.IsNullOrEmpty(this.HourValue))
                 {
-                    int.TryParse(this.HourValue, out hour);
+                    if (int.TryParse(this.HourValue, out hour) && (hour < 0 || hour > 23))
+                    {
+                        return null;
+                    }
                 }
                 if (!string.IsNullOrEmpty(this.MinuteValue))
                 {
-                    int.TryParse(this.MinuteValue, out minute);
+                    if (int.TryParse(this.MinuteValue, out minute) && (minute < 0 || minute > 59))
+                    {
+                        return null;
+                    }
                 }
 
                 return new DateTime(parsedDate.Year, parsedDate.Month, parsedDate.Day, hour, minute, 0);
