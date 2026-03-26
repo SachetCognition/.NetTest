@@ -14,6 +14,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 
     public class DataTableSortingJsonConverter : JsonConverter
     {
+        public override bool CanWrite => false;
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
