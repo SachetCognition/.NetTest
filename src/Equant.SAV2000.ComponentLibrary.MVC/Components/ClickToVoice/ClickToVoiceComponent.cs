@@ -99,7 +99,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                 url = this.ActionUrl,
                 telephoneNumber = this.TelephoneNumber,
                 telephoneControlId = this.TelephoneControlId,
-                title = ApplicationStrings.TIP000022
+                title = string.Format(System.Globalization.CultureInfo.CurrentCulture, ApplicationStrings.TIP000022, this.TelephoneNumber)
             });
             return string.Format("$('#{0}').clickToVoice({1});", this.Id, options);
         }
