@@ -26,14 +26,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 tagBuilderFieldSet.AddCssClass(this.Component.CssClassFieldSet);
 
             var tagBuilderUl = new TagBuilder("ul");
-            if (!string.IsNullOrEmpty(this.Component.CssClass))
-                tagBuilderUl.AddCssClass("checkboxpadding " + this.Component.CssClass);
+            var effectiveCssClass = this.Component.IsDisabled ? this.Component.CssClassDisabled : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tagBuilderUl.AddCssClass("checkboxpadding " + effectiveCssClass);
             tagBuilderUl.MergeAttribute("id", this.Component.Id);
             tagBuilderUl.MergeAttributes(this.Component.HtmlAttributes);
 
             if (this.Component.IsDisabled)
             {
-                this.Component.CssClass = this.Component.CssClassDisabled;
                 tagBuilderFieldSet.MergeAttribute("disabled", "disabled");
             }
 
@@ -106,7 +106,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 tagBuilderCheckBox.MergeAttribute("name", this.Component.Name);
             if (item.Disabled)
             {
-                this.Component.CssClass = this.Component.CssClassDisabled;
                 tagBuilderCheckBox.MergeAttribute("disabled", "disabled");
             }
             if (item.Selected)
