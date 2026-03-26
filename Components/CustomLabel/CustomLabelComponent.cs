@@ -18,7 +18,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 
         public override string Id { get; set; }
         public string Text { get; set; }
-        public string AccessText { get; set; }
         public string CssClass { get; set; }
         public string ForId { get; set; }
         public string AssociatedControlId
