@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CompositeDateHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -16,15 +16,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Label;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Html;
 
     /// <summary>
     /// The composite date html builder.
@@ -48,7 +49,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -103,7 +104,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
 
             //set associated control id for label to first date textbox
             this.Component.CustomLabel.AssociatedControlId = this.GetForAttribute(datesToShow, weeksToShow);
-            var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
+            var tagBuilderLabelDiv = new TagBuilder("div");
+            tagBuilderLabelDiv.InnerHtml.SetHtmlContent(this.Component.CustomLabel.ToHtmlString());
 
             if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
             {
@@ -213,7 +215,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
                 sbTagMainDivInnerHtml.Append(this.Component.InformationIcon.ToHtmlString());
             }
 
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
+            tagBuilderMainDiv.InnerHtml.SetHtmlContent(sbTagMainDivInnerHtml.ToString());
             writer.Write(tagBuilderMainDiv.ToString());
         }
 

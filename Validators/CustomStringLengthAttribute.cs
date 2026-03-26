@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
-
 namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
 {
     using System.Globalization;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// Specifies the minimum and maximum length of characters that are allowed in a data field
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientValidatable
+    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientModelValidator
     {
 
         /// <summary>
@@ -47,11 +46,24 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var adapt = new StringLengthAttributeAdapter(metadata, context, this);
-            return adapt.GetClientValidationRules();
-
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-length"))
+            {
+                context.Attributes.Add("data-val-length", ErrorMessage ?? string.Empty);
+            }
+            if (!context.Attributes.ContainsKey("data-val-length-max"))
+            {
+                context.Attributes.Add("data-val-length-max", this.MaximumLength.ToString());
+            }
+            if (this.MinimumLength > 0 && !context.Attributes.ContainsKey("data-val-length-min"))
+            {
+                context.Attributes.Add("data-val-length-min", this.MinimumLength.ToString());
+            }
         }
     }
 }

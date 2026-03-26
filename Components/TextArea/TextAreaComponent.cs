@@ -1,6 +1,7 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TextArea
 {
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
 
     public class TextAreaComponent : ComponentBase
     {
@@ -9,7 +10,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TextArea
         public int Rows { get; set; }
         public int Cols { get; set; }
 
-        public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
-        public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }
+        public override void WriteHtml(System.IO.TextWriter writer) { }
+        public override void WriteInitScript(System.IO.TextWriter writer) { }
     }
 }

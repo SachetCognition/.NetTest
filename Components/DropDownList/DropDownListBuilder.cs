@@ -1,9 +1,10 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
 {
     using System;
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class DropDownListBuilder : ComponentBuilderBase<DropDownListComponent, DropDownListBuilder>
     {

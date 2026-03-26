@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="HtmlHelperExtension.cs" company="">
 //   
 // </copyright>
@@ -13,13 +13,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
-    using System.Web.Mvc;
-    using System.Web.Mvc.Html;
-    using System.Web.SessionState;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ScriptRenderer;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.StyleRender;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Html;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The html helper extension.
@@ -40,7 +39,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         ///     </see>
         ///     .
         /// </returns>
-        public static ComponentFactory<TModel> Sav2000<TModel>(this HtmlHelper<TModel> helper)
+        public static ComponentFactory<TModel> Sav2000<TModel>(this IHtmlHelper<TModel> helper)
         {
             return helper.Sav2000(false);
         }
@@ -62,7 +61,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         ///     </see>
         ///     .
         /// </returns>
-        public static ComponentFactory<TModel> Sav2000<TModel>(this HtmlHelper<TModel> helper, bool isLightRequirement)
+        public static ComponentFactory<TModel> Sav2000<TModel>(this IHtmlHelper<TModel> helper, bool isLightRequirement)
         {
             var clientDependencyScriptRendererComponent = new ClientDependencyScriptRendererComponent(helper);
             var scriptRenderer = helper.ViewContext.HttpContext.Items[ScriptRendererComponent.ContextKey] as ScriptRendererComponent ??
@@ -97,9 +96,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Extensions
         /// <typeparam name="TProperty">
         /// </typeparam>
         /// <returns>
-        /// The <see cref="MvcHtmlString"/>.
+        /// The <see cref="IHtmlContent"/>.
         /// </returns>
-        public static MvcHtmlString  Sav2000ValidationMessageFor<TModel,TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        public static IHtmlContent  Sav2000ValidationMessageFor<TModel,TProperty>(this IHtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
         {
           return   htmlHelper.ValidationMessageFor(expression,null,new {role="alert"}  );
         }

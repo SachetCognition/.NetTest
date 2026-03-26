@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ButtonBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -11,9 +11,8 @@
 // -------------------------------------------------------------------------------------------------
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
 {
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The Builder class for the Button component

@@ -1,12 +1,12 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Collections.Generic;
-    using System.Web.Mvc;
     using System.Data;
 
     using Equant.SAV2000.ComponentLibrary.Common.Components.DataTables;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The data table builder.

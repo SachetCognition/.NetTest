@@ -1,11 +1,11 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Globalization;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Html;
 
     /// <summary>
     /// The data table html builder.
@@ -29,7 +29,7 @@
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer !=null && this.Component.IsVisible)
             {
@@ -37,7 +37,7 @@
 
                 // Generate table HTML tag
                 var tagBuilderTable = new TagBuilder("table");
-                var stringBuilderTable = new StringBuilder(tagBuilderTable.InnerHtml);
+                var stringBuilderTable = new StringBuilder();
                 tagBuilderTable.MergeAttribute("id", this.Component.Id);
 
                 if (!string.IsNullOrEmpty(this.Component.Name))
@@ -62,7 +62,8 @@
                 tagBuilderTable.MergeAttributes(this.Component.HtmlAttributes);
 
                 // Generate caption
-                var tagBuilderCaption = new TagBuilder("caption") { InnerHtml = this.Component.Caption };
+                var tagBuilderCaption = new TagBuilder("caption");
+                tagBuilderCaption.InnerHtml.SetHtmlContent(this.Component.Caption);
                 tagBuilderCaption.AddCssClass("hide-access");
 
                 // Generate thead HTML tag
@@ -70,12 +71,12 @@
                 
                 // Generate tr HTML tag
                 var tagBuilderTr = new TagBuilder("tr");
-                var stringBuilderTr = new StringBuilder(tagBuilderTr.InnerHtml);
+                var stringBuilderTr = new StringBuilder();
 
                 // Generate tr HTML tag for column filter
                 var tagBuilderTrFilter = new TagBuilder("tr");
                 tagBuilderTrFilter.AddCssClass("filter-search");
-                var stringBuilderTrFilter = new StringBuilder(tagBuilderTrFilter.InnerHtml);
+                var stringBuilderTrFilter = new StringBuilder();
                 
                 // Generate the column headers
                 foreach (var column in this.Component.Columns)
@@ -88,10 +89,10 @@
                     if (column.HeaderTemplate != null)
                     {
                         var stringBuilderTh = new StringBuilder();
-                        column.HeaderTemplate.HtmlHelper = this.Component.HtmlHelper;
+                        column.HeaderTemplate.IHtmlHelper = this.Component.HtmlHelper;
                         column.HeaderTemplate.Title = column.HeaderText;
                         column.HeaderTemplate.BuildHtml(stringBuilderTh);
-                        tagBuilderTh.InnerHtml = stringBuilderTh.ToString();
+                        tagBuilderTh.InnerHtml.SetHtmlContent(stringBuilderTh.ToString());
                         stringBuilderTr.Append(tagBuilderTh);
                     }
                     else
@@ -100,11 +101,11 @@
 
                         if (column.ShowHeaderText)
                         {
-                            tagBuilderTh.InnerHtml = column.HeaderText;
+                            tagBuilderTh.InnerHtml.SetHtmlContent(column.HeaderText);
                         }
                         else
                         {
-                            tagBuilderTh.InnerHtml = string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText );
+                            tagBuilderTh.InnerHtml.SetHtmlContent(string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText ));
                         }
 
                         stringBuilderTr.Append(tagBuilderTh);
@@ -119,13 +120,13 @@
                     }
                 }
                 
-                tagBuilderTr.InnerHtml = stringBuilderTr.ToString();
-                tagBuilderThead.InnerHtml = tagBuilderTr.ToString();
+                tagBuilderTr.InnerHtml.SetHtmlContent(stringBuilderTr.ToString());
+                tagBuilderThead.InnerHtml.SetHtmlContent(tagBuilderTr.ToString());
 
                 if (this.Component.IsFilter && this.Component.IsShowHeader)
                 {
-                    tagBuilderTrFilter.InnerHtml = stringBuilderTrFilter.ToString();
-                    tagBuilderThead.InnerHtml = string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter);
+                    tagBuilderTrFilter.InnerHtml.SetHtmlContent(stringBuilderTrFilter.ToString());
+                    tagBuilderThead.InnerHtml.SetHtmlContent(string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter));
                 }
 
                 stringBuilderTable.Append(tagBuilderCaption);
@@ -134,7 +135,7 @@
                 var tagBuilderTbody = new TagBuilder("tbody");
                 stringBuilderTable.Append(tagBuilderTbody);
 
-                tagBuilderTable.InnerHtml = stringBuilderTable.ToString();
+                tagBuilderTable.InnerHtml.SetHtmlContent(stringBuilderTable.ToString());
 
                 writer.Write(tagBuilderTable);
             }

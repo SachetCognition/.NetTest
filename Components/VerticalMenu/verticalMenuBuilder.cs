@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VerticalMenuBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -13,12 +13,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The menu builder.

@@ -1,44 +1,19 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PageProvider.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Defines the PageProvider type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace Equant.SAV2000.ComponentLibrary.MVC.Infrastructure
 {
-    using System;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Http;
 
     /// <summary>
-    /// The page provider.
+    /// Provides page-level context for ASP.NET Core (replaces System.Web.UI.Page).
     /// </summary>
-    public sealed class PageProvider
+    public class PageProvider
     {
-        /// <summary>
-        /// A Page object is required to fetch webresources
-        /// As it is quite a big object it is lazyly cached
-        /// </summary>
-        private static readonly Lazy<Page> Lazy = new Lazy<Page>(() => new Page());
+        private readonly HttpContext _httpContext;
 
-        /// <summary>
-        /// Prevents a default instance of the <see cref="PageProvider"/> class from being created.
-        /// </summary>
-        private PageProvider()
+        public PageProvider(HttpContext httpContext)
         {
+            _httpContext = httpContext;
         }
 
-        /// <summary>
-        /// Gets the cached page.
-        /// </summary>
-        public static Page Instance
-        {
-            get
-            {
-                return Lazy.Value;
-            }
-        }
+        public HttpContext HttpContext => _httpContext;
     }
 }

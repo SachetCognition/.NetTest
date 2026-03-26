@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DateRequiredAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,17 +15,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date required attribute.
     /// This is date required attribute class
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DateRequiredAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DateRequiredAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DateRequiredAttribute"/> class.
@@ -61,10 +61,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var dateRequiredRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "daterequired" };
-            yield return dateRequiredRule;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-daterequired"))
+            {
+                context.Attributes.Add("data-val-daterequired", this.ErrorMessageString);
+            }
         }
 
         /// <summary>

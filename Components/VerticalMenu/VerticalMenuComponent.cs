@@ -2,11 +2,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Image;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Menu;
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class VerticalMenuComponent : ComponentBase
     {
@@ -15,7 +16,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             this.MenuItems = new List<MenuItem>();
             this.CopyRightImage = new ImageComponent();
         }
-        public VerticalMenuComponent(HtmlHelper htmlHelper) : base(htmlHelper)
+        public VerticalMenuComponent(IHtmlHelper htmlHelper) : base(htmlHelper)
         {
             this.MenuItems = new List<MenuItem>();
             this.CopyRightImage = new ImageComponent(htmlHelper);
@@ -36,7 +37,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             get { return new List<JsResource>().AsReadOnly(); }
         }
 
-        public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
-        public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }
+        public override void WriteHtml(System.IO.TextWriter writer) { }
+        public override void WriteInitScript(System.IO.TextWriter writer) { }
     }
 }

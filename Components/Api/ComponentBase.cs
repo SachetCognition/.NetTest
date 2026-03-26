@@ -2,15 +2,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
+    using Microsoft.AspNetCore.Html;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
 
     public abstract class ComponentBase
     {
         public ComponentBase() { }
-        public ComponentBase(HtmlHelper htmlHelper) { this.HtmlHelper = htmlHelper; }
+        public ComponentBase(IHtmlHelper htmlHelper) { this.HtmlHelper = htmlHelper; }
 
         public virtual string Id { get; set; }
         public virtual string Name { get; set; }
@@ -21,9 +23,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
         public Dictionary<string, object> HtmlAttributes { get; set; } = new Dictionary<string, object>();
         public virtual ReadOnlyCollection<JsResource> JsResources { get { return new List<JsResource>().AsReadOnly(); } }
         public virtual ReadOnlyCollection<CssResource> CssResources { get { return new List<CssResource>().AsReadOnly(); } }
-        public HtmlHelper HtmlHelper { get; set; }
+        public IHtmlHelper HtmlHelper { get; set; }
         public ModelMetadata ModelMetadata { get; set; }
-        public MvcHtmlString ValidationString { get; set; }
+        public HtmlString ValidationString { get; set; }
 
         public virtual string ToHtmlString()
         {
@@ -57,7 +59,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
                 HtmlAttributes[key] = value;
         }
 
-        public abstract void WriteHtml(HtmlTextWriter writer);
-        public abstract void WriteInitScript(HtmlTextWriter writer);
+        public abstract void WriteHtml(TextWriter writer);
+        public abstract void WriteInitScript(TextWriter writer);
     }
 }

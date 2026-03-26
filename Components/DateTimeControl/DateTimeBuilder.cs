@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="DateTimeBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -13,12 +13,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The Builder class for the DateTime component

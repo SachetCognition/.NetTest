@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 {
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The multi column tree view builder.

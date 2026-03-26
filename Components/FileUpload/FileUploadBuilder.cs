@@ -1,7 +1,7 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.FileUpload
 {
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public class FileUploadBuilder : ComponentBuilderBase<FileUploadComponent, FileUploadBuilder>
     {

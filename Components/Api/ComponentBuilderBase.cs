@@ -1,7 +1,6 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 {
-    using System.Web.Mvc;
-
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     public abstract class ComponentBuilderBase<TComponent, TBuilder>
         where TComponent : ComponentBase
         where TBuilder : ComponentBuilderBase<TComponent, TBuilder>

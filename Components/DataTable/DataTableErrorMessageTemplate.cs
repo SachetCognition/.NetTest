@@ -1,9 +1,8 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Text;
-    using System.Web;
-    using System.Web.UI;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
 
     /// <summary>
     /// Am error message block for DataTable
@@ -35,7 +34,7 @@
         /// <param name="writer">
         /// The HTML writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer != null && this.Component.IsVisible)
             {
