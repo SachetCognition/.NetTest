@@ -127,7 +127,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
                 if (this.Component.IsFilter && this.Component.IsShowHeader)
                 {
                     tagBuilderTrFilter.InnerHtml.SetHtmlContent(stringBuilderTrFilter.ToString());
-                    tagBuilderThead.InnerHtml.SetHtmlContent(string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter));
+                    var existingTheadHtml = tagBuilderThead.InnerHtml.ToHtmlString();
+                    tagBuilderThead.InnerHtml.SetHtmlContent(
+                        string.Format(CultureInfo.InvariantCulture, "{0}{1}",
+                            existingTheadHtml,
+                            tagBuilderTrFilter.ToHtmlString()));
                 }
 
                 stringBuilderTable.Append(tagBuilderCaption.ToHtmlString());
