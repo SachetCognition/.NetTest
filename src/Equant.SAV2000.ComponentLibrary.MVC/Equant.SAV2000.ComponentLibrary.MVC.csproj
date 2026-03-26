@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Equant.SAV2000.ComponentLibrary.MVC</RootNamespace>
+    <AssemblyName>Equant.SAV2000.ComponentLibrary.MVC</AssemblyName>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Equant.SAV2000.ComponentLibrary.Common\Equant.SAV2000.ComponentLibrary.Common.csproj" />
+  </ItemGroup>
+
+</Project>
