@@ -77,7 +77,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
             foreach (var script in orderedScripts)
             {
-                writer.Write($"<script src=\"{script.ResourcePath}\"></script>\n");
+                writer.Write($"<script src=\"{System.Text.Encodings.Web.HtmlEncoder.Default.Encode(script.ResourcePath)}\"></script>\n");
             }
 
             return new HtmlString(writer.ToString());

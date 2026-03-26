@@ -15,19 +15,21 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext != null)
+            if (bindingContext == null)
             {
-                var contextName = bindingContext.ModelName + ".Context";
-                var value = bindingContext.ValueProvider.GetValue(contextName);
-                if (value != ValueProviderResult.None)
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
+            var contextName = bindingContext.ModelName + ".Context";
+            var value = bindingContext.ValueProvider.GetValue(contextName);
+            if (value != ValueProviderResult.None)
+            {
+                var attemptedValue = value.FirstValue;
+                if (attemptedValue != null)
                 {
-                    var attemptedValue = value.FirstValue;
-                    if (attemptedValue != null)
-                    {
-                        var retrievedValue = JsonConvert.DeserializeObject<DataTableContext>(attemptedValue);
-                        bindingContext.Result = ModelBindingResult.Success(retrievedValue);
-                        return Task.CompletedTask;
-                    }
+                    var retrievedValue = JsonConvert.DeserializeObject<DataTableContext>(attemptedValue);
+                    bindingContext.Result = ModelBindingResult.Success(retrievedValue);
+                    return Task.CompletedTask;
                 }
             }
 

@@ -64,7 +64,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
             foreach (var style in orderedStyles)
             {
-                writer.Write($"<link rel=\"stylesheet\" href=\"{style.ResourcePath}\" />\n");
+                writer.Write($"<link rel=\"stylesheet\" href=\"{System.Text.Encodings.Web.HtmlEncoder.Default.Encode(style.ResourcePath)}\" />\n");
             }
 
             return new HtmlString(writer.ToString());
