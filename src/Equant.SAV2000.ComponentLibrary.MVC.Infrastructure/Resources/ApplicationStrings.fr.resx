@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ACCESS000002" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="ACCESS000005" xml:space="preserve">
+    <value>Basculer</value>
+  </data>
+  <data name="ACCESS000006" xml:space="preserve">
+    <value>Fermer le titre</value>
+  </data>
+  <data name="ACCESS000007" xml:space="preserve">
+    <value>Texte d'accessibilite pour {0}</value>
+  </data>
+  <data name="AM" xml:space="preserve">
+    <value> AM</value>
+  </data>
+  <data name="CleanImageTooltip" xml:space="preserve">
+    <value>Effacer {0}</value>
+  </data>
+  <data name="Datatable_sEmptyTable" xml:space="preserve">
+    <value>Aucune donnee disponible dans le tableau</value>
+  </data>
+  <data name="Datatable_sInfo" xml:space="preserve">
+    <value>Affichage de _START_ a _END_ sur _TOTAL_ entrees</value>
+  </data>
+  <data name="Datatable_sInfoEmpty" xml:space="preserve">
+    <value>Affichage de 0 a 0 sur 0 entrees</value>
+  </data>
+  <data name="Datatable_sInfoFiltered" xml:space="preserve">
+    <value>(filtre a partir de _MAX_ entrees au total)</value>
+  </data>
+  <data name="Datatable_sInfoThousands" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Datatable_sLoadingRecords" xml:space="preserve">
+    <value>Chargement...</value>
+  </data>
+  <data name="Datatable_sProcessing" xml:space="preserve">
+    <value>Traitement...</value>
+  </data>
+  <data name="Datatable_sRefreshTime" xml:space="preserve">
+    <value>Derniere mise a jour: {0}</value>
+  </data>
+  <data name="Datatable_sZeroRecords" xml:space="preserve">
+    <value>Aucun enregistrement correspondant trouve</value>
+  </data>
+  <data name="DateImageToolTip" xml:space="preserve">
+    <value>Information sur le format de date</value>
+  </data>
+  <data name="ERR_DATE_INVALIDE" xml:space="preserve">
+    <value>Format de date invalide pour {0}</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="LBL000011" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="LBL000016" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="LBL000017" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="LBL000021" xml:space="preserve">
+    <value>Aucune donnee disponible</value>
+  </data>
+  <data name="LBL000022" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="LBL000023" xml:space="preserve">
+    <value>Heures pour {0}</value>
+  </data>
+  <data name="LBL000024" xml:space="preserve">
+    <value>Minutes pour {0}</value>
+  </data>
+  <data name="LBL000025" xml:space="preserve">
+    <value>Rechercher :</value>
+  </data>
+  <data name="LBL000026" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="LBL000027" xml:space="preserve">
+    <value>activer pour trier la colonne par ordre croissant</value>
+  </data>
+  <data name="LBL000028" xml:space="preserve">
+    <value>activer pour trier la colonne par ordre decroissant</value>
+  </data>
+  <data name="LBL000029" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="LBL000030" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="LBL000032" xml:space="preserve">
+    <value>Tout selectionner</value>
+  </data>
+  <data name="LBL000385" xml:space="preserve">
+    <value>et</value>
+  </data>
+  <data name="LBL000911" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="LBL000912" xml:space="preserve">
+    <value>Soustraire</value>
+  </data>
+  <data name="MSG000004" xml:space="preserve">
+    <value>{0} est obligatoire</value>
+  </data>
+  <data name="MSG000491" xml:space="preserve">
+    <value>Format de date : jj/MM/aaaa ou MM/jj/aaaa</value>
+  </data>
+  <data name="MomentFormat" xml:space="preserve">
+    <value>JJ/MM/AAAA</value>
+  </data>
+  <data name="MULBL001708" xml:space="preserve">
+    <value>Entre</value>
+  </data>
+  <data name="MULBL001709" xml:space="preserve">
+    <value>Egal</value>
+  </data>
+  <data name="MULBL001722" xml:space="preserve">
+    <value>Superieur a</value>
+  </data>
+  <data name="MULBL001723" xml:space="preserve">
+    <value>Inferieur a</value>
+  </data>
+  <data name="MULBL001724" xml:space="preserve">
+    <value>Superieur ou egal a</value>
+  </data>
+  <data name="MULBL001725" xml:space="preserve">
+    <value>Inferieur ou egal a</value>
+  </data>
+  <data name="PM" xml:space="preserve">
+    <value> PM</value>
+  </data>
+  <data name="RecordsLimitMessageLong" xml:space="preserve">
+    <value>Le nombre d'enregistrements depasse la limite maximale. Veuillez affiner vos criteres de recherche.</value>
+  </data>
+  <data name="RecordsLimitMessageShort" xml:space="preserve">
+    <value>Limite d'enregistrements depassee</value>
+  </data>
+  <data name="TIP000001" xml:space="preserve">
+    <value>Calendrier pour {0}</value>
+  </data>
+  <data name="TIP000010" xml:space="preserve">
+    <value>{0} est obligatoire</value>
+  </data>
+  <data name="TIP000011" xml:space="preserve">
+    <value>Suivant</value>
+  </data>
+  <data name="TIP000012" xml:space="preserve">
+    <value>Premier</value>
+  </data>
+  <data name="TIP000013" xml:space="preserve">
+    <value>Precedent</value>
+  </data>
+  <data name="TIP000014" xml:space="preserve">
+    <value>Dernier</value>
+  </data>
+  <data name="TIP000021" xml:space="preserve">
+    <value>Trier par ordre croissant</value>
+  </data>
+  <data name="TIP000022" xml:space="preserve">
+    <value>Cliquer pour appeler {0}</value>
+  </data>
+  <data name="TIP000023" xml:space="preserve">
+    <value>Effacer la date pour {0}</value>
+  </data>
+  <data name="TIP000024" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="TIP000025" xml:space="preserve">
+    <value>Trier par ordre decroissant</value>
+  </data>
+  <data name="TPOAR02F02T77CE11_DATE_DU_JOUR" xml:space="preserve">
+    <value>Date du jour</value>
+  </data>
+  <data name="TPOAR02F02T77CE11_ENTRE" xml:space="preserve">
+    <value>Entre</value>
+  </data>
+  <data name="TimeMandatory" xml:space="preserve">
+    <value>L'heure est obligatoire pour {0}</value>
+  </data>
+  <data name="Today_Date" xml:space="preserve">
+    <value>Date du jour</value>
+  </data>
+  <data name="equals_To" xml:space="preserve">
+    <value>Egal a</value>
+  </data>
+  <data name="lblAsteriks" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="lblsemiColon" xml:space="preserve">
+    <value>:</value>
+  </data>
+</root>
