@@ -355,8 +355,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
             return TagToString(tagbuilderLineRowDiv);
         }
 
-        private StringBuilder str = new StringBuilder();
-
         private string Makechild(DataRow drow)
         {
             var strChild = new StringBuilder();
@@ -373,6 +371,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                 foreach (var foundRow in foundRows)
                 {
                     var tagbuilderli = new TagBuilder("li");
+                    var anchorHtml = new StringBuilder();
 
                     if ((string)foundRow["HasChild"] == "Yes")
                     {
@@ -385,21 +384,19 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                         var tagbuilderspan = new TagBuilder("span");
                         tagbuilderspan.Attributes["class"] = "glyphicon glyphicon-minus";
                         tagBulderanchor.InnerHtml.AppendHtml(TagToString(tagbuilderspan));
-                        this.str.Append(TagToString(tagBulderanchor));
+                        anchorHtml.Append(TagToString(tagBulderanchor));
                     }
                     else if (foundRows.Last() == foundRow)
                     {
-                        this.str = new StringBuilder();
                         tagbuilderli.Attributes["class"] = "lastchild";
                     }
                     else
                     {
-                        this.str = new StringBuilder();
                         tagbuilderli.Attributes["class"] = "child";
                     }
 
                     var liContent = new StringBuilder();
-                    liContent.Append(this.str.ToString());
+                    liContent.Append(anchorHtml.ToString());
                     liContent.Append(this.MakeNode(foundRow));
                     if ((string)foundRow["HasChild"] == "Yes")
                     {
