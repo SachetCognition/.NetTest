@@ -17,10 +17,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip
         public ImageToolTipBuilder Text(string text) { Component.Text = text; return this; }
         public ImageToolTipBuilder ImageUrl(string url) { Component.ImageUrl = url; return this; }
         public ImageToolTipBuilder ToolTipId(string id) { Component.ToolTipId = id; return this; }
-        public ImageToolTipBuilder CssClassImage(string cssClass) { return this; }
+        public ImageToolTipBuilder CssClassImage(string cssClass) { Component.CssClass = cssClass; return this; }
         public ImageToolTipBuilder PersistanceMode(PersistanceMode mode) { return this; }
         public ImageToolTipBuilder Title(string title) { return this; }
-        public ImageToolTipBuilder AlternateText(string text) { return this; }
+        public ImageToolTipBuilder AlternateText(string text) { Component.ImageAlt = text; return this; }
         public ImageToolTipBuilder Css(string css) { return this; }
         public ImageToolTipBuilder CssClassSpan(string css) { return this; }
         public ImageToolTipBuilder CssClassInnerSpan(string css) { return this; }
