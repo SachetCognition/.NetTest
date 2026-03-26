@@ -18,7 +18,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             get { return this.timeOffset; }
             set
             {
-                if (Convert.ToInt32(value, CultureInfo.CurrentCulture) == 0)
+                if (value.HasValue && Convert.ToInt32(value.Value, CultureInfo.CurrentCulture) == 0)
                 {
                     this.IsUtcMode = true;
                 }
@@ -108,14 +108,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 int hour = 0, minute = 0;
                 if (!string.IsNullOrEmpty(this.HourValue))
                 {
-                    if (int.TryParse(this.HourValue, out hour) && (hour < 0 || hour > 23))
+                    if (!int.TryParse(this.HourValue, out hour) || hour < 0 || hour > 23)
                     {
                         return null;
                     }
                 }
                 if (!string.IsNullOrEmpty(this.MinuteValue))
                 {
-                    if (int.TryParse(this.MinuteValue, out minute) && (minute < 0 || minute > 59))
+                    if (!int.TryParse(this.MinuteValue, out minute) || minute < 0 || minute > 59)
                     {
                         return null;
                     }

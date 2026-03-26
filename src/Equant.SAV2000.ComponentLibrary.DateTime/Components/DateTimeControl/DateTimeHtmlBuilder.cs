@@ -387,7 +387,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         private static string GetCurItemEng(int hour)
         {
             var sb = new StringBuilder();
-            sb.Append(hour <= 12 ? hour.ToString("00", CultureInfo.InvariantCulture) : (hour % 12).ToString("00", CultureInfo.InvariantCulture));
+            if (hour == 0)
+            {
+                sb.Append("12");
+            }
+            else
+            {
+                sb.Append(hour <= 12 ? hour.ToString("00", CultureInfo.InvariantCulture) : (hour % 12).ToString("00", CultureInfo.InvariantCulture));
+            }
             sb.Append(hour <= 11 ? ApplicationStrings.AM : ApplicationStrings.PM);
             return sb.ToString();
         }
