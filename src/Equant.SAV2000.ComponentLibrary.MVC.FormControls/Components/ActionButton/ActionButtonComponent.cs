@@ -17,6 +17,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
             this.OnClick = "null";
             this.Title = string.Empty;
             this.Text = string.Empty;
+            this.Value = string.Empty;
         }
 
         public ActionButtonComponent(IHtmlHelper htmlHelper) : base(htmlHelper)
@@ -24,6 +25,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
             this.OnClick = "null";
             this.Title = string.Empty;
             this.Text = string.Empty;
+            this.Value = string.Empty;
         }
 
         public override ReadOnlyCollection<JsResource> JsResources
