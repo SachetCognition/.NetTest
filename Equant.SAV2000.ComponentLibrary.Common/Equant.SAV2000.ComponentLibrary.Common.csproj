@@ -46,6 +46,8 @@
     <Compile Include="Resources\PersistanceMode.cs" />
     <Compile Include="Components\DataTables\SortDirection.cs" />
     <Compile Include="Components\DataTables\CriteriaParameter.cs" />
+    <Compile Include="Components\DataTables\CriteriaParameterEvaluationType.cs" />
+    <Compile Include="Helper\Crypt.cs" />
     <Compile Include="Components\DataTables\Options\DataTableColumnsOption.cs" />
     <Compile Include="Components\DataTables\Options\DataTableOptions.cs" />
     <Compile Include="Components\DataTables\Options\DataTableLanguageOption.cs" />
