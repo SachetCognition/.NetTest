@@ -15,6 +15,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         public string ForId { get; set; }
         public string AssociatedControlId { get; set; }
         public bool IsMandatory { get; set; }
+        public bool IsOnlyForAccess { get; set; }
+        public string CssClassLabel { get; set; }
+        public string SuperscriptText { get; set; }
+        public string SuperscriptCssClass { get; set; }
+        public string SuperscriptToolTip { get; set; }
+        public bool DisplayStar { get; set; }
+        public bool DisplayColon { get; set; }
+        public bool IsHtmlEncode { get; set; }
 
         public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
         public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }

@@ -8,11 +8,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         public CustomLabelBuilder(CustomLabelComponent component) : base(component) { }
         public CustomLabelBuilder(CustomLabelComponent component, ModelMetadata modelMetadata) : base(component, modelMetadata) { }
 
-        public CustomLabelBuilder Text(string text) { return this; }
+        public CustomLabelBuilder Text(string text) { Component.Text = text; return this; }
         public CustomLabelBuilder AssociatedControlId(string id) { Component.AssociatedControlId = id; return this; }
         public CustomLabelBuilder HtmlAttributes(object attributes) { return this; }
-        public CustomLabelBuilder IsOnlyForAccess(bool value) { return this; }
-        public CustomLabelBuilder IsMandatory(bool value) { return this; }
-        public CustomLabelBuilder CssClassLabel(string cssClass) { return this; }
+        public CustomLabelBuilder IsOnlyForAccess(bool value) { Component.IsOnlyForAccess = value; return this; }
+        public CustomLabelBuilder IsMandatory(bool value) { Component.IsMandatory = value; return this; }
+        public CustomLabelBuilder CssClassLabel(string cssClass) { Component.CssClassLabel = cssClass; return this; }
     }
 }
