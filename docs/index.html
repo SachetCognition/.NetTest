@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URS — Migration of Equant.SAV2000.ComponentLibrary.MVC to .NET 8+</title>
+<style>
+/* === Reset & Base === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a2e; background: #f8f9fa; line-height: 1.6;
+}
+
+/* === Layout === */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: 260px; height: 100vh;
+  background: #1a1a2e; color: #ccc; overflow-y: auto; z-index: 100;
+  padding: 1.5rem 0; border-right: 3px solid #e94560;
+}
+.sidebar h2 { color: #e94560; font-size: 1rem; padding: 0 1.2rem 0.8rem; border-bottom: 1px solid #333; margin-bottom: 0.5rem; }
+.sidebar a {
+  display: block; padding: 0.45rem 1.2rem; color: #aaa; text-decoration: none;
+  font-size: 0.85rem; transition: all 0.2s;
+}
+.sidebar a:hover, .sidebar a.active { color: #fff; background: rgba(233,69,96,0.15); border-left: 3px solid #e94560; }
+.sidebar .nav-group { margin-top: 0.6rem; }
+.sidebar .nav-group-title { color: #777; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.3rem 1.2rem; }
+
+.content { margin-left: 260px; padding: 2rem 3rem 4rem; max-width: 1100px; }
+
+/* === Typography === */
+h1 { font-size: 2rem; color: #1a1a2e; margin-bottom: 0.5rem; }
+h2 { font-size: 1.5rem; color: #1a1a2e; margin: 2.5rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid #e94560; }
+h3 { font-size: 1.15rem; color: #16213e; margin: 1.5rem 0 0.6rem; }
+h4 { font-size: 1rem; color: #0f3460; margin: 1rem 0 0.4rem; }
+p { margin-bottom: 0.8rem; }
+.meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+.meta span { display: inline-block; margin-right: 1.5rem; }
+
+/* === Badges === */
+.badge {
+  display: inline-block; padding: 0.15rem 0.55rem; border-radius: 3px;
+  font-size: 0.75rem; font-weight: 600; color: #fff; vertical-align: middle;
+}
+.badge-must { background: #c0392b; }
+.badge-should { background: #e67e22; }
+.badge-could { background: #2980b9; }
+.badge-critical { background: #6c1226; }
+.badge-high { background: #c0392b; }
+.badge-medium { background: #e67e22; }
+.badge-low { background: #27ae60; }
+
+/* === Tables === */
+table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.9rem; }
+thead th {
+  background: #1a1a2e; color: #fff; padding: 0.6rem 0.8rem;
+  text-align: left; position: sticky; top: 0; z-index: 2;
+}
+tbody td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #ddd; }
+tbody tr:nth-child(even) { background: #f0f2f5; }
+tbody tr:hover { background: #e8ecf1; }
+
+/* === Collapsible Details === */
+details { margin: 0.8rem 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; }
+details[open] { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+summary {
+  padding: 0.8rem 1rem; cursor: pointer; font-weight: 600;
+  background: #f0f2f5; border-radius: 6px; list-style: none; position: relative;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "\25B6"; margin-right: 0.6rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block; }
+details[open] > summary::before { transform: rotate(90deg); }
+details > .detail-body { padding: 1rem 1.2rem; }
+
+/* === User Story Cards === */
+.story-card {
+  border: 1px solid #ddd; border-radius: 6px; padding: 1rem 1.2rem;
+  margin: 0.8rem 0; background: #fff; border-left: 4px solid #2980b9;
+}
+.story-card.must { border-left-color: #c0392b; }
+.story-card.should { border-left-color: #e67e22; }
+.story-card.could { border-left-color: #2980b9; }
+.story-id { font-weight: 700; color: #0f3460; font-size: 0.9rem; }
+.story-title { font-weight: 600; font-size: 1.05rem; margin: 0.3rem 0; }
+.story-field { margin: 0.25rem 0; font-size: 0.9rem; }
+.story-field strong { color: #333; }
+.story-ac { margin: 0.4rem 0 0.2rem; }
+.story-ac ul { margin-left: 1.2rem; }
+.story-ac li { margin: 0.2rem 0; font-size: 0.88rem; }
+.story-components { font-size: 0.85rem; color: #555; margin-top: 0.3rem; }
+.story-components code { background: #eef; padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.82rem; }
+
+/* === Risk Matrix === */
+.risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1rem 0; }
+.risk-item {
+  border: 1px solid #ddd; border-radius: 6px; padding: 0.8rem 1rem; background: #fff;
+}
+.risk-item h4 { margin: 0 0 0.3rem; }
+
+/* === Print === */
+@media print {
+  .sidebar { display: none; }
+  .content { margin-left: 0; padding: 1rem; max-width: 100%; }
+  details { break-inside: avoid; }
+  details[open] > summary { background: #eee; }
+  .story-card { break-inside: avoid; }
+  table { font-size: 0.8rem; }
+  h2 { break-before: page; }
+  body { font-size: 12pt; }
+}
+
+/* === Responsive === */
+@media (max-width: 900px) {
+  .sidebar { width: 200px; }
+  .content { margin-left: 200px; padding: 1.5rem; }
+}
+@media (max-width: 700px) {
+  .sidebar { position: static; width: 100%; height: auto; border-right: none; border-bottom: 3px solid #e94560; }
+  .content { margin-left: 0; padding: 1rem; }
+  .risk-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SIDEBAR ============ -->
+<nav class="sidebar" id="sidebar">
+  <h2>URS Navigation</h2>
+  <a href="#section-1">1. Title &amp; Metadata</a>
+  <a href="#section-2">2. Executive Summary</a>
+  <a href="#section-3">3. Current Tech Stack</a>
+  <a href="#section-4">4. User Stories</a>
+  <div class="nav-group">
+    <div class="nav-group-title">Epics</div>
+    <a href="#epic-1">&nbsp;&nbsp;Epic 1: Form Controls</a>
+    <a href="#epic-2">&nbsp;&nbsp;Epic 2: Data Display</a>
+    <a href="#epic-3">&nbsp;&nbsp;Epic 3: Navigation</a>
+    <a href="#epic-4">&nbsp;&nbsp;Epic 4: Date/Time</a>
+    <a href="#epic-5">&nbsp;&nbsp;Epic 5: Validation</a>
+    <a href="#epic-6">&nbsp;&nbsp;Epic 6: Labels &amp; Tooltips</a>
+    <a href="#epic-7">&nbsp;&nbsp;Epic 7: Infrastructure</a>
+    <a href="#epic-8">&nbsp;&nbsp;Epic 8: Migration</a>
+  </div>
+  <a href="#section-5">5. Functional Requirements</a>
+  <a href="#section-6">6. Non-Functional Requirements</a>
+  <a href="#section-7">7. Migration Mapping</a>
+  <a href="#section-8">8. Risk Assessment</a>
+  <a href="#section-9">9. Reusability Matrix</a>
+  <a href="#section-10">10. Component Inventory</a>
+</nav>
+
+<!-- ============ CONTENT ============ -->
+<main class="content">
+
+<!-- ====== SECTION 1 ====== -->
+<section id="section-1">
+<h1>User Requirement Specification</h1>
+<p style="font-size:1.15rem; color:#555;">Migration of <strong>Equant.SAV2000.ComponentLibrary.MVC</strong> to .NET 8+</p>
+<div class="meta">
+  <span><strong>Version:</strong> 1.0</span>
+  <span><strong>Date:</strong> 2026-03-26</span>
+  <span><strong>Status:</strong> <span class="badge badge-should">Draft</span></span>
+  <span><strong>Document ID:</strong> URS-SAV2000-MIG-001</span>
+</div>
+</section>
+
+<!-- ====== SECTION 2 ====== -->
+<section id="section-2">
+<h2>2. Executive Summary</h2>
+<p>This document defines the user requirements for migrating the <strong>Equant.SAV2000.ComponentLibrary</strong> from .NET Framework 4.8 / ASP.NET MVC 5 to .NET 8+ / ASP.NET Core. The library is a 42-component server-side HTML UI toolkit used extensively across the SAV2000 application suite.</p>
+<p>The migration must achieve <strong>zero business functionality deprecation</strong>. Every component, validator, model binder, and resource management mechanism currently in production must have a functionally equivalent implementation on the target platform. The library generates HTML on the server using a fluent builder API (<code>Html.Sav2000().Component()</code>) and initializes client-side jQuery plugins via inline scripts.</p>
+<p>Key migration drivers include: end of .NET Framework 4.8 mainstream support, inability to use modern NuGet ecosystem, build tooling modernization (FxCop &rarr; Roslyn, ajaxmin &rarr; esbuild), and elimination of legacy SourceSafe SCC integration.</p>
+</section>
+
+<!-- ====== SECTION 3 ====== -->
+<section id="section-3">
+<h2>3. Current Tech Stack</h2>
+<table>
+<thead><tr><th>Category</th><th>Current Technology</th><th>Version</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Runtime</td><td>.NET Framework</td><td>4.8</td><td>Windows-only, legacy</td></tr>
+<tr><td>Web Framework</td><td>ASP.NET MVC</td><td>5.2.3</td><td>System.Web.Mvc dependency</td></tr>
+<tr><td>Razor Engine</td><td>Microsoft.AspNet.Razor</td><td>3.2.3</td><td>Classic Razor pages</td></tr>
+<tr><td>Web Pages</td><td>Microsoft.AspNet.WebPages</td><td>3.2.3</td><td>Helper infrastructure</td></tr>
+<tr><td>ORM</td><td>Entity Framework</td><td>4.1.10311.0</td><td>ObjectContext-based</td></tr>
+<tr><td>JSON</td><td>Newtonsoft.Json</td><td>6.0.4</td><td>Serialization &amp; custom attributes</td></tr>
+<tr><td>Resource Delivery</td><td>ClientDependency Framework</td><td>1.8.2.1</td><td>JS/CSS bundling &amp; dedup</td></tr>
+<tr><td>Client Libraries</td><td>jQuery + plugins</td><td>Various</td><td>DataTables, clueTip, qTip, UI Datepicker</td></tr>
+<tr><td>Build Tools</td><td>MSBuild</td><td>ToolsVersion 12.0</td><td>Old-style csproj</td></tr>
+<tr><td>JS Minification</td><td>ajaxmin.bat</td><td>N/A</td><td>Pre-build batch script</td></tr>
+<tr><td>Code Analysis</td><td>FxCop</td><td>N/A</td><td>Custom ruleset file</td></tr>
+<tr><td>Source Control</td><td>SourceSafe (SCC)</td><td>N/A</td><td>SCC properties in csproj</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ====== SECTION 4 ====== -->
+<section id="section-4">
+<h2>4. User Stories</h2>
+<p>65+ user stories organized across 8 epics covering the full scope of the component library migration.</p>
+
+<!-- ======== EPIC 1: Form Controls ======== -->
+<section id="epic-1">
+<details open>
+<summary><h3 style="display:inline;">Epic 1: Form Controls (13 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-FC-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Button Rendering</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a submit button with configurable CSS, click handler, disabled state, and dialog modal trigger,</div>
+  <div class="story-field"><strong>So that</strong> users can submit forms and trigger actions.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>HTML output matches current <code>&lt;input type="submit"&gt;</code> with id, name, value, data-toggle, data-target attributes</li>
+      <li>jQuery plugin <code>$('#id').savbutton({onClick: ...})</code> initializes correctly</li>
+      <li>Disabled state renders <code>disabled="disabled"</code> attribute</li>
+      <li>Dialog trigger renders appropriate <code>data-toggle</code> and <code>data-target</code> attributes</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ButtonComponent</code> <code>ButtonBuilder</code> <code>ButtonHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">ActionButton Rendering</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render an action button with a span-wrapped text, configurable CSS, and dialog box trigger,</div>
+  <div class="story-field"><strong>So that</strong> users can perform contextual actions.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;button&gt;&lt;span&gt;text&lt;/span&gt;&lt;/button&gt;</code> structure</li>
+      <li>Supports CSS class configuration</li>
+      <li>Dialog box trigger integrates with DialogBox component</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ActionButtonComponent</code> <code>ActionButtonBuilder</code> <code>ActionButtonHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">CheckBox with Events</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a checkbox with onClick and onChange event handlers,</div>
+  <div class="story-field"><strong>So that</strong> user interactions trigger application logic.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li><code>$('#id').checkBox({onClick: ..., onChange: ...})</code> initializes</li>
+      <li>Checked/unchecked state persists across postbacks</li>
+      <li>Model binding correctly maps checked state to boolean</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CheckBoxComponent</code> <code>CheckBoxBuilder</code> <code>CheckBoxHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-004</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">CheckBoxList</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a list of checkboxes from a collection of items,</div>
+  <div class="story-field"><strong>So that</strong> users can make multiple selections.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders checkbox group from <code>IEnumerable&lt;CheckBoxListItem&gt;</code></li>
+      <li>Selected items correctly bound on form submit</li>
+      <li>Supports horizontal and vertical layout modes</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CheckBoxListComponent</code> <code>CheckBoxListBuilder</code> <code>CheckBoxListHtmlBuilder</code> <code>CheckBoxListItem</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-005</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">RadioButton</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a radio button input,</div>
+  <div class="story-field"><strong>So that</strong> users can make single selections.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;input type="radio"&gt;</code> with correct name grouping</li>
+      <li>Selected value correctly model-bound</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>RadioButtonComponent</code> <code>RadioButtonBuilder</code> <code>RadioButtonHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-006</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">RadioButtonList</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a group of radio buttons,</div>
+  <div class="story-field"><strong>So that</strong> users can select one option from a set.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders group of radio buttons from data source</li>
+      <li>Mutual exclusivity within the group</li>
+      <li>Supports configurable layout</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>RadioButtonListComponent</code> <code>RadioButtonListBuilder</code> <code>RadioButtonListHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-007</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">TextBox</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a single-line text input with configurable attributes,</div>
+  <div class="story-field"><strong>So that</strong> users can enter text data.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;input type="text"&gt;</code> with id, name, value, maxlength, placeholder</li>
+      <li>Supports readonly and disabled states</li>
+      <li>Model binding preserves value on postback</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>TextBoxComponent</code> <code>TextBoxBuilder</code> <code>TextBoxHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-008</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">TextArea</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a multi-line text area,</div>
+  <div class="story-field"><strong>So that</strong> users can enter longer text.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;textarea&gt;</code> with configurable rows, cols</li>
+      <li>Supports maxlength validation</li>
+      <li>Model binding preserves multiline content</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>TextAreaComponent</code> <code>TextAreaBuilder</code> <code>TextAreaHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-FC-009</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DropDownList with Data Binding</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a select dropdown bound to a data collection,</div>
+  <div class="story-field"><strong>So that</strong> users can choose from predefined options.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;select&gt;</code> with <code>&lt;option&gt;</code> elements from <code>DataCollection</code></li>
+      <li>Supports default/placeholder option</li>
+      <li>Selected value correctly model-bound</li>
+      <li>Supports cascading dropdowns via onChange events</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DropDownListComponent</code> <code>DropDownListBuilder</code> <code>DropDownListHtmlBuilder</code> <code>DataCollection</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-FC-010</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">ListBox</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a multi-select list box,</div>
+  <div class="story-field"><strong>So that</strong> users can select multiple items from a scrollable list.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;select multiple&gt;</code> with configurable size</li>
+      <li>Multiple selected values correctly model-bound as array</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ListBoxComponent</code> <code>ListBoxBuilder</code> <code>ListBoxHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-FC-011</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DualList</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a dual-list selector (available/selected),</div>
+  <div class="story-field"><strong>So that</strong> users can move items between two lists.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders two list boxes with add/remove buttons</li>
+      <li>Items can be moved between available and selected lists</li>
+      <li>Selected items submitted on form post</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DualListComponent</code> <code>DualListBuilder</code> <code>DualListHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-FC-012</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">CommentBox</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a comment box (multi-line input),</div>
+  <div class="story-field"><strong>So that</strong> users can enter comments.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders textarea-based comment input</li>
+      <li>Supports character count display</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CommentBoxComponent</code> <code>CommentBoxBuilder</code> <code>CommentBoxHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-FC-013</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">FileUpload</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a file upload control,</div>
+  <div class="story-field"><strong>So that</strong> users can upload files.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;input type="file"&gt;</code> element</li>
+      <li>Supports file type restrictions</li>
+      <li>Integrates with form multipart submission</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>FileUploadComponent</code> <code>FileUploadBuilder</code> <code>FileUploadHtmlBuilder</code></div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 2: Data Display ======== -->
+<section id="epic-2">
+<details>
+<summary><h3 style="display:inline;">Epic 2: Data Display (9 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-DD-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DataTable Client-Side</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a data table with client-side data (System.Data.DataTable), pagination, sorting, and column reorder,</div>
+  <div class="story-field"><strong>So that</strong> users can browse tabular data.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Table renders with CSS class <code>"display table dataTable"</code></li>
+      <li>Pagination uses <code>"SwanPagination"</code> type</li>
+      <li>Default page size is 10</li>
+      <li>Horizontal scrolling enabled by default</li>
+      <li><code>$('#id').dataTableCore({...})</code> initializes with full options JSON</li>
+      <li>Column reorder via jquery.dataTables.colMoveResize.js</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DataTableComponent</code> <code>DataTableBuilder</code> <code>DataTableHtmlBuilder</code> <code>DataTableOptionsSerializer</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-DD-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DataTable Server-Side</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a data table with server-side processing via POST to a ServiceUri, with encrypted criteria parameters,</div>
+  <div class="story-field"><strong>So that</strong> large datasets are fetched on demand.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Cannot use ServiceUri and Data simultaneously (throws <code>NotSupportedException</code>)</li>
+      <li>Criteria parameters encrypted via <code>Crypt.Encrypt</code> when <code>IsEncryptionRequired=true</code></li>
+      <li>POST method used for server-side requests</li>
+      <li>JSON response parsed and rendered into table rows</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DataTableComponent</code> <code>DataTableBuilder</code> <code>DataTableHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-DD-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DataTable Select/Delete/Modify Columns</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> add select-all checkboxes, delete icons, and modify icons to DataTable rows,</div>
+  <div class="story-field"><strong>So that</strong> users can perform bulk and row-level operations.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Select column at index 0, Delete at index 1, Modify at index 2 by default</li>
+      <li>Delete renders trash.png icon</li>
+      <li>Modify renders modify icon</li>
+      <li>Click events fire <code>OnDeleteClick</code>/<code>OnModifyClick</code>/<code>OnSelectColumnClick</code> callbacks</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DataTableComponent</code> <code>DataTableBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DD-004</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DataTable Column Filtering</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> enable column-level text filtering on a DataTable,</div>
+  <div class="story-field"><strong>So that</strong> users can filter data by column values.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>When <code>IsFilter=true</code>, <code>jquery.dataTables.columnFilter.js</code> is loaded</li>
+      <li>Filter inputs rendered per column</li>
+      <li>Server-side filtering sends filter params in POST body</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DataTableComponent</code> <code>DataTableBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DD-005</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DataTable Error Handling</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> display error messages and redirect to an error page when AJAX calls fail,</div>
+  <div class="story-field"><strong>So that</strong> users see meaningful error information.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li><code>ErrorPageUrl</code> generated from <code>HttpContext.Request</code> parameters (NumFen, COOKIENAME)</li>
+      <li>Record limit messages displayed when <code>TotalRecordsLimit</code> exceeded</li>
+      <li>AJAX error callback redirects to error page</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DataTableComponent</code> <code>DataTableHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-DD-006</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">TreeGrid</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a multi-column tree grid with expandable rows, checkbox columns, image columns, and custom columns,</div>
+  <div class="story-field"><strong>So that</strong> users can browse hierarchical data.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Data source is <code>System.Data.DataTable</code></li>
+      <li>Supports <code>CheckBoxTextColumn</code>, <code>ImageTextColumn</code>, <code>TreeCustomColumnData</code></li>
+      <li>Row highlighting on selection</li>
+      <li>Expand/collapse child rows</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>TreeGridComponent</code> <code>TreeGridBuilder</code> <code>TreeGridHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DD-007</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">ErrorComponent</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render error messages with configurable styling,</div>
+  <div class="story-field"><strong>So that</strong> validation and system errors are displayed to users.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders error messages from <code>ErrorMessageModel</code></li>
+      <li>Supports multiple error display styles</li>
+      <li>Integrates with MVC validation summary</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ErrorComponent</code> <code>ErrorBuilder</code> <code>ErrorHtmlBuilder</code> <code>ErrorMessageModel</code></div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-DD-008</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">ProgressBar</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a progress bar,</div>
+  <div class="story-field"><strong>So that</strong> users can see operation progress.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders progress bar with configurable percentage</li>
+      <li>Supports animated progress updates</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ProgressBarComponent</code> <code>ProgressBarBuilder</code> <code>ProgressBarHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DD-009</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">Image and PopupImage</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render images and popup images,</div>
+  <div class="story-field"><strong>So that</strong> users can view visual content.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;img&gt;</code> with configurable src, alt, CSS</li>
+      <li>PopupImage opens in overlay/modal on click</li>
+      <li>Supports <code>ImageSrc</code> model for dynamic sources</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ImageComponent</code> <code>ImageBuilder</code> <code>ImageHtmlBuilder</code> <code>ImageSrc</code> <code>PopupImageComponent</code> <code>PopupImageBuilder</code> <code>PopupImageHtmlBuilder</code></div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 3: Navigation ======== -->
+<section id="epic-3">
+<details>
+<summary><h3 style="display:inline;">Epic 3: Navigation (5 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-NAV-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">BreadCrumbs</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a breadcrumb navigation trail,</div>
+  <div class="story-field"><strong>So that</strong> users can see their location in the application hierarchy.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders ordered list of breadcrumb items with links</li>
+      <li>Last item rendered as plain text (current page)</li>
+      <li>Separator between items configurable</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>BreadCrumbsComponent</code> <code>BreadCrumbsBuilder</code> <code>BreadCrumbsHtmlBuilder</code> <code>BreadCrumbsItem</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-NAV-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">HorizontalMenu</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a horizontal navigation menu with menu items,</div>
+  <div class="story-field"><strong>So that</strong> users can navigate between sections.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders horizontal menu bar with clickable items</li>
+      <li>Supports active/selected state highlighting</li>
+      <li>Menu items from <code>HorizontalMenuItemInfo</code> collection</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>HorizontalMenuComponent</code> <code>HorizontalMenuBuilder</code> <code>HorizontalMenuHtmlBuilder</code> <code>HorizontalMenuItemInfo</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-NAV-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">VerticalMenu</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a vertical navigation menu with copyright image,</div>
+  <div class="story-field"><strong>So that</strong> users can navigate in a sidebar layout.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders vertical menu with stacked items</li>
+      <li>Supports copyright/branding image at bottom</li>
+      <li>Menu items from <code>VerticalMenuItemInfo</code> collection</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>VerticalMenuComponent</code> <code>VerticalMenuBuilder</code> <code>VerticalMenuHtmlBuilder</code> <code>VerticalMenuItemInfo</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-NAV-004</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">HorizontalTab</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a tabbed interface,</div>
+  <div class="story-field"><strong>So that</strong> users can switch between content panels.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders tab headers with associated content panels</li>
+      <li>Tab switching via JavaScript (no page reload)</li>
+      <li>Supports active tab state</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>HorizontalTabComponent</code> <code>HorizontalTabBuilder</code> <code>HorizontalTabHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-NAV-005</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DropDownMenu</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a dropdown menu with child menus,</div>
+  <div class="story-field"><strong>So that</strong> users can access nested navigation options.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders multi-level dropdown menu structure</li>
+      <li>Supports keyboard navigation</li>
+      <li>Child menus appear on hover/click</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DropDownMenuComponent</code> <code>DropDownMenuBuilder</code> <code>DropDownMenuHtmlBuilder</code> <code>DropdownMenu</code> <code>ChildMenu</code></div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 4: Date/Time Controls ======== -->
+<section id="epic-4">
+<details>
+<summary><h3 style="display:inline;">Epic 4: Date/Time Controls (6 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-DT-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DateTime Picker</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a date picker with calendar popup, hour/minute dropdowns, erase button, current date selector, and information icon,</div>
+  <div class="story-field"><strong>So that</strong> users can select dates and times.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Supports French (dd/MM/yyyy) and English (MM/dd/yyyy) formats</li>
+      <li>UTC mode and timezone offset mode</li>
+      <li>jQuery UI datepicker integration</li>
+      <li><code>$('#id').dateTime({...})</code> initializes with full options</li>
+      <li>Erase button clears date, hour, and minute fields</li>
+      <li>Current date selector sets today's date</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DateTimeComponent</code> <code>DateTimeBuilder</code> <code>DateTimeHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-DT-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">CompositeDate with 16 Date Types</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a composite date control with a date type dropdown (16 options: Between, Equal, GreaterThan, LessThan, LessThanOrEqual, GreaterThanOrEqual, Empty, EqualCurrentDate, ModelBetween, ModelEqual, ModelGreaterThan, ModelGreaterThanOrEqual, ModelLessThan, ModelLessThanOrEqual, Week, WeekBetween), dual date fields, dual week fields, and an "and" label,</div>
+  <div class="story-field"><strong>So that</strong> users can specify complex date criteria.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Selecting a date type shows/hides appropriate fields (single date, dual dates, single week, dual weeks)</li>
+      <li>Model date types change date input to model format (D+5, J-3)</li>
+      <li>JavaScript handles all show/hide/clear logic via CompositeDate.js</li>
+      <li>All 16 date types render correct field combinations</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CompositeDateComponent</code> <code>CompositeDateBuilder</code> <code>CompositeDateHtmlBuilder</code> <code>CompositeDateViewModel</code> <code>DateSelectionDropDown</code> <code>EnumDateTypes</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DT-003</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">CompositeDateExt with Depth</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render an extended composite date with Add/Subtract day depth,</div>
+  <div class="story-field"><strong>So that</strong> users can specify date ranges with offsets.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Extends CompositeDate with additional depth field</li>
+      <li>Add/Subtract selector for depth direction</li>
+      <li>Depth value validated as positive integer</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CompositeDateExtComponent</code> <code>CompositeDateExtBuilder</code> <code>CompositeDateExtHtmlBuilder</code> <code>CompositeDateExtViewModel</code> <code>DateExtSelectionDropDown</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-DT-004</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">WeekYear Picker</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a week/year picker,</div>
+  <div class="story-field"><strong>So that</strong> users can select ISO week numbers.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Week input validates ISO week range (1-53)</li>
+      <li>Year input validates 4-digit year</li>
+      <li>Supports English and French week formats</li>
+      <li>Model binding via <code>WeekYearWithFormatBinder</code></li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>WeekYearComponent</code> <code>WeekYearBuilder</code> <code>WeekYearHtmlBuilder</code> <code>WeekAndYear</code> <code>WeekYearWithFormat</code> <code>WeekYearWithFormatBinder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DT-005</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DateDuration</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a date with duration control,</div>
+  <div class="story-field"><strong>So that</strong> users can specify a time duration relative to dates.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Combines date picker with duration input</li>
+      <li>Duration computed from date difference when applicable</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DateDurationComponent</code> <code>DateDurationBuilder</code> <code>DateDurationHtmlBuilder</code> <code>DateDuration</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-DT-006</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">Duration</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a duration input (hours, minutes, seconds, milliseconds),</div>
+  <div class="story-field"><strong>So that</strong> users can specify time durations.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders separate inputs for hours, minutes, seconds, milliseconds</li>
+      <li>Values validated within valid ranges</li>
+      <li>Model binding to <code>DurationEntity</code></li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DurationComponent</code> <code>DurationBuilder</code> <code>DurationHtmlBuilder</code> <code>DurationEntity</code></div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 5: Validation ======== -->
+<section id="epic-5">
+<details>
+<summary><h3 style="display:inline;">Epic 5: Validation (8 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-VAL-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DateRequired</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> apply a DateRequired validation attribute,</div>
+  <div class="story-field"><strong>So that</strong> date fields are validated as required with client-side "daterequired" validation type.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Server-side validates <code>DateTimeWithFormat</code> is not null/empty</li>
+      <li>Client-side emits <code>ModelClientValidationRule</code> with <code>ValidationType="daterequired"</code></li>
+      <li>Validation message uses localized strings</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-VAL-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">DateConditionalRequired</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> conditionally require a date field based on another property's value and date type selection,</div>
+  <div class="story-field"><strong>So that</strong> validation adapts to the selected date comparison mode.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Required only when dependent property has specific date type value</li>
+      <li>Client-side emits conditional validation rule</li>
+      <li>Supports both date and model date type conditions</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-VAL-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">EndDateGreaterThan</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> validate that an end date is greater than a start date,</div>
+  <div class="story-field"><strong>So that</strong> date ranges are logically valid.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Compares two <code>DateTimeWithFormat</code> properties</li>
+      <li>Client-side <code>ValidationType="enddategreaterthan"</code></li>
+      <li>Validation message includes both field names</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-VAL-004</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">EndWeekGreaterThan</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> validate that an end week is greater than a start week,</div>
+  <div class="story-field"><strong>So that</strong> week ranges are logically valid.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Compares two <code>WeekYearWithFormat</code> properties</li>
+      <li>Week/year combination used for comparison</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-VAL-005</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">WeekConditionalRequired</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> conditionally require a week field based on the selected date type (only for WeekBetween),</div>
+  <div class="story-field"><strong>So that</strong> week fields are required only when relevant.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Only validates when <code>DateTypePropertyName</code> resolves to a week-type date type</li>
+      <li>Client-side <code>ValidationType="weekconditionalrequired"</code> with <code>"otherweekid"</code> parameter</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-VAL-006</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">LessThanCurrentDate</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> validate that a date is less than the current date (respecting UTC/timezone offset),</div>
+  <div class="story-field"><strong>So that</strong> future dates are rejected.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Uses <code>DateComponentHelper.GetCurrentDate()</code> which respects UTC mode and timezone offset</li>
+      <li>Client-side <code>ValidationType="lessthancurrentdate"</code></li>
+      <li>Timezone offset correctly applied in comparison</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-VAL-007</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DurationValidator</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> validate that a duration does not exceed the time difference between two dates,</div>
+  <div class="story-field"><strong>So that</strong> durations are logically bounded.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Compares <code>TimeSpan</code> of duration input against <code>TimeSpan</code> between start and end <code>DateTimeWithFormat</code> properties</li>
+      <li>Client-side emits <code>"durationvalidator"</code> with <code>startdateid</code>, <code>enddateid</code>, <code>datedurationid</code> parameters</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-VAL-008</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">CustomStringLength</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> apply a custom string length validation,</div>
+  <div class="story-field"><strong>So that</strong> text inputs are bounded.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Validates string length against min/max bounds</li>
+      <li>Localized error messages</li>
+      <li>Client-side validation support</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 6: Labels, Tooltips & Links ======== -->
+<section id="epic-6">
+<details>
+<summary><h3 style="display:inline;">Epic 6: Labels, Tooltips &amp; Links (7 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-LT-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">CustomLabel with Accessibility</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a label with star indicator (mandatory), colon, superscript, accessibility text, and <code>for</code> attribute,</div>
+  <div class="story-field"><strong>So that</strong> form fields are properly labeled and accessible.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li><code>for</code> attribute is mandatory (enforced in DEBUG builds)</li>
+      <li>Screen-reader-only text uses <code>"hide-access"</code> CSS class</li>
+      <li>Mandatory indicator renders red asterisk (*)</li>
+      <li>Colon and superscript configurable</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CustomLabelComponent</code> <code>CustomLabelBuilder</code> <code>CustomLabelHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-LT-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Label and SpanLabel</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render simple labels and span-based labels,</div>
+  <div class="story-field"><strong>So that</strong> text content can be displayed with semantic markup.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Label renders <code>&lt;label&gt;</code> element with <code>for</code> attribute</li>
+      <li>SpanLabel renders <code>&lt;span&gt;</code> element with configurable CSS</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>LabelComponent</code> <code>LabelBuilder</code> <code>LabelHtmlBuilder</code> <code>SpanLabelComponent</code> <code>SpanLabelBuilder</code> <code>SpanLabelHtmlBuilder</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-LT-003</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">ImageToolTip</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render an image with a tooltip (click or hover persistence mode),</div>
+  <div class="story-field"><strong>So that</strong> users can see contextual help.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Supports click and hover persistence modes</li>
+      <li>Tooltip content configurable via <code>Text()</code></li>
+      <li>Image URL and CSS configurable</li>
+      <li>Uses clueTip or qTip jQuery plugin</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ImageToolTipComponent</code> <code>ImageToolTipBuilder</code> <code>ImageToolTipHtmlBuilder</code></div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-LT-004</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">PopOver</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a popover tooltip,</div>
+  <div class="story-field"><strong>So that</strong> users can see additional information on hover/click.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders popover with configurable content and position</li>
+      <li>Supports HTML content in popover body</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>PopOverComponent</code> <code>PopOverBuilder</code> <code>PopOverHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-LT-005</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">HyperLink</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render an anchor link with configurable attributes,</div>
+  <div class="story-field"><strong>So that</strong> users can navigate to URLs.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders <code>&lt;a href="..."&gt;</code> with configurable text, target, CSS</li>
+      <li>Supports onClick handler</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>HyperLinkComponent</code> <code>HyperLinkBuilder</code> <code>HyperLinkHtmlBuilder</code></div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-LT-006</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">ClickToVoice</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a click-to-voice interface with telephone number display and qTip tooltip,</div>
+  <div class="story-field"><strong>So that</strong> users can initiate web calls.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Displays formatted telephone number</li>
+      <li>Tooltip via qTip plugin shows call status</li>
+      <li>Click initiates voice call action</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ClickToVoiceComponent</code> <code>ClickToVoiceBuilder</code> <code>ClickToVoiceHtmlBuilder</code></div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-LT-007</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">Communicator</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a communicator component,</div>
+  <div class="story-field"><strong>So that</strong> users can access communication features.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders communicator UI element</li>
+      <li>Integrates with messaging/communication backend</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CommunicatorComponent</code> <code>CommunicatorBuilder</code> <code>CommunicatorHtmlBuilder</code></div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 7: Infrastructure ======== -->
+<section id="epic-7">
+<details>
+<summary><h3 style="display:inline;">Epic 7: Infrastructure (7 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-INF-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">ComponentFactory Entry Point</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> access all components via <code>Html.Sav2000().ComponentName()</code> fluent API,</div>
+  <div class="story-field"><strong>So that</strong> I have a consistent entry point in Razor views.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li><code>Html.Sav2000()</code> returns <code>ComponentFactory&lt;TModel&gt;</code></li>
+      <li><code>Html.Sav2000(true)</code> enables light requirement mode</li>
+      <li>All 42 components accessible via factory methods</li>
+      <li>Factory methods return typed builders for fluent configuration</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ComponentFactory</code> <code>HtmlHelperExtension</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-INF-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Script Resource Management</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have component JavaScript automatically registered and delivered in priority order,</div>
+  <div class="story-field"><strong>So that</strong> dependencies load correctly.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>JsResource priority ordering preserved (200, 210, 220, etc.)</li>
+      <li>Conditional loading (e.g., DataTable filter scripts only when <code>IsFilter=true</code>)</li>
+      <li>ClientDependency or equivalent manages deduplication</li>
+      <li>Scripts rendered at correct page location</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>ScriptRendererComponent</code> <code>JsResource</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-INF-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Style Resource Management</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have component CSS automatically registered and delivered,</div>
+  <div class="story-field"><strong>So that</strong> components are styled correctly.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>CSS resources registered and deduplicated</li>
+      <li>Styles rendered in document <code>&lt;head&gt;</code></li>
+      <li>Priority ordering preserved</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>StyleRendererComponent</code> <code>CssResource</code></div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-INF-004</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">DialogBox</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a modal dialog with configurable buttons,</div>
+  <div class="story-field"><strong>So that</strong> users can confirm actions.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Modal overlay with configurable title and body</li>
+      <li>OK/Cancel button configuration</li>
+      <li>Callback functions on button clicks</li>
+      <li>Integrates with Button and ActionButton triggers</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>DialogBoxComponent</code> <code>DialogBoxBuilder</code> <code>DialogBoxHtmlBuilder</code></div>
+</div>
+
+<div class="story-card could">
+  <span class="story-id">US-INF-005</span> <span class="badge badge-could">Could Have</span>
+  <div class="story-title">CustomHeader</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> render a custom header section,</div>
+  <div class="story-field"><strong>So that</strong> pages have consistent header styling.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Renders header with configurable title and styling</li>
+      <li>Consistent across all pages using the component</li>
+    </ul>
+  </div>
+  <div class="story-components">Components: <code>CustomHeaderComponent</code> <code>CustomHeaderBuilder</code> <code>CustomHeaderHtmlBuilder</code></div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-INF-006</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Model Binding Preservation</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have <code>DateTimeWithFormatBinder</code>, <code>WeekYearWithFormatBinder</code>, and <code>DataTableContextModelBinder</code> produce identical model binding results,</div>
+  <div class="story-field"><strong>So that</strong> form submissions work correctly.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li><code>DateTimeWithFormatBinder</code> parses date strings with format awareness</li>
+      <li><code>WeekYearWithFormatBinder</code> parses week/year with English/French format</li>
+      <li><code>DataTableContextModelBinder</code> binds DataTable AJAX request parameters</li>
+      <li>All binders produce identical results to current implementation</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-INF-007</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Localization</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have all ~60+ localized string keys from ApplicationStrings available in French and English,</div>
+  <div class="story-field"><strong>So that</strong> the UI is properly localized.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>All keys from <code>ApplicationStrings.resx</code> migrated</li>
+      <li>French and English resource files maintained</li>
+      <li>Strongly-typed accessor class generated</li>
+      <li>Fallback culture behavior preserved</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</details>
+</section>
+
+<!-- ======== EPIC 8: Migration-Specific ======== -->
+<section id="epic-8">
+<details>
+<summary><h3 style="display:inline;">Epic 8: Migration-Specific (5 stories)</h3></summary>
+<div class="detail-body">
+
+<div class="story-card must">
+  <span class="story-id">US-MIG-001</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Project Format</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have the migrated project use SDK-style csproj targeting .NET 8+,</div>
+  <div class="story-field"><strong>So that</strong> I can use modern tooling (dotnet CLI, NuGet PackageReference).</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>SDK-style csproj with <code>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;</code></li>
+      <li>Target framework: <code>net8.0</code> or later</li>
+      <li>All NuGet references as <code>PackageReference</code></li>
+      <li><code>dotnet build</code> and <code>dotnet test</code> work from CLI</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-MIG-002</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">No System.Web Dependencies</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have all <code>System.Web.Mvc</code> and <code>System.Web.UI</code> dependencies removed,</div>
+  <div class="story-field"><strong>So that</strong> the library runs on ASP.NET Core.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>No references to <code>System.Web.*</code> assemblies</li>
+      <li>Replaced with <code>Microsoft.AspNetCore.Mvc.*</code> equivalents</li>
+      <li><code>HtmlHelper</code> replaced with <code>IHtmlHelper</code> or Tag Helpers</li>
+      <li><code>HtmlTextWriter</code> replaced with modern HTML generation</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card must">
+  <span class="story-id">US-MIG-003</span> <span class="badge badge-must">Must Have</span>
+  <div class="story-title">Static File Delivery</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have all 47 jQuery plugin JS files served as static files from wwwroot/ in a Razor Class Library,</div>
+  <div class="story-field"><strong>So that</strong> WebResource embedding is eliminated.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>All JS/CSS files in <code>wwwroot/_content/</code></li>
+      <li>No embedded resources</li>
+      <li>Files served via ASP.NET Core static file middleware</li>
+      <li>Razor Class Library (RCL) project structure</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-MIG-004</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">Modern Build Tooling</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have JS minification handled by esbuild or webpack instead of ajaxmin.bat, and code analysis by Roslyn analyzers instead of FxCop,</div>
+  <div class="story-field"><strong>So that</strong> the build pipeline uses modern, cross-platform tools.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>JS minification via esbuild or webpack</li>
+      <li>Code analysis via Roslyn analyzers (StyleCop, SonarAnalyzer, etc.)</li>
+      <li>No Windows-specific build scripts</li>
+      <li>CI/CD pipeline compatible</li>
+    </ul>
+  </div>
+</div>
+
+<div class="story-card should">
+  <span class="story-id">US-MIG-005</span> <span class="badge badge-should">Should Have</span>
+  <div class="story-title">Test Coverage</div>
+  <div class="story-field"><strong>As a</strong> developer,</div>
+  <div class="story-field"><strong>I want to</strong> have minimum 80% code coverage with unit tests for all components, validators, and model binders,</div>
+  <div class="story-field"><strong>So that</strong> migration regressions are caught.</div>
+  <div class="story-ac"><strong>Acceptance Criteria:</strong>
+    <ul>
+      <li>Minimum 80% line coverage</li>
+      <li>All 42 components have builder and HTML output tests</li>
+      <li>All validators have positive and negative test cases</li>
+      <li>Model binders tested with mock form data</li>
+      <li>Coverage report generated as part of CI</li>
+    </ul>
+  </div>
+</div>
+
+</div>
+</details>
+</section>
+
+</section>
+
+<!-- ====== SECTION 5 ====== -->
+<section id="section-5">
+<h2>5. Functional Requirements</h2>
+
+<table>
+<thead><tr><th>ID</th><th>Requirement</th><th>Description</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td>FR-001</td><td>Component Rendering Parity</td><td>All 42 components must produce equivalent HTML output in .NET 8+ as they do in .NET Framework 4.8. Pixel-level differences in whitespace are acceptable; structural differences are not.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-002</td><td>Fluent Builder API</td><td>The <code>Html.Sav2000().Component().Option1().Option2().Build()</code> pattern must be preserved. Method signatures, return types (for chaining), and builder behavior must be identical.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-003</td><td>JavaScript Plugin Compatibility</td><td>All jQuery plugin initialization scripts (e.g., <code>$('#id').dataTableCore({...})</code>, <code>$('#id').dateTime({...})</code>) must produce identical JSON option objects.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-004</td><td>Client-Side Validation</td><td>All 8 custom validators must emit equivalent client-side validation rules. <code>IClientValidatable</code> must be replaced with ASP.NET Core's <code>IClientModelValidator</code> interface.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-005</td><td>Model Binding</td><td><code>DateTimeWithFormatBinder</code>, <code>WeekYearWithFormatBinder</code>, and <code>DataTableContextModelBinder</code> must produce identical binding results.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-006</td><td>Localization</td><td>All ~60+ string keys from <code>ApplicationStrings.resx</code> must be available through ASP.NET Core's <code>IStringLocalizer</code> or equivalent. French/English resource files preserved.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-007</td><td>Resource Delivery</td><td>JavaScript and CSS resources must be delivered with correct priority ordering and deduplication. ClientDependency Framework replaced with ASP.NET Core bundling or equivalent.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-008</td><td>DataTable Server-Side Processing</td><td>Server-side DataTable must support POST requests, encrypted criteria parameters, pagination, sorting, and filtering with identical request/response format.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-009</td><td>Date/Time Business Logic</td><td>All 16 composite date types, week/year parsing (English/French), UTC/timezone handling, and model date formats (D+5, J-3) must behave identically.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+<tr><td>FR-010</td><td>Accessibility</td><td>CustomLabel <code>for</code> attribute enforcement, screen-reader text (<code>hide-access</code> class), and ARIA attributes must be preserved.</td><td><span class="badge badge-should">Should Have</span></td></tr>
+<tr><td>FR-011</td><td>DataTable Features</td><td>Column reorder, select-all checkboxes, delete/modify icon columns, SwanPagination, and column filtering must all function identically.</td><td><span class="badge badge-must">Must Have</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ====== SECTION 6 ====== -->
+<section id="section-6">
+<h2>6. Non-Functional Requirements</h2>
+
+<table>
+<thead><tr><th>ID</th><th>Requirement</th><th>Description</th><th>Target</th></tr></thead>
+<tbody>
+<tr><td>NFR-001</td><td>Target Framework</td><td>All projects must target <code>net8.0</code> or later. No <code>System.Web</code> references.</td><td>.NET 8.0+</td></tr>
+<tr><td>NFR-002</td><td>Project Format</td><td>SDK-style csproj. Razor Class Library for static assets. NuGet PackageReference only.</td><td>SDK-style</td></tr>
+<tr><td>NFR-003</td><td>Package Management</td><td>All third-party dependencies via NuGet PackageReference. No <code>packages.config</code>. No manually referenced DLLs.</td><td>PackageReference</td></tr>
+<tr><td>NFR-004</td><td>Test Coverage</td><td>Minimum 80% line coverage. All components, validators, and model binders tested. CI-integrated coverage report.</td><td>&ge; 80%</td></tr>
+<tr><td>NFR-005</td><td>Build Tooling</td><td>Cross-platform build. No Windows-specific scripts. JS minification via esbuild/webpack. Roslyn analyzers replace FxCop.</td><td>Cross-platform</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ====== SECTION 7 ====== -->
+<section id="section-7">
+<h2>7. Migration Mapping Table</h2>
+<p>Mapping of legacy types and technologies to their modern replacements.</p>
+
+<table>
+<thead><tr><th>Legacy Type / Technology</th><th>Modern Replacement</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>System.Web.Mvc.HtmlHelper</code></td><td><code>Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper</code></td><td>Interface-based; use dependency injection</td></tr>
+<tr><td><code>System.Web.Mvc.ModelMetadata</code></td><td><code>Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata</code></td><td>Different property names; adapter needed</td></tr>
+<tr><td><code>System.Web.Mvc.MvcHtmlString</code></td><td><code>Microsoft.AspNetCore.Html.HtmlString</code></td><td>Direct replacement; implements <code>IHtmlContent</code></td></tr>
+<tr><td><code>System.Web.UI.HtmlTextWriter</code></td><td><code>System.IO.TextWriter</code> / Tag Helpers</td><td>No direct equivalent; consider TagBuilder</td></tr>
+<tr><td><code>System.Web.Mvc.IClientValidatable</code></td><td><code>Microsoft.AspNetCore.Mvc.ModelBinding.Validation.IClientModelValidator</code></td><td>Different method signature; see FR-004</td></tr>
+<tr><td><code>System.Web.Mvc.ModelClientValidationRule</code></td><td>Custom implementation via <code>IClientModelValidator</code></td><td>Build validation attributes directly</td></tr>
+<tr><td><code>System.Web.Mvc.DefaultModelBinder</code></td><td><code>Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinder</code></td><td>Interface-based; register via <code>IModelBinderProvider</code></td></tr>
+<tr><td><code>ClientDependency.Core</code></td><td>ASP.NET Core Bundling / WebOptimizer / custom middleware</td><td>No direct port; rebuild resource management</td></tr>
+<tr><td><code>EntityFramework 4.1</code></td><td><code>Microsoft.EntityFrameworkCore 8.x</code></td><td>Major API changes; <code>ObjectContext</code> &rarr; <code>DbContext</code></td></tr>
+<tr><td><code>Newtonsoft.Json 6.0.4</code></td><td><code>System.Text.Json</code> or <code>Newtonsoft.Json 13.x</code></td><td>Evaluate custom serialization needs first</td></tr>
+<tr><td>FxCop Ruleset</td><td>Roslyn Analyzers (StyleCop, SonarAnalyzer)</td><td>Configure via <code>.editorconfig</code> and NuGet</td></tr>
+<tr><td>ajaxmin.bat (JS minification)</td><td>esbuild / webpack / rollup</td><td>Cross-platform, faster, modern</td></tr>
+<tr><td>SourceSafe SCC properties</td><td>Git (already migrated)</td><td>Remove all <code>Scc*</code> csproj properties</td></tr>
+<tr><td>WebResource / EmbeddedResource (JS/CSS)</td><td>Static files in <code>wwwroot/_content/</code></td><td>Razor Class Library pattern</td></tr>
+<tr><td><code>packages.config</code></td><td>PackageReference in csproj</td><td>Automatic via SDK-style migration</td></tr>
+<tr><td>Old-style csproj (ToolsVersion 12.0)</td><td>SDK-style csproj</td><td>Use <code>dotnet migrate</code> or manual conversion</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ====== SECTION 8 ====== -->
+<section id="section-8">
+<h2>8. Risk Assessment</h2>
+<p>Risk severity matrix for the migration project. Each risk includes likelihood, impact, and mitigation strategy.</p>
+
+<div class="risk-grid">
+
+<div class="risk-item">
+  <h4><span class="badge badge-critical">Critical</span> R-001: jQuery Plugin Behavioral Differences</h4>
+  <p><strong>Likelihood:</strong> High &nbsp; <strong>Impact:</strong> High</p>
+  <p>jQuery plugins (DataTables, clueTip, qTip, UI Datepicker) may behave differently with newer jQuery versions or in ASP.NET Core's rendering pipeline.</p>
+  <p><strong>Mitigation:</strong> Pin jQuery plugin versions. Create integration tests that compare HTML output and JS initialization objects. Test all 42 components in browser.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-critical">Critical</span> R-002: Client-Side Validation Loss</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> Critical</p>
+  <p><code>IClientValidatable</code> does not exist in ASP.NET Core. All 8 custom validators must be reimplemented using <code>IClientModelValidator</code>.</p>
+  <p><strong>Mitigation:</strong> Create validator adapter layer. Write comprehensive tests for all validation scenarios including edge cases.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-high">High</span> R-003: HtmlTextWriter Removal</h4>
+  <p><strong>Likelihood:</strong> Certain &nbsp; <strong>Impact:</strong> High</p>
+  <p><code>System.Web.UI.HtmlTextWriter</code> is used by every component's <code>WriteHtml()</code> and <code>WriteInitScript()</code> methods. No direct ASP.NET Core equivalent.</p>
+  <p><strong>Mitigation:</strong> Create wrapper class that implements similar API using <code>TagBuilder</code> or <code>TextWriter</code>. Preserve method signatures where possible.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-high">High</span> R-004: ClientDependency Replacement</h4>
+  <p><strong>Likelihood:</strong> Certain &nbsp; <strong>Impact:</strong> High</p>
+  <p>ClientDependency Framework has no ASP.NET Core port. Resource registration, deduplication, and priority ordering must be rebuilt.</p>
+  <p><strong>Mitigation:</strong> Build custom middleware or use WebOptimizer. Preserve priority ordering semantics.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-high">High</span> R-005: Model Binder API Changes</h4>
+  <p><strong>Likelihood:</strong> Certain &nbsp; <strong>Impact:</strong> High</p>
+  <p>ASP.NET Core model binding uses <code>IModelBinder</code>/<code>IModelBinderProvider</code> instead of <code>DefaultModelBinder</code>. Custom binders need full rewrite.</p>
+  <p><strong>Mitigation:</strong> Implement <code>IModelBinder</code> interface. Test with identical form data to verify binding parity.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-high">High</span> R-006: Date/Time Parsing Differences</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> High</p>
+  <p>French/English date format parsing, UTC handling, and timezone offset logic are complex and brittle. Culture-dependent behavior may differ between .NET Framework and .NET 8.</p>
+  <p><strong>Mitigation:</strong> Create exhaustive date parsing test suite with known inputs/outputs from production. Test both cultures.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-medium">Medium</span> R-007: Newtonsoft.Json Serialization Changes</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> Medium</p>
+  <p>DataTable options serialization uses Newtonsoft.Json attributes (<code>[JsonProperty]</code>, <code>[JsonIgnore]</code>). Migration to <code>System.Text.Json</code> may change serialization behavior.</p>
+  <p><strong>Mitigation:</strong> Keep Newtonsoft.Json initially. Migrate to System.Text.Json as separate phase with comparison tests.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-medium">Medium</span> R-008: Entity Framework Migration</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> Medium</p>
+  <p>EF 4.1 to EF Core 8.x is a major version jump. <code>ObjectContext</code> patterns don't exist in EF Core.</p>
+  <p><strong>Mitigation:</strong> Isolate EF dependency. Component library has minimal direct EF usage. Focus on <code>System.Data.DataTable</code> compatibility.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-medium">Medium</span> R-009: Encryption Compatibility</h4>
+  <p><strong>Likelihood:</strong> Low &nbsp; <strong>Impact:</strong> High</p>
+  <p><code>Crypt.Encrypt</code> used for DataTable criteria parameters. Algorithm must produce identical ciphertext for interop with existing services.</p>
+  <p><strong>Mitigation:</strong> Document current encryption algorithm. Test encrypt/decrypt roundtrip across frameworks.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-medium">Medium</span> R-010: Localization Architecture Change</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> Medium</p>
+  <p>ASP.NET Core uses <code>IStringLocalizer</code> instead of strongly-typed <code>ApplicationStrings.ResourceName</code> pattern.</p>
+  <p><strong>Mitigation:</strong> Create compatibility wrapper or generate strongly-typed accessor. Maintain resx files.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-medium">Medium</span> R-011: Build Pipeline Disruption</h4>
+  <p><strong>Likelihood:</strong> Medium &nbsp; <strong>Impact:</strong> Medium</p>
+  <p>Replacing ajaxmin.bat and FxCop with modern tools requires build pipeline reconfiguration.</p>
+  <p><strong>Mitigation:</strong> Set up parallel build pipeline. Run both old and new until parity confirmed.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-low">Low</span> R-012: Static File Path Changes</h4>
+  <p><strong>Likelihood:</strong> High &nbsp; <strong>Impact:</strong> Low</p>
+  <p>Embedded resource URLs change to <code>/_content/LibraryName/</code> paths. All hardcoded paths need updating.</p>
+  <p><strong>Mitigation:</strong> Use path constants or configuration. Search and replace all resource URLs.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-low">Low</span> R-013: SourceSafe Reference Removal</h4>
+  <p><strong>Likelihood:</strong> Certain &nbsp; <strong>Impact:</strong> Low</p>
+  <p>SCC properties in csproj files reference SourceSafe. These must be cleanly removed.</p>
+  <p><strong>Mitigation:</strong> Remove all <code>Scc*</code> properties during csproj conversion. Already done in stub project.</p>
+</div>
+
+<div class="risk-item">
+  <h4><span class="badge badge-low">Low</span> R-014: Test Infrastructure Setup</h4>
+  <p><strong>Likelihood:</strong> Low &nbsp; <strong>Impact:</strong> Medium</p>
+  <p>No existing test project. Must create from scratch with mocking framework, test data, and CI integration.</p>
+  <p><strong>Mitigation:</strong> Use xUnit + Moq + bUnit (for Razor). Set up CI early in migration process.</p>
+</div>
+
+</div>
+</section>
+
+<!-- ====== SECTION 9 ====== -->
+<section id="section-9">
+<h2>9. Reusability Matrix</h2>
+<p>Assessment of what can be reused from the current codebase versus what must be rewritten for .NET 8+.</p>
+
+<table>
+<thead><tr><th>Category</th><th>Can Reuse</th><th>Must Rewrite</th><th>Notes</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Component Business Logic</strong></td>
+  <td>Builder option methods, property setters, fluent API chains, validation logic</td>
+  <td>Base class hierarchy (<code>ComponentBase</code>, <code>ComponentBuilderBase</code>, <code>HtmlBuilderBase</code>)</td>
+  <td>~60% reusable. Method bodies mostly portable.</td>
+</tr>
+<tr>
+  <td><strong>HTML Generation</strong></td>
+  <td>HTML structure and attribute logic</td>
+  <td>All <code>WriteHtml()</code> and <code>WriteInitScript()</code> methods (use <code>HtmlTextWriter</code>)</td>
+  <td>~30% reusable. Structure preserved, rendering API changes.</td>
+</tr>
+<tr>
+  <td><strong>JavaScript Files</strong></td>
+  <td>All 47 JS files (100% reusable)</td>
+  <td>None</td>
+  <td>Client-side code is framework-independent. Move to wwwroot/.</td>
+</tr>
+<tr>
+  <td><strong>CSS Files</strong></td>
+  <td>All CSS files (100% reusable)</td>
+  <td>None</td>
+  <td>Move to wwwroot/ as static files.</td>
+</tr>
+<tr>
+  <td><strong>Validators</strong></td>
+  <td>Validation logic and error messages</td>
+  <td><code>IClientValidatable</code> implementation, <code>ModelClientValidationRule</code> creation</td>
+  <td>~50% reusable. Core validation logic preserved.</td>
+</tr>
+<tr>
+  <td><strong>Model Binders</strong></td>
+  <td>Parsing logic (date formats, week formats)</td>
+  <td>Binder class structure (<code>DefaultModelBinder</code> &rarr; <code>IModelBinder</code>)</td>
+  <td>~40% reusable. Parsing methods portable.</td>
+</tr>
+<tr>
+  <td><strong>Resource Management</strong></td>
+  <td>Priority ordering values, resource metadata</td>
+  <td>Registration, deduplication, rendering pipeline</td>
+  <td>~20% reusable. Architecture fundamentally different.</td>
+</tr>
+<tr>
+  <td><strong>Localization</strong></td>
+  <td>.resx files (100% reusable), string values</td>
+  <td>Accessor class (use <code>IStringLocalizer</code> or regenerate)</td>
+  <td>~80% reusable. Resource files are cross-platform.</td>
+</tr>
+<tr>
+  <td><strong>DataTable Options (Common)</strong></td>
+  <td>POCO classes, JSON serialization attributes</td>
+  <td>May need attribute migration if moving to System.Text.Json</td>
+  <td>~90% reusable with Newtonsoft.Json retained.</td>
+</tr>
+<tr>
+  <td><strong>Encryption (Crypt)</strong></td>
+  <td>Encryption/decryption algorithm</td>
+  <td>May need API adjustments for .NET 8 crypto APIs</td>
+  <td>~70% reusable. Core algorithms portable.</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<!-- ====== SECTION 10 ====== -->
+<section id="section-10">
+<h2>10. Appendix — Complete Component Inventory</h2>
+<p>Full inventory of all 42 components in the library with file paths, estimated line counts, and complexity ratings.</p>
+
+<table>
+<thead><tr><th>#</th><th>Component</th><th>Files</th><th>Est. Lines</th><th>Complexity</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>ActionButton</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>2</td><td>BreadCrumbs</td><td>Component, Builder, HtmlBuilder, BreadCrumbsItem</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>3</td><td>Button</td><td>Component, Builder, HtmlBuilder</td><td>~300</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>4</td><td>CheckBox</td><td>Component, Builder, HtmlBuilder</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>5</td><td>CheckBoxList</td><td>Component, Builder, HtmlBuilder, CheckBoxListItem</td><td>~350</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>6</td><td>ClickToVoice</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>7</td><td>CommentBox</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>8</td><td>Communicator</td><td>Component, Builder, HtmlBuilder</td><td>~150</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>9</td><td>CompositeDate</td><td>Component, Builder, HtmlBuilder, ViewModel, DateSelectionDropDown, EnumDateTypes</td><td>~1200</td><td><span class="badge badge-critical">Critical</span></td></tr>
+<tr><td>10</td><td>CompositeDateExt</td><td>Component, Builder, HtmlBuilder, ViewModel, DateExtSelectionDropDown</td><td>~800</td><td><span class="badge badge-high">High</span></td></tr>
+<tr><td>11</td><td>CustomHeader</td><td>Component, Builder, HtmlBuilder</td><td>~150</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>12</td><td>CustomLabel</td><td>Component, Builder, HtmlBuilder</td><td>~400</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>13</td><td>CustomValidator</td><td>DateRequired, DateConditionalRequired, EndDateGreaterThan, EndWeekGreaterThan, WeekConditionalRequired, LessThanCurrentDate, DurationValidator, CustomStringLength</td><td>~1000</td><td><span class="badge badge-high">High</span></td></tr>
+<tr><td>14</td><td>DataTable</td><td>Component, Builder, HtmlBuilder, OptionsSerializer</td><td>~1500</td><td><span class="badge badge-critical">Critical</span></td></tr>
+<tr><td>15</td><td>DateDuration</td><td>Component, Builder, HtmlBuilder, DateDuration model</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>16</td><td>DateTime</td><td>Component, Builder, HtmlBuilder</td><td>~800</td><td><span class="badge badge-high">High</span></td></tr>
+<tr><td>17</td><td>DialogBox</td><td>Component, Builder, HtmlBuilder</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>18</td><td>DropDownList</td><td>Component, Builder, HtmlBuilder, DataCollection</td><td>~400</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>19</td><td>DropDownMenu</td><td>Component, Builder, HtmlBuilder, DropdownMenu, ChildMenu</td><td>~350</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>20</td><td>DualList</td><td>Component, Builder, HtmlBuilder</td><td>~350</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>21</td><td>Duration</td><td>Component, Builder, HtmlBuilder, DurationEntity</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>22</td><td>ErrorComponent</td><td>Component, Builder, HtmlBuilder, ErrorMessageModel</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>23</td><td>FileUpload</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>24</td><td>HorizontalMenu</td><td>Component, Builder, HtmlBuilder, HorizontalMenuItemInfo</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>25</td><td>HorizontalTab</td><td>Component, Builder, HtmlBuilder</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>26</td><td>HyperLink</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>27</td><td>Image</td><td>Component, Builder, HtmlBuilder, ImageSrc</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>28</td><td>ImageToolTip</td><td>Component, Builder, HtmlBuilder</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>29</td><td>Label</td><td>Component, Builder, HtmlBuilder</td><td>~150</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>30</td><td>ListBox</td><td>Component, Builder, HtmlBuilder</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>31</td><td>Page</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>32</td><td>PopOver</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>33</td><td>PopupImage</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>34</td><td>ProgressBar</td><td>Component, Builder, HtmlBuilder</td><td>~150</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>35</td><td>RadioButton</td><td>Component, Builder, HtmlBuilder</td><td>~200</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>36</td><td>RadioButtonList</td><td>Component, Builder, HtmlBuilder</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>37</td><td>ScriptRenderer</td><td>Component</td><td>~100</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>38</td><td>SpanLabel</td><td>Component, Builder, HtmlBuilder</td><td>~150</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>39</td><td>StyleRenderer</td><td>Component</td><td>~100</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>40</td><td>TextArea</td><td>Component, Builder, HtmlBuilder</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>41</td><td>TextBox</td><td>Component, Builder, HtmlBuilder</td><td>~250</td><td><span class="badge badge-low">Low</span></td></tr>
+<tr><td>42</td><td>TreeGrid</td><td>Component, Builder, HtmlBuilder, Column types</td><td>~800</td><td><span class="badge badge-high">High</span></td></tr>
+<tr><td>43</td><td>VerticalMenu</td><td>Component, Builder, HtmlBuilder, VerticalMenuItemInfo</td><td>~300</td><td><span class="badge badge-medium">Medium</span></td></tr>
+<tr><td>44</td><td>WeekYear</td><td>Component, Builder, HtmlBuilder, WeekAndYear, WeekYearWithFormat, Binder</td><td>~500</td><td><span class="badge badge-high">High</span></td></tr>
+</tbody>
+</table>
+
+<p><strong>Total estimated lines:</strong> ~14,000+<br>
+<strong>Critical complexity components:</strong> CompositeDate, DataTable<br>
+<strong>High complexity components:</strong> CompositeDateExt, CustomValidator, DateTime, TreeGrid, WeekYear</p>
+
+</section>
+
+</main>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+// Sidebar active link highlighting on scroll
+(function() {
+  var links = document.querySelectorAll('.sidebar a[href^="#"]');
+  var sections = [];
+  links.forEach(function(link) {
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) sections.push({ link: link, target: target });
+  });
+
+  function onScroll() {
+    var scrollTop = window.scrollY + 100;
+    var current = null;
+    sections.forEach(function(s) {
+      if (s.target.offsetTop <= scrollTop) current = s;
+    });
+    links.forEach(function(l) { l.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+})();
+
+// Expand all details when printing
+window.addEventListener('beforeprint', function() {
+  document.querySelectorAll('details').forEach(function(d) { d.setAttribute('open', ''); });
+});
+</script>
+
+</body>
+</html>

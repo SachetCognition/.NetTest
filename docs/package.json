@@ -1,0 +1,6 @@
+{
+  "name": "urs-docs",
+  "scripts": {
+    "serve": "npx serve -l 8080 ."
+  }
+}
