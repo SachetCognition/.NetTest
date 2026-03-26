@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------------------------
 // <copyright file="DateConditionalRequiredAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,17 +15,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date greater than attribute.
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DateConditionalRequiredAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DateConditionalRequiredAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// The other property name.
@@ -90,10 +90,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var conditionalRequiredRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "dateconditionalrequired" };
-            yield return conditionalRequiredRule;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-dateconditionalrequired"))
+            {
+                context.Attributes.Add("data-val-dateconditionalrequired", this.ErrorMessageString);
+            }
         }
 
         /// <summary>

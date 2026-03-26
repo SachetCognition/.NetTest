@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="CheckBoxListBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,10 +15,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.SpanLabel;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// CheckBox list builder.

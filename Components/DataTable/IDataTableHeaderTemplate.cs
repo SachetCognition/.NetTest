@@ -1,8 +1,7 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 {
     using System.Text;
-    using System.Web.Mvc;
-
+    using Microsoft.AspNetCore.Mvc.Rendering;
     /// <summary>
     /// The DataTableHeaderComponent interface.
     /// </summary>
@@ -11,7 +10,7 @@
         /// <summary>
         /// Gets or sets the html helper.
         /// </summary>
-        HtmlHelper HtmlHelper { get; set; }
+        IHtmlHelper IHtmlHelper { get; set; }
 
         /// <summary>
         /// Gets or sets the title.

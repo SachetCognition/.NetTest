@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="LabelHelper.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -11,8 +11,9 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
-    using System.Web.Mvc;
-
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+    using Microsoft.AspNetCore.Html;
     /// <summary>
     /// The label helper.
     /// </summary>
@@ -52,14 +53,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 
             if (isHtmlEncode)
             {
-                tagBuilderSpan.SetInnerText(spanText);
+                tagBuilderSpan.InnerHtml.Clear(); tagBuilderSpan.InnerHtml.Append(spanText);
             }
             else
             {
-                tagBuilderSpan.InnerHtml = spanText;
+                tagBuilderSpan.InnerHtml.SetHtmlContent(spanText);
             }
 
-            return tagBuilderSpan.ToString();
+            return tagBuilderSpan.ToHtmlString();
         }
 
         /// <summary>
@@ -84,9 +85,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
             }
 
             tagBuilderSpan.MergeAttribute("class", "required");
-            tagBuilderSpan.InnerHtml = abbrText;
+            tagBuilderSpan.InnerHtml.SetHtmlContent(abbrText);
 
-            return tagBuilderSpan.ToString();
+            return tagBuilderSpan.ToHtmlString();
         }
     }
 }

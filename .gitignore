@@ -1,5 +1,21 @@
+## Build outputs
 bin/
 obj/
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+
+## IDE
+.vs/
 *.user
 *.suo
-.vs/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Coverage
+TestResults/
+coverage/

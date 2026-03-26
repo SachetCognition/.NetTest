@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ClickToVoiceHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,12 +15,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
     using System;
     using System.Globalization;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.AspNetCore.Html;
 
     /// <summary>
     /// The ClickToVoice HTML builder class
@@ -51,7 +51,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -99,12 +99,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                         tbtelnoSpan.AddCssClass(this.Component.CssTelephoneNumberSpan);
                     }
 
-                    tbtelnoSpan.InnerHtml = this.Component.TelephoneNumber;
-                    sbInnerHtml.Append(tbtelnoSpan);
+                    tbtelnoSpan.InnerHtml.SetHtmlContent(this.Component.TelephoneNumber);
+                    sbInnerHtml.Append(tbtelnoSpan.ToHtmlString());
                 }
 
-                tagBuilderAnchor.InnerHtml=tagBuilderAnchor.InnerHtml.AppendWithBuilder(sbInnerHtml.ToString());
-                writer.Write(tagBuilderAnchor.ToString());
+                tagBuilderAnchor.InnerHtml.SetHtmlContent(sbInnerHtml.ToString());
+                writer.Write(tagBuilderAnchor.ToHtmlString());
             }
         }
 
@@ -137,7 +137,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                 tagBuilderImage.AddCssClass(this.Component.CssClassImage);
             }
 
-            return tagBuilderImage.ToString(TagRenderMode.StartTag);
+            return tagBuilderImage.ToHtmlString(TagRenderMode.StartTag);
         }
     }
 }
