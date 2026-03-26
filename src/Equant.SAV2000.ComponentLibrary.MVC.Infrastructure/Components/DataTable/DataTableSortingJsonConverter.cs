@@ -24,7 +24,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
             var sorting = new List<KeyValuePair<string, SortDirection>>();
             foreach (var item in JArray.Load(reader))
             {
-                var direction = item[1].Value<string>().Equals("desc") ? SortDirection.Desc : SortDirection.Asc;
+                var direction = "desc".Equals(item[1].Value<string>(), StringComparison.OrdinalIgnoreCase) ? SortDirection.Desc : SortDirection.Asc;
                 sorting.Add(new KeyValuePair<string, SortDirection>(item[0].Value<string>(), direction));
             }
 
