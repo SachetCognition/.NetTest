@@ -32,9 +32,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TextBox
             if (this.Component.IsDisabled)
                 tag.MergeAttribute("disabled", "disabled");
 
-            tag.AddCssClass((this.Component.IsReadOnly || this.Component.IsDisabled)
+            var effectiveCssClass = (this.Component.IsReadOnly || this.Component.IsDisabled)
                 ? this.Component.CssClassReadOnly
-                : this.Component.CssClass);
+                : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tag.AddCssClass(effectiveCssClass);
 
             tag.TagRenderMode = TagRenderMode.SelfClosing;
             return tag;

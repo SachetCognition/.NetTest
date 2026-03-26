@@ -19,8 +19,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
                 tag.MergeAttribute("name", this.Component.Name);
             if (this.Component.IsDisabled)
                 tag.MergeAttribute("disabled", "disabled");
-            if (!string.IsNullOrEmpty(this.Component.CssClass))
-                tag.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
+            var effectiveCssClass = this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tag.AddCssClass(effectiveCssClass);
             if (!string.IsNullOrEmpty(this.Component.CascadeFrom))
                 tag.MergeAttribute("data-cascade-from", this.Component.CascadeFrom);
 

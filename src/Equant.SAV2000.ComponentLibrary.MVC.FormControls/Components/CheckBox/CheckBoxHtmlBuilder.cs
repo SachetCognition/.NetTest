@@ -31,12 +31,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
 
             if (this.Component.IsDisabled)
             {
-                this.Component.CssClass = this.Component.CssClassDisabled;
                 tagBuilderCheckBox.MergeAttribute("disabled", "disabled");
             }
 
-            if (!string.IsNullOrEmpty(this.Component.CssClass))
-                tagBuilderCheckBox.AddCssClass(this.Component.CssClass);
+            var effectiveCssClass = this.Component.IsDisabled ? this.Component.CssClassDisabled : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tagBuilderCheckBox.AddCssClass(effectiveCssClass);
 
             if (!string.IsNullOrEmpty(this.Component.Title))
                 tagBuilderCheckBox.MergeAttribute("title", this.Component.Title);

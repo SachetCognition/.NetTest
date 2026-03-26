@@ -26,7 +26,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
 
             tbActionButton.MergeAttribute("type", "submit");
             tbActionButton.MergeAttributes(this.Component.HtmlAttributes);
-            tbActionButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
+            var effectiveCssClass = this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tbActionButton.AddCssClass(effectiveCssClass);
 
             if (!string.IsNullOrEmpty(this.Component.AccessText))
             {

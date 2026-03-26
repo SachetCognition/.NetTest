@@ -26,7 +26,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
             }
 
             tagBuilder.MergeAttributes(this.Component.HtmlAttributes);
-            tagBuilder.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
+            var effectiveCssClass = this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass;
+            if (!string.IsNullOrEmpty(effectiveCssClass))
+                tagBuilder.AddCssClass(effectiveCssClass);
             tagBuilder.TagRenderMode = TagRenderMode.StartTag;
 
             return tagBuilder;
