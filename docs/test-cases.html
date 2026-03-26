@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Case Specification - Equant.SAV2000.ComponentLibrary.MVC Migration</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1a1a2e; background: #f8f9fa; line-height: 1.6; }
+.sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #1a1a2e; color: #ccc; overflow-y: auto; z-index: 100; padding: 1.5rem 0; border-right: 3px solid #0f3460; }
+.sidebar h2 { color: #0f3460; font-size: 1rem; padding: 0 1.2rem 0.8rem; border-bottom: 1px solid #333; margin-bottom: 0.5rem; }
+.sidebar a { display: block; padding: 0.4rem 1.2rem; color: #aaa; text-decoration: none; font-size: 0.82rem; transition: all 0.2s; }
+.sidebar a:hover, .sidebar a.active { color: #fff; background: rgba(15,52,96,0.3); border-left: 3px solid #0f3460; }
+.sidebar .nav-group { margin-top: 0.5rem; }
+.sidebar .nav-group-title { color: #777; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.3rem 1.2rem; }
+.content { margin-left: 280px; padding: 2rem 3rem 4rem; max-width: 1200px; }
+h1 { font-size: 2rem; color: #1a1a2e; margin-bottom: 0.5rem; }
+h2 { font-size: 1.5rem; color: #1a1a2e; margin: 2.5rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid #0f3460; }
+h3 { font-size: 1.15rem; color: #16213e; margin: 1.5rem 0 0.6rem; }
+h4 { font-size: 1rem; color: #0f3460; margin: 1rem 0 0.4rem; }
+p { margin-bottom: 0.8rem; }
+.meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+.meta span { display: inline-block; margin-right: 1.5rem; }
+.badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600; color: #fff; vertical-align: middle; }
+.badge-unit { background: #2980b9; } .badge-integration { background: #8e44ad; } .badge-functional { background: #27ae60; }
+.badge-regression { background: #e67e22; } .badge-e2e { background: #c0392b; } .badge-performance { background: #d35400; }
+.badge-nonfunctional { background: #7f8c8d; } .badge-security { background: #6c1226; }
+.badge-pass { background: #27ae60; } .badge-fail { background: #c0392b; } .badge-pending { background: #f39c12; }
+.badge-critical { background: #6c1226; } .badge-high { background: #c0392b; } .badge-medium { background: #e67e22; } .badge-low { background: #27ae60; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.85rem; }
+thead th { background: #1a1a2e; color: #fff; padding: 0.55rem 0.7rem; text-align: left; position: sticky; top: 0; z-index: 2; }
+tbody td { padding: 0.5rem 0.7rem; border-bottom: 1px solid #ddd; }
+tbody tr:nth-child(even) { background: #f0f2f5; } tbody tr:hover { background: #e8ecf1; }
+details { margin: 0.8rem 0; border: 1px solid #ddd; border-radius: 6px; background: #fff; }
+details[open] { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+summary { padding: 0.8rem 1rem; cursor: pointer; font-weight: 600; background: #f0f2f5; border-radius: 6px; list-style: none; position: relative; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "\25B6"; margin-right: 0.6rem; font-size: 0.75rem; transition: transform 0.2s; display: inline-block; }
+details[open] > summary::before { transform: rotate(90deg); }
+details > .detail-body { padding: 1rem 1.2rem; }
+.tc-card { border: 1px solid #ddd; border-radius: 6px; padding: 1rem 1.2rem; margin: 0.6rem 0; background: #fff; }
+.tc-card.unit { border-left: 4px solid #2980b9; } .tc-card.integration { border-left: 4px solid #8e44ad; }
+.tc-card.functional { border-left: 4px solid #27ae60; } .tc-card.regression { border-left: 4px solid #e67e22; }
+.tc-card.e2e { border-left: 4px solid #c0392b; } .tc-card.performance { border-left: 4px solid #d35400; }
+.tc-card.nonfunctional { border-left: 4px solid #7f8c8d; } .tc-card.security { border-left: 4px solid #6c1226; }
+.tc-id { font-weight: 700; color: #0f3460; font-size: 0.88rem; }
+.tc-title { font-weight: 600; font-size: 1rem; margin: 0.2rem 0; }
+.tc-field { margin: 0.2rem 0; font-size: 0.88rem; } .tc-field strong { color: #333; }
+.tc-steps { margin: 0.4rem 0; } .tc-steps ol { margin-left: 1.2rem; } .tc-steps li { margin: 0.15rem 0; font-size: 0.85rem; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1rem 0; }
+.summary-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 1.2rem; text-align: center; }
+.summary-card .num { font-size: 2rem; font-weight: 700; color: #0f3460; }
+.summary-card .label { font-size: 0.85rem; color: #666; }
+.coverage-bar { background: #eee; border-radius: 4px; height: 22px; margin: 0.3rem 0; position: relative; overflow: hidden; }
+.coverage-fill { background: #27ae60; height: 100%; border-radius: 4px; }
+.coverage-text { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600; line-height: 22px; color: #333; }
+@media print { .sidebar { display: none; } .content { margin-left: 0; padding: 1rem; max-width: 100%; } details { break-inside: avoid; } .tc-card { break-inside: avoid; } h2 { break-before: page; } body { font-size: 12pt; } }
+@media (max-width: 700px) { .sidebar { position: static; width: 100%; height: auto; } .content { margin-left: 0; padding: 1rem; } }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <h2>Test Cases Navigation</h2>
+  <a href="#section-1">1. Overview</a>
+  <a href="#section-2">2. Test Strategy</a>
+  <a href="#section-3">3. Coverage Summary</a>
+  <div class="nav-group">
+    <div class="nav-group-title">Epic Test Suites</div>
+    <a href="#epic-tc-1">&nbsp;&nbsp;Epic 1: Form Controls</a>
+    <a href="#epic-tc-2">&nbsp;&nbsp;Epic 2: Data Display</a>
+    <a href="#epic-tc-3">&nbsp;&nbsp;Epic 3: Navigation</a>
+    <a href="#epic-tc-4">&nbsp;&nbsp;Epic 4: Date/Time</a>
+    <a href="#epic-tc-5">&nbsp;&nbsp;Epic 5: Validation</a>
+    <a href="#epic-tc-6">&nbsp;&nbsp;Epic 6: Labels &amp; Tooltips</a>
+    <a href="#epic-tc-7">&nbsp;&nbsp;Epic 7: Infrastructure</a>
+    <a href="#epic-tc-8">&nbsp;&nbsp;Epic 8: Migration</a>
+  </div>
+  <a href="#section-fr">4. Functional Req Tests</a>
+  <a href="#section-nfr">5. Non-Functional Req Tests</a>
+  <a href="#section-perf">6. Performance Tests</a>
+  <a href="#section-security">7. Security Tests</a>
+  <a href="#section-regression">8. Regression Suite</a>
+  <a href="#section-e2e">9. E2E Scenarios</a>
+  <a href="#section-traceability">10. Traceability Matrix</a>
+  <a href="#section-artifacts">11. Test Artifacts</a>
+</nav>
+
+<main class="content">
+
+<!-- Section 1 -->
+<section id="section-1">
+<h1>Test Case Specification</h1>
+<p style="font-size:1.15rem; color:#555;">Equant.SAV2000.ComponentLibrary.MVC &mdash; .NET 8+ Migration</p>
+<div class="meta">
+  <span><strong>Version:</strong> 1.0</span>
+  <span><strong>Date:</strong> 2026-03-26</span>
+  <span><strong>Status:</strong> <span class="badge badge-pending">Draft</span></span>
+  <span><strong>Related URS:</strong> URS-SAV2000-MIG-001 v1.0</span>
+</div>
+<p>This document defines the comprehensive test case specification for the migration of the Equant.SAV2000.ComponentLibrary from .NET Framework 4.8 to .NET 8+. It covers <strong>361 test cases</strong> across all test types: Unit, Integration, Functional, Regression, Performance, Security, Non-Functional, and End-to-End testing, providing <strong>93% average requirement coverage</strong> across all 65+ user stories, 11 functional requirements, and 5 non-functional requirements.</p>
+
+<div class="summary-grid">
+  <div class="summary-card"><div class="num">361</div><div class="label">Total Test Cases</div></div>
+  <div class="summary-card"><div class="num">185</div><div class="label">Unit Tests</div></div>
+  <div class="summary-card"><div class="num">52</div><div class="label">Integration Tests</div></div>
+  <div class="summary-card"><div class="num">38</div><div class="label">Functional Tests</div></div>
+  <div class="summary-card"><div class="num">42</div><div class="label">Regression Tests</div></div>
+  <div class="summary-card"><div class="num">18</div><div class="label">E2E Tests</div></div>
+  <div class="summary-card"><div class="num">12</div><div class="label">Performance Tests</div></div>
+  <div class="summary-card"><div class="num">6</div><div class="label">Security Tests</div></div>
+</div>
+</section>
+
+<section id="section-2">
+<h2>2. Test Strategy</h2>
+<h3>2.1 Test Types</h3>
+<table>
+<thead><tr><th>Type</th><th>Scope</th><th>Tools</th><th>Count</th><th>Environment</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-unit">Unit</span></td><td>Individual components, builders, HTML builders, validators, model binders</td><td>xUnit, Moq, FluentAssertions</td><td>185</td><td>CI (dotnet test)</td></tr>
+<tr><td><span class="badge badge-integration">Integration</span></td><td>Component pipelines, resource chains, model binding with form data</td><td>xUnit, TestServer, AngleSharp</td><td>52</td><td>CI (dotnet test)</td></tr>
+<tr><td><span class="badge badge-functional">Functional</span></td><td>Fluent API behavior, HTML correctness, jQuery plugin JSON</td><td>xUnit, AngleSharp, JsonAssert</td><td>38</td><td>CI (dotnet test)</td></tr>
+<tr><td><span class="badge badge-regression">Regression</span></td><td>HTML snapshot comparison .NET FW 4.8 vs .NET 8+</td><td>xUnit, Verify, DiffPlex</td><td>42</td><td>CI (compare pipeline)</td></tr>
+<tr><td><span class="badge badge-e2e">E2E</span></td><td>Full page rendering, form submission, validation flow</td><td>Playwright, xUnit</td><td>18</td><td>Staging server</td></tr>
+<tr><td><span class="badge badge-performance">Performance</span></td><td>Rendering throughput, memory, deduplication speed</td><td>BenchmarkDotNet, xUnit</td><td>12</td><td>CI (benchmark)</td></tr>
+<tr><td><span class="badge badge-nonfunctional">Non-Functional</span></td><td>Build tooling, project format, cross-platform, coverage</td><td>dotnet CLI, CI scripts</td><td>8</td><td>CI</td></tr>
+<tr><td><span class="badge badge-security">Security</span></td><td>Encryption parity, XSS prevention, input sanitization</td><td>xUnit, OWASP ZAP</td><td>6</td><td>CI + Security scan</td></tr>
+</tbody>
+</table>
+
+<h3>2.2 Test Environments</h3>
+<table>
+<thead><tr><th>Environment</th><th>Purpose</th><th>Configuration</th></tr></thead>
+<tbody>
+<tr><td>Local Development</td><td>Developer testing</td><td>.NET 8 SDK, VS 2022 / Rider</td></tr>
+<tr><td>CI Pipeline</td><td>Automated execution</td><td>GitHub Actions, Ubuntu, .NET 8</td></tr>
+<tr><td>Comparison Pipeline</td><td>Regression: FW 4.8 vs .NET 8</td><td>Windows (FW 4.8) + Linux (.NET 8)</td></tr>
+<tr><td>Staging Server</td><td>E2E and performance</td><td>Kestrel, Playwright browsers</td></tr>
+</tbody>
+</table>
+
+<h3>2.3 Entry / Exit Criteria</h3>
+<table>
+<thead><tr><th>Phase</th><th>Entry Criteria</th><th>Exit Criteria</th></tr></thead>
+<tbody>
+<tr><td>Build</td><td>Project compiles with zero errors</td><td>All warnings resolved or documented</td></tr>
+<tr><td>Unit Tests</td><td>Test framework configured</td><td>100% pass rate, &ge;80% line coverage</td></tr>
+<tr><td>Integration</td><td>TestServer configured</td><td>100% pass rate</td></tr>
+<tr><td>Regression</td><td>Baseline snapshots from .NET FW 4.8</td><td>Zero unexpected differences</td></tr>
+<tr><td>E2E</td><td>Staging server deployed</td><td>All critical paths pass</td></tr>
+<tr><td>Performance</td><td>Benchmarks baselined</td><td>No regression &gt;10%</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="section-3">
+<h2>3. Coverage Summary</h2>
+<table>
+<thead><tr><th>Epic</th><th>Stories</th><th>Test Cases</th><th>Avg Coverage</th></tr></thead>
+<tbody>
+<tr><td>Epic 1: Form Controls</td><td>13</td><td>37</td><td>97%</td></tr>
+<tr><td>Epic 2: Data Display</td><td>9</td><td>28</td><td>95%</td></tr>
+<tr><td>Epic 3: Navigation</td><td>5</td><td>10</td><td>100%</td></tr>
+<tr><td>Epic 4: Date/Time Controls</td><td>6</td><td>23</td><td>97%</td></tr>
+<tr><td>Epic 5: Validation</td><td>8</td><td>24</td><td>97%</td></tr>
+<tr><td>Epic 6: Labels &amp; Tooltips</td><td>7</td><td>18</td><td>93%</td></tr>
+<tr><td>Epic 7: Infrastructure</td><td>7</td><td>19</td><td>96%</td></tr>
+<tr><td>Epic 8: Migration</td><td>5</td><td>11</td><td>100%</td></tr>
+<tr><td>Functional Reqs (FR-001 to FR-011)</td><td>11</td><td>24</td><td>100%</td></tr>
+<tr><td>Non-Functional Reqs</td><td>5</td><td>8</td><td>100%</td></tr>
+<tr><td>Cross-Cutting (Perf, Security, E2E)</td><td>-</td><td>36</td><td>-</td></tr>
+<tr><td>Regression (42 components)</td><td>42</td><td>42</td><td>100%</td></tr>
+<tr style="font-weight:700; background:#e8ecf1;"><td>TOTAL</td><td>65+</td><td>361</td><td>93%</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="epic-tc-1">
+<details open>
+<summary><h3 style="display:inline;">Epic 1: Form Controls (37 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ButtonComponent default property values</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> xUnit test project configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Create new ButtonComponent()</li><li>Assert Id is empty string</li><li>Assert CssClass is empty</li><li>Assert IsDisabled is false</li><li>Assert DialogBoxId is empty</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All default property values match expected defaults</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ButtonBuilder fluent API chaining</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ButtonComponent instantiated</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call builder.Id('btn1').Text('Submit').CssClass('btn-primary').OnClick('handleClick').IsDisabled(true)</li><li>Assert Component.Id == 'btn1'</li><li>Assert Component.Text == 'Submit'</li><li>Assert Component.IsDisabled == true</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All properties set correctly via fluent chain, builder returns self for each call</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-001-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ButtonHtmlBuilder renders correct HTML structure</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ButtonComponent configured with Id, Text, CssClass</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render button via HtmlBuilder</li><li>Parse output with AngleSharp</li><li>Assert element is input[type=submit]</li><li>Assert id attribute matches</li><li>Assert value attribute matches Text</li><li>Assert class attribute includes configured CSS</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> HTML output is <input type='submit' id='btn1' value='Submit' class='btn-primary'></div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ButtonHtmlBuilder disabled state rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ButtonComponent with IsDisabled=true</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render button</li><li>Parse HTML</li><li>Assert disabled='disabled' attribute present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Disabled attribute rendered when IsDisabled is true</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-001-U05</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ButtonHtmlBuilder dialog trigger attributes</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ButtonComponent with DialogBoxId set</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set DialogBoxId to 'confirmDialog'</li><li>Render button</li><li>Assert data-toggle='modal' present</li><li>Assert data-target='#confirmDialog' present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Dialog trigger data attributes rendered correctly</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-001-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Button jQuery plugin initialization script</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full button rendering pipeline available</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Configure button with OnClick handler</li><li>Render full output including init script</li><li>Extract JavaScript from output</li><li>Assert script contains $('#btn1').savbutton({onClick: handleClick})</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> jQuery plugin initialization script generated with correct options JSON</div>
+</div>
+<div class="tc-card regression">
+  <span class="tc-id">TC-FC-001-R01</span> <span class="badge badge-regression">Regression</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Button HTML output regression vs .NET FW 4.8</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Baseline HTML snapshot from .NET FW 4.8 build available</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render button with identical configuration on both frameworks</li><li>Compare HTML output using DiffPlex</li><li>Assert structural equivalence (whitespace differences acceptable)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Zero structural differences between .NET FW 4.8 and .NET 8 output</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ActionButtonComponent default values</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> xUnit configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Create new ActionButtonComponent()</li><li>Assert defaults</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Default property values correct</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ActionButtonHtmlBuilder renders span-wrapped text</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ActionButtonComponent with Text='Save'</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render action button</li><li>Parse HTML</li><li>Assert structure is <button><span>Save</span></button></li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Button wraps text in span element</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-002-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ActionButton dialog box integration</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ActionButtonComponent with DialogBoxId</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set DialogBoxId</li><li>Render</li><li>Assert data attributes for dialog trigger</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Dialog trigger attributes present</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBoxComponent renders input[type=checkbox]</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CheckBoxComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render checkbox</li><li>Parse HTML</li><li>Assert input[type=checkbox] element</li><li>Assert id and name attributes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Checkbox input element rendered with correct attributes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBox onClick/onChange event handlers</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CheckBoxComponent with event handlers set</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set OnClick='handleClick' and OnChange='handleChange'</li><li>Render with init script</li><li>Assert jQuery plugin initializes with both handlers</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Plugin init includes onClick and onChange callbacks</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-003-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBox checked state persistence</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CheckBoxComponent with IsChecked=true</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set IsChecked to true</li><li>Render</li><li>Assert checked='checked' attribute present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Checked attribute rendered when IsChecked is true</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-003-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBox model binding roundtrip</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with form containing checkbox</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with checkbox checked</li><li>Assert model property is true</li><li>POST form without checkbox</li><li>Assert model property is false</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Boolean model binding works for both checked and unchecked states</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBoxListComponent renders from collection</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CheckBoxListComponent with 3 CheckBoxListItems</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind items collection</li><li>Render</li><li>Assert 3 checkbox input elements</li><li>Assert each has correct value</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All items rendered as individual checkboxes</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-004-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBoxList selected items model binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with checkbox list form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with 2 of 3 items checked</li><li>Assert model receives array of 2 selected values</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Multiple selected values bound as array</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-004-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CheckBoxList horizontal and vertical layout</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CheckBoxListComponent with layout configuration</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with horizontal layout</li><li>Assert items in single row</li><li>Render with vertical layout</li><li>Assert items stacked</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Layout mode controls rendering direction</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">RadioButtonComponent renders input[type=radio]</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> RadioButtonComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render radio button</li><li>Assert input[type=radio]</li><li>Assert name attribute for grouping</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Radio input rendered with group name</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-005-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">RadioButton selected value model binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with radio button form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with radio selected</li><li>Assert model property matches selected value</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Selected radio value correctly bound</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">RadioButtonListComponent renders group</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> RadioButtonListComponent with 3 options</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind options</li><li>Render</li><li>Assert 3 radio inputs with same name</li><li>Assert mutual exclusivity via name grouping</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Radio group rendered with shared name attribute</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-006-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">RadioButtonList configurable layout</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-006 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> RadioButtonListComponent with layout option</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with different layout configs</li><li>Assert HTML structure matches layout</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Layout configuration applied</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-007-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TextBoxComponent renders input[type=text]</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TextBoxComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render textbox</li><li>Assert input[type=text]</li><li>Assert id, name, value, maxlength, placeholder attributes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Text input rendered with all configured attributes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-007-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TextBox readonly and disabled states</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TextBoxComponent with readonly/disabled flags</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set IsReadOnly=true, render, assert readonly attribute</li><li>Set IsDisabled=true, render, assert disabled attribute</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> State attributes rendered correctly</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-007-U03</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TextBox value preservation on postback</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with textbox form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with text value</li><li>Assert model binding preserves value</li><li>Re-render form, assert value in HTML</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Value persists through postback cycle</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-008-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TextAreaComponent renders textarea element</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-008 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TextAreaComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render textarea</li><li>Assert <textarea> element</li><li>Assert rows, cols attributes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Textarea rendered with dimensions</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-008-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TextArea multiline content model binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-008 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with textarea form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with multiline text (containing newlines)</li><li>Assert model property preserves newlines</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Multiline content preserved through model binding</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-009-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownListComponent renders select with options</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DropDownListComponent with DataCollection of 5 items</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind DataCollection</li><li>Render</li><li>Assert <select> with 5 <option> elements</li><li>Assert each option has correct value and text</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Select element rendered with all options from data source</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-009-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownList default/placeholder option</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DropDownListComponent with placeholder text</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set placeholder option</li><li>Render</li><li>Assert first <option> is placeholder with empty value</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Placeholder option rendered as first item</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-009-U03</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownList selected value binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with dropdown form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with selected option</li><li>Assert model property matches selected value</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Selected value correctly bound</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-009-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownList onChange cascading support</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DropDownListComponent with onChange handler</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set onChange handler</li><li>Render with init script</li><li>Assert JavaScript onChange callback in output</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Cascading dropdown support via onChange event</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-010-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ListBoxComponent renders select[multiple]</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-010 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ListBoxComponent with items</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render listbox</li><li>Assert <select multiple> element</li><li>Assert configurable size attribute</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Multi-select listbox rendered</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-010-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ListBox multiple selection binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-010 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with listbox form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with 3 items selected</li><li>Assert model receives array of 3 values</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Multiple selections bound as array</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-011-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DualListComponent renders two list boxes</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-011 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DualListComponent with available items</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render dual list</li><li>Assert two <select> elements (available + selected)</li><li>Assert add/remove buttons present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Dual list structure with controls rendered</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-011-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DualList item transfer JavaScript</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-011 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full DualList rendering pipeline</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with init script</li><li>Assert JavaScript handles item move between lists</li><li>Assert selected items posted on form submit</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Item transfer and form submission works</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-012-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CommentBoxComponent renders textarea</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-012 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CommentBoxComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render comment box</li><li>Assert textarea-based element</li><li>Assert character count display element if configured</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Comment box rendered with character count</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-FC-013-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">FileUploadComponent renders input[type=file]</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-013 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> FileUploadComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render file upload</li><li>Assert <input type='file'> element</li><li>Assert accept attribute for file type restrictions</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> File upload input rendered</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-FC-013-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">FileUpload multipart form integration</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-FC-013 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with file upload form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST multipart form with file</li><li>Assert file received by controller action</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> File upload integrates with multipart submission</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-2">
+<details>
+<summary><h3 style="display:inline;">Epic 2: Data Display (28 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTableComponent default configuration</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent instantiated</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Create DataTableComponent</li><li>Assert default page size is 10</li><li>Assert horizontal scrolling enabled</li><li>Assert CSS class includes 'display table dataTable'</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Default DataTable configuration matches expected values</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTableHtmlBuilder renders table from DataTable</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with System.Data.DataTable (3 cols, 5 rows)</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind data source</li><li>Render</li><li>Assert <table> with <thead> and <tbody></li><li>Assert 3 column headers</li><li>Assert 5 data rows</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Table structure matches data source</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-001-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable pagination type SwanPagination</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render init script</li><li>Extract JSON options</li><li>Assert sPaginationType == 'SwanPagination'</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Pagination type correctly set in options JSON</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable column reorder script loading</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with column reorder enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with resource registration</li><li>Assert jquery.dataTables.colMoveResize.js registered</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Column reorder script loaded</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DD-001-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable full rendering pipeline</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full DataTable + Builder + HtmlBuilder pipeline</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Configure via fluent API</li><li>Render complete output</li><li>Assert HTML + JS init script + resource registrations all present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Complete DataTable output with HTML, scripts, and resources</div>
+</div>
+<div class="tc-card regression">
+  <span class="tc-id">TC-DD-001-R01</span> <span class="badge badge-regression">Regression</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable JSON options regression</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Baseline JSON options from .NET FW 4.8</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Generate options JSON on both frameworks</li><li>Compare using JsonAssert</li><li>Assert key-for-key equivalence</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> JSON options identical between frameworks</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable server-side ServiceUri configuration</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with ServiceUri set</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set ServiceUri to '/api/data'</li><li>Render init script</li><li>Assert sAjaxSource in JSON</li><li>Assert POST method configured</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Server-side configuration in JSON options</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable mutual exclusion: Data + ServiceUri throws</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with both Data and ServiceUri</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Data property to a DataTable</li><li>Set ServiceUri to '/api/data'</li><li>Assert NotSupportedException thrown on render</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> NotSupportedException when both Data and ServiceUri are set</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-002-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable criteria parameter encryption</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with IsEncryptionRequired=true and criteria params</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add CriteriaParameter(name='filter', value='test')</li><li>Set IsEncryptionRequired=true</li><li>Render</li><li>Assert criteria parameter value is encrypted via Crypt.Encrypt</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Criteria parameters encrypted when required</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DD-002-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable server-side AJAX roundtrip</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with DataTable controller endpoint</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render DataTable with ServiceUri pointing to test endpoint</li><li>Simulate AJAX POST request</li><li>Assert JSON response parsed correctly</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Server-side data fetching works end-to-end</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable select-all checkbox column</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with select column enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enable select column</li><li>Render</li><li>Assert checkbox at column index 0</li><li>Assert select-all checkbox in header</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Select column with checkboxes at index 0</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable delete icon column</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with delete column enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enable delete column</li><li>Render</li><li>Assert trash.png icon at column index 1</li><li>Assert OnDeleteClick callback in init script</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Delete icon column with click handler</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-003-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable modify icon column</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with modify column enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enable modify column</li><li>Render</li><li>Assert modify icon at column index 2</li><li>Assert OnModifyClick callback</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Modify icon column with click handler</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable column filter script conditional loading</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with IsFilter flag</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set IsFilter=true</li><li>Render with resources</li><li>Assert jquery.dataTables.columnFilter.js loaded</li><li>Set IsFilter=false</li><li>Assert script NOT loaded</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Filter script conditionally loaded based on IsFilter</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-004-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable filter inputs per column</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with IsFilter=true</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render DataTable with filtering enabled</li><li>Assert filter input elements in table footer/header</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Per-column filter inputs rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable ErrorPageUrl generation</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with HttpContext mocked</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Mock HttpContext.Request with NumFen and COOKIENAME params</li><li>Render</li><li>Assert ErrorPageUrl in init script JSON</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Error page URL generated from request parameters</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-005-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable record limit message</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with TotalRecordsLimit</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set TotalRecordsLimit to 1000</li><li>Render</li><li>Assert limit message in init script</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Record limit message displayed when configured</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TreeGridComponent renders from DataTable</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TreeGridComponent with hierarchical DataTable</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind DataTable with parent-child relationships</li><li>Render</li><li>Assert expandable row structure</li><li>Assert row highlighting on selection</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Tree grid renders with expandable hierarchy</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-006-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TreeGrid checkbox and image columns</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TreeGridComponent with CheckBoxTextColumn and ImageTextColumn</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Configure checkbox column</li><li>Configure image column</li><li>Render</li><li>Assert checkbox elements in column</li><li>Assert image elements in column</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Special column types render correctly</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-007-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ErrorComponent renders error messages</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ErrorComponent with ErrorMessageModel</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set error message and styling</li><li>Render</li><li>Assert error message text displayed</li><li>Assert configurable CSS class applied</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Error messages displayed with styling</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-008-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ProgressBarComponent renders progress element</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-008 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ProgressBarComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set progress value</li><li>Render</li><li>Assert progress bar element with value</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Progress bar rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-009-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ImageComponent renders img element</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-009 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ImageComponent with src and alt</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set ImageSrc and alt text</li><li>Render</li><li>Assert <img> with src and alt attributes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Image rendered with attributes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DD-009-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">PopupImageComponent renders clickable image</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-009 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> PopupImageComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Configure popup image</li><li>Render</li><li>Assert image with popup trigger</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Popup image with click handler</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-3">
+<details>
+<summary><h3 style="display:inline;">Epic 3: Navigation (10 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">BreadCrumbsComponent renders trail</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> BreadCrumbsComponent with 3 BreadCrumbsItems</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add 3 breadcrumb items with text and URL</li><li>Render</li><li>Assert ordered list of links</li><li>Assert separator between items</li><li>Assert last item is plain text (current page)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Breadcrumb trail rendered with links and separators</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">BreadCrumbs single item renders without separator</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> BreadCrumbsComponent with 1 item</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add single breadcrumb</li><li>Render</li><li>Assert no separator present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Single breadcrumb has no separator</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HorizontalMenuComponent renders menu items</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> HorizontalMenuComponent with 4 HorizontalMenuItemInfo items</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add menu items</li><li>Render</li><li>Assert navigation list with 4 items</li><li>Assert each item has link and text</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Horizontal menu rendered with all items</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HorizontalMenu active item highlighting</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> HorizontalMenuComponent with active item set</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Mark one item as active</li><li>Render</li><li>Assert active CSS class on selected item</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Active menu item has correct CSS class</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">VerticalMenuComponent renders menu with copyright</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> VerticalMenuComponent with MenuItems and CopyRightImage</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add menu items and copyright image</li><li>Render</li><li>Assert vertical menu structure</li><li>Assert copyright image at bottom</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Vertical menu with copyright image rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">VerticalMenu null safety - empty MenuItems</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> VerticalMenuComponent with parameterless constructor</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Create VerticalMenuComponent()</li><li>Assert MenuItems is not null (empty list)</li><li>Assert CopyRightImage is not null</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Parameterless constructor initializes collections</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HorizontalTabComponent renders tabs</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> HorizontalTabComponent with 3 tabs</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add 3 tab configurations</li><li>Render</li><li>Assert tab headers rendered</li><li>Assert content panels rendered</li><li>Assert first tab active by default</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Tabbed interface with headers and panels</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-NAV-004-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HorizontalTab switching via JavaScript</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full HorizontalTab rendering with init script</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render complete output</li><li>Assert JavaScript handles tab switching without page reload</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Tab switching handled client-side</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownMenuComponent renders multi-level menu</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DropDownMenuComponent with parent and child menus</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Add parent menu with 2 child menus</li><li>Render</li><li>Assert nested menu structure</li><li>Assert child menus within parent</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Multi-level dropdown menu structure rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-NAV-005-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DropDownMenu keyboard navigation</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-NAV-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DropDownMenuComponent rendered</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with init script</li><li>Assert keyboard navigation handlers in JavaScript</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Keyboard navigation supported</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-4">
+<details>
+<summary><h3 style="display:inline;">Epic 4: Date/Time Controls (23 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTimeComponent French date format</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeComponent with French culture</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set culture to fr-FR</li><li>Render</li><li>Assert date format is dd/MM/yyyy</li><li>Assert jQuery datepicker configured for French</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> French date format dd/MM/yyyy applied</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTimeComponent English date format</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeComponent with English culture</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set culture to en-US</li><li>Render</li><li>Assert date format is MM/dd/yyyy</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> English date format MM/dd/yyyy applied</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-001-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTime UTC mode rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeComponent with UTC mode enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enable UTC mode</li><li>Render init script</li><li>Assert UTC flag in jQuery plugin options</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> UTC mode flag passed to JavaScript</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTime erase button clears all fields</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeComponent with erase button</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with erase button</li><li>Assert erase button element present</li><li>Assert JavaScript clear handler configured for date, hour, minute fields</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Erase button clears date, hour, and minute</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-001-U05</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTime hour/minute dropdowns</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeComponent with time enabled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render</li><li>Assert hour dropdown (0-23)</li><li>Assert minute dropdown (0-59)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Time dropdowns rendered with correct ranges</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DT-001-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTime jQuery UI datepicker integration</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full DateTimeComponent rendering pipeline</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render complete output</li><li>Assert jquery-ui-datepicker.js resource registered</li><li>Assert datepicker init in script</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> jQuery UI datepicker integration complete</div>
+</div>
+<div class="tc-card regression">
+  <span class="tc-id">TC-DT-001-R01</span> <span class="badge badge-regression">Regression</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTime init script JSON regression</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Baseline from .NET FW 4.8</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Compare init script JSON options between frameworks</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> DateTime plugin options identical</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate renders all 16 date types</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateComponent with EnumDateTypes</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render date type dropdown</li><li>Assert 16 options: Between, Equal, GreaterThan, LessThan, LessThanOrEqual, GreaterThanOrEqual, Empty, EqualCurrentDate, ModelBetween, ModelEqual, ModelGreaterThan, ModelGreaterThanOrEqual, ModelLessThan, ModelLessThanOrEqual, Week, WeekBetween</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All 16 date types available in dropdown</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate field visibility by type - Between</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateComponent with type=Between</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Select Between type</li><li>Assert two date fields visible</li><li>Assert 'and' label visible</li><li>Assert week fields hidden</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Between type shows dual date fields</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-002-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate field visibility by type - Equal</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateComponent with type=Equal</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Select Equal type</li><li>Assert single date field visible</li><li>Assert second date field hidden</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Equal type shows single date field</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-002-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate field visibility by type - Week</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateComponent with type=Week</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Select Week type</li><li>Assert single week field visible</li><li>Assert date fields hidden</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week type shows week field only</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-002-U05</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate Model date format (D+5, J-3)</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateComponent with ModelEqual type</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Select ModelEqual type</li><li>Assert date input switches to model format (D+5, J-3)</li><li>Assert standard datepicker hidden</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Model date types change input format</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DT-002-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate JavaScript show/hide logic</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full CompositeDate with CompositeDate.js</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render complete output</li><li>Assert CompositeDate.js handles type change events</li><li>Assert field visibility toggled correctly</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> JavaScript show/hide logic works for all 16 types</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDateExtComponent depth field</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-003 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateExtComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render extended composite date</li><li>Assert depth input field present</li><li>Assert Add/Subtract selector present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Extended date with depth field rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDateExt depth validation</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-003 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CompositeDateExtComponent with depth value</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set depth to negative number</li><li>Assert validation error</li><li>Set depth to positive</li><li>Assert valid</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Depth validated as positive integer</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekYearComponent week range validation (1-53)</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> WeekYearComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enter week 0</li><li>Assert invalid</li><li>Enter week 54</li><li>Assert invalid</li><li>Enter week 1 and 53</li><li>Assert both valid</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week number validated within ISO range</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-004-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekYear 4-digit year validation</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> WeekYearComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enter 2-digit year</li><li>Assert invalid</li><li>Enter 4-digit year</li><li>Assert valid</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Year must be 4 digits</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DT-004-U03</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekYearWithFormatBinder model binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with WeekYear form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with week=10, year=2026</li><li>Assert WeekYearWithFormat model bound correctly</li><li>Assert Format property set based on culture</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week/year model binding with format</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateDurationComponent renders combined control</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateDurationComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render date duration</li><li>Assert date picker present</li><li>Assert duration input present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Combined date+duration control rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-DT-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DurationComponent renders time inputs</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-006 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DurationComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render duration</li><li>Assert hours input (0-99)</li><li>Assert minutes input (0-59)</li><li>Assert seconds input (0-59)</li><li>Assert milliseconds input (0-999)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duration inputs for H:M:S:ms rendered</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-DT-006-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DurationEntity model binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DT-006 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with Duration form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>POST form with hours=2, minutes=30, seconds=15, ms=500</li><li>Assert DurationEntity bound correctly</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duration model binding works</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-5">
+<details>
+<summary><h3 style="display:inline;">Epic 5: Validation (24 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateRequired server-side validation - null date</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [DateRequired] attribute on DateTimeWithFormat property</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set property to null</li><li>Validate model</li><li>Assert validation fails with required error</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Null date fails validation</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateRequired server-side validation - empty date</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [DateRequired] attribute</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set property to empty DateTimeWithFormat</li><li>Validate</li><li>Assert validation fails</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Empty date fails validation</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-001-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateRequired server-side validation - valid date</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [DateRequired] attribute</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set property to valid DateTimeWithFormat(2026-01-15)</li><li>Validate</li><li>Assert validation passes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Valid date passes validation</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateRequired client-side validation rule</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateRequired attribute instance</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call GetClientValidationRules()</li><li>Assert returns rule with ValidationType='daterequired'</li><li>Assert error message localized</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Client validation rule emitted with type 'daterequired'</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateConditionalRequired - condition met</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [DateConditionalRequired] and dependent property set to Between</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date type to Between</li><li>Leave date empty</li><li>Validate</li><li>Assert fails</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Validation triggered when condition is met</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateConditionalRequired - condition not met</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [DateConditionalRequired] and dependent property set to Empty</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date type to Empty</li><li>Leave date empty</li><li>Validate</li><li>Assert passes (condition not met)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Validation skipped when condition not met</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">EndDateGreaterThan - end > start passes</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start=2026-01-01, end=2026-01-15</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate model</li><li>Assert passes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> End date after start date passes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">EndDateGreaterThan - end < start fails</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start=2026-01-15, end=2026-01-01</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate model</li><li>Assert fails with error including both field names</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> End date before start date fails</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-003-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">EndDateGreaterThan - equal dates fails</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start=end=2026-01-15</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate model</li><li>Assert fails (must be greater, not equal)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Equal dates fail (greater than, not equal)</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-003-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">EndDateGreaterThan client-side rule</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> EndDateGreaterThan attribute</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Get client validation rules</li><li>Assert ValidationType='enddategreaterthan'</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Client rule with correct type</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">EndWeekGreaterThan comparison</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start week/year and end week/year</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set start=Week 10/2026, end=Week 20/2026</li><li>Assert passes</li><li>Set end=Week 5/2026</li><li>Assert fails</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week/year combination compared correctly</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekConditionalRequired - WeekBetween type</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with date type = WeekBetween</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date type to WeekBetween</li><li>Leave week empty</li><li>Validate</li><li>Assert fails</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week required when date type is WeekBetween</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-005-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekConditionalRequired - non-week type</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with date type = Equal</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date type to Equal</li><li>Leave week empty</li><li>Validate</li><li>Assert passes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week not required for non-week date types</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-005-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekConditionalRequired client-side rule</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> WeekConditionalRequired attribute</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Get client rules</li><li>Assert ValidationType='weekconditionalrequired'</li><li>Assert 'otherweekid' parameter present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Client rule with otherweekid parameter</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LessThanCurrentDate - past date passes</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with date = yesterday</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date to yesterday</li><li>Validate</li><li>Assert passes</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Past date accepted</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-006-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LessThanCurrentDate - future date fails</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with date = tomorrow</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set date to tomorrow</li><li>Validate</li><li>Assert fails</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Future date rejected</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-006-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LessThanCurrentDate UTC mode</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> LessThanCurrentDate with UTC mode</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Mock DateComponentHelper.GetCurrentDate() in UTC mode</li><li>Set date to current UTC minus 1 hour</li><li>Validate</li><li>Assert behavior respects UTC</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> UTC mode affects current date comparison</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-006-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LessThanCurrentDate timezone offset</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> LessThanCurrentDate with timezone offset</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set timezone offset</li><li>Validate date near boundary</li><li>Assert offset correctly applied</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Timezone offset respected in comparison</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-007-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DurationValidator - duration within range</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-007 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start=08:00, end=17:00, duration=2 hours</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert passes (2h < 9h difference)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duration within date range passes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-007-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DurationValidator - duration exceeds range</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-007 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with start=08:00, end=10:00, duration=5 hours</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert fails (5h > 2h difference)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duration exceeding range fails</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-007-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DurationValidator client-side rule</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-007 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DurationValidator attribute</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Get client rules</li><li>Assert ValidationType='durationvalidator'</li><li>Assert startdateid, enddateid, datedurationid parameters</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Client rule with all three ID parameters</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-VAL-008-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomStringLength min/max bounds</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-VAL-008 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Model with [CustomStringLength(5, 100)]</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set string to 3 chars</li><li>Assert fails (below min)</li><li>Set to 50 chars</li><li>Assert passes</li><li>Set to 150 chars</li><li>Assert fails (above max)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> String length validated against bounds</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-6">
+<details>
+<summary><h3 style="display:inline;">Epic 6: Labels, Tooltips &amp; Links (18 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabelComponent default DisplayColon=true</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent instantiated via both constructors</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Create CustomLabelComponent()</li><li>Assert DisplayColon == true</li><li>Create CustomLabelComponent(htmlHelper)</li><li>Assert DisplayColon == true</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> DisplayColon defaults to true in both constructors</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel mandatory star indicator</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with DisplayStar=true</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set DisplayStar=true</li><li>Render</li><li>Assert red asterisk (*) in output</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Mandatory star indicator rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel for attribute and accessibility</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with AssociatedControlId</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AssociatedControlId='txtName'</li><li>Assert HtmlAttributes['for'] == 'txtName'</li><li>Render</li><li>Assert for attribute in <label> element</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> for attribute synced with HtmlAttributes and rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel screen-reader text hide-access class</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with AccessText</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AccessText='Required field'</li><li>Render</li><li>Assert <span class='hide-access'>Required field</span> in output</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Screen reader text with hide-access CSS class</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U05</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel AssociatedControlId null guard</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelBuilder with null/empty id</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call builder.AssociatedControlId(null)</li><li>Assert ArgumentNullException thrown</li><li>Call builder.AssociatedControlId('')</li><li>Assert ArgumentNullException thrown</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Null/empty id throws ArgumentNullException</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U06</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabelBuilder all 12 fluent methods</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelBuilder instance</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call each method: Text, AssociatedControlId, IsOnlyForAccess, IsMandatory, CssClassLabel, SuperScriptText, SuperscriptCssClass, SuperscriptToolTip, DisplayStar, DisplayColon, IsHtmlEncode, HtmlAttributes</li><li>Assert each sets corresponding component property</li><li>Assert method chaining returns builder</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All builder methods work and chain correctly</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-001-U07</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel superscript rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with SuperscriptText and SuperscriptCssClass</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set SuperscriptText='(1)'</li><li>Set SuperscriptCssClass='sup-style'</li><li>Render</li><li>Assert <sup class='sup-style'>(1)</sup> in output</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Superscript rendered with CSS class</div>
+</div>
+<div class="tc-card regression">
+  <span class="tc-id">TC-LT-001-R01</span> <span class="badge badge-regression">Regression</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel HTML regression</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Baseline HTML from .NET FW 4.8</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render CustomLabel with all features enabled</li><li>Compare output to baseline</li><li>Assert structural equivalence</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> CustomLabel output matches .NET FW 4.8</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LabelComponent renders label element</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> LabelComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and for attribute</li><li>Render</li><li>Assert <label for='...'> element</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Label element with for attribute</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">LabelBuilder Text and CssClassLabel methods</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> LabelBuilder instance</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Text('Name')</li><li>Assert Component.Text == 'Name'</li><li>Call CssClassLabel('lbl')</li><li>Assert Component.CssClassLabel == 'lbl'</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Builder methods set component properties</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-002-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">SpanLabelComponent renders span element</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> SpanLabelComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and CssClass</li><li>Render</li><li>Assert <span class='...'> element</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Span label with CSS class</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ImageToolTipBuilder wires all properties</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-003 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ImageToolTipBuilder instance</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Text('tooltip text')</li><li>Call ImageUrl('/img/help.png')</li><li>Call CssClassImage('img15')</li><li>Call AlternateText('Help')</li><li>Assert all Component properties set</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All builder methods wire to component properties</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ImageToolTip persistence modes</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-003 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ImageToolTipComponent with Click and Hover modes</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render with Click mode</li><li>Render with Hover mode</li><li>Assert different JavaScript behaviors</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Click and hover persistence modes work</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">PopOverComponent renders popover</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-004 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> PopOverComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render popover</li><li>Assert popover HTML structure</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Popover rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HyperLinkComponent renders anchor</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-005 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> HyperLinkComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Url, Text, Target, CssClass</li><li>Render</li><li>Assert <a href='...' target='...' class='...'> with text</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Anchor element with all attributes</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ClickToVoiceComponent renders telephone UI</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-006 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ClickToVoiceComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set telephone number</li><li>Render</li><li>Assert formatted number displayed</li><li>Assert qTip tooltip configured</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Click-to-voice UI with tooltip</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-LT-007-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CommunicatorComponent renders UI</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-007 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CommunicatorComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render communicator</li><li>Assert communicator element present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Communicator component rendered</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-7">
+<details>
+<summary><h3 style="display:inline;">Epic 7: Infrastructure (19 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ComponentFactory returns typed builders</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ComponentFactory<TModel> instantiated</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call factory.Button()</li><li>Assert returns ButtonBuilder</li><li>Call factory.DataTable()</li><li>Assert returns DataTableBuilder</li><li>Test all 42 component factory methods</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All factory methods return correctly typed builders</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-INF-001-U02</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Html.Sav2000() extension method</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Razor view context with HtmlHelper</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Html.Sav2000()</li><li>Assert returns ComponentFactory<TModel></li><li>Call Html.Sav2000(true)</li><li>Assert light requirement mode enabled</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Extension method returns factory with correct mode</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-INF-001-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ComponentFactory fluent API end-to-end</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full Razor view rendering context</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Html.Sav2000().Button().Id('btn1').Text('Submit').Build()</li><li>Assert MvcHtmlString output contains button HTML</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Full fluent API chain produces HTML output</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-002-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">JsResource priority ordering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Multiple JsResource instances with priorities 200, 210, 220</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Register resources in random order</li><li>Retrieve ordered list</li><li>Assert ordering: 200, 210, 220</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Resources ordered by priority</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-002-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">JsResource conditional loading</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with IsFilter toggled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set IsFilter=false</li><li>Get registered resources</li><li>Assert columnFilter.js NOT present</li><li>Set IsFilter=true</li><li>Assert columnFilter.js present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Conditional scripts loaded only when needed</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-002-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">JsResource deduplication</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Two components registering same JsResource</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Register same resource from two components</li><li>Get resource list</li><li>Assert resource appears only once</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duplicate resources deduplicated</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CssResource registration and ordering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Multiple CssResource instances</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Register CSS resources</li><li>Assert ordering preserved</li><li>Assert deduplication works</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> CSS resources registered, ordered, deduplicated</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-004-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DialogBoxComponent modal rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DialogBoxComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set title, body, buttons</li><li>Render</li><li>Assert modal overlay structure</li><li>Assert OK/Cancel buttons</li><li>Assert callback JavaScript</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Modal dialog rendered with buttons</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-005-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomHeaderComponent renders header</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-005 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomHeaderComponent configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set title</li><li>Render</li><li>Assert header element with title</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Header rendered</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-006-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTimeWithFormatBinder parses French date</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Mock form data with dd/MM/yyyy date string</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind '15/01/2026' with French format</li><li>Assert DateTimeWithFormat has correct DateTime</li><li>Assert Format matches French format</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> French date parsed correctly</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-006-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DateTimeWithFormatBinder parses English date</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Mock form data with MM/dd/yyyy date string</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind '01/15/2026' with English format</li><li>Assert correct DateTime</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> English date parsed correctly</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-006-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekYearWithFormatBinder parsing</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Mock form data with week/year values</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind week=10, year=2026</li><li>Assert WeekYearWithFormat bound correctly</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week/year model binding</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-006-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTableContextModelBinder binding</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Mock AJAX request with DataTable parameters</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind DataTable request params (sEcho, iDisplayStart, etc.)</li><li>Assert DataTableContext model populated</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> DataTable context model binding</div>
+</div>
+<div class="tc-card regression">
+  <span class="tc-id">TC-INF-006-R01</span> <span class="badge badge-regression">Regression</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Model binder parity regression</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-006 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Baseline binding results from .NET FW 4.8</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind identical form data on both frameworks</li><li>Compare model property values</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Binding results identical between frameworks</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-007-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ApplicationStrings all 60+ keys available</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ApplicationStrings resource file</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Load resource file</li><li>Assert all ~60+ keys present</li><li>Assert no null values</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All localization keys present</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-007-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ApplicationStrings French/English resources</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Both language resource files</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Load French resources</li><li>Load English resources</li><li>Assert same key set in both</li><li>Assert values differ (translated)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Both language files maintained with translations</div>
+</div>
+<div class="tc-card unit">
+  <span class="tc-id">TC-INF-007-U03</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ApplicationStrings fallback culture</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-INF-007 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Unrecognized culture setting</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set culture to unknown</li><li>Access string key</li><li>Assert falls back to default (English)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Fallback to default culture</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="epic-tc-8">
+<details>
+<summary><h3 style="display:inline;">Epic 8: Migration-Specific (11 test cases)</h3></summary>
+<div class="detail-body">
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-001-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">SDK-style csproj format</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> .NET 8 project created</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Inspect csproj file</li><li>Assert <Project Sdk='Microsoft.NET.Sdk'></li><li>Assert TargetFramework is net8.0 or later</li><li>Assert all NuGet refs are PackageReference</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> SDK-style csproj targeting .NET 8+</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-001-U02</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">dotnet build succeeds</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> SDK-style project</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run 'dotnet build'</li><li>Assert exit code 0</li><li>Assert zero errors</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Project builds with dotnet CLI</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-001-U03</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">dotnet test succeeds</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Test project configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run 'dotnet test'</li><li>Assert all tests pass</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Tests run via dotnet CLI</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-002-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">No System.Web references</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Migrated project</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Search all .cs files for 'using System.Web'</li><li>Assert zero occurrences</li><li>Search csproj for System.Web assembly references</li><li>Assert zero</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Zero System.Web dependencies</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-002-U02</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">HtmlHelper replaced with IHtmlHelper</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Migrated component code</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Search for System.Web.Mvc.HtmlHelper</li><li>Assert zero occurrences</li><li>Assert Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper used</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> ASP.NET Core IHtmlHelper used</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-003-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Static files in wwwroot/_content/</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Migrated RCL project</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Assert all 47 JS files in wwwroot/_content/ directory</li><li>Assert CSS files present</li><li>Assert no embedded resources</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All assets served as static files</div>
+</div>
+<div class="tc-card integration">
+  <span class="tc-id">TC-MIG-003-I01</span> <span class="badge badge-integration">Integration</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Static file serving via middleware</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with static file middleware</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Request /_content/LibraryName/BundledDatatableScripts.js</li><li>Assert 200 OK</li><li>Assert correct content type</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Static files served via ASP.NET Core middleware</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-004-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">JS minification via modern tooling</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Build pipeline configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run build</li><li>Assert JS files minified</li><li>Assert no ajaxmin.bat dependency</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Modern JS minification</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-004-U02</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Roslyn analyzers replace FxCop</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Project with analyzers</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Assert no FxCop ruleset references</li><li>Assert Roslyn analyzer NuGet packages present</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Code analysis via Roslyn</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-005-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Code coverage >= 80%</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Full test suite executed</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run tests with coverage collection</li><li>Generate coverage report</li><li>Assert line coverage >= 80%</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Coverage target met</div>
+</div>
+<div class="tc-card nonfunctional">
+  <span class="tc-id">TC-MIG-005-U02</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">All 42 components have tests</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-005 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Test project</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>List test classes</li><li>Assert test class exists for each of 42 components</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Complete component test coverage</div>
+</div>
+</div>
+</details>
+</section>
+
+<section id="section-fr">
+<h2>4. Functional Requirement Tests</h2>
+<p>Tests mapped to the 11 Functional Requirements (FR-001 through FR-011).</p>
+<table>
+<thead><tr><th>TC ID</th><th>Description</th><th>Type</th><th>FR Ref</th><th>Priority</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong>TC-FR-001-01</strong></td><td>Component HTML output structural equivalence (42 components)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-001-02</strong></td><td>Component HTML attribute correctness (id, name, class, data-*)</td><td><span class="badge badge-functional">Functional</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-002-01</strong></td><td>Fluent API method chaining returns correct builder type</td><td><span class="badge badge-unit">Unit</span></td><td>FR-002</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-002-02</strong></td><td>Builder.Build() produces MvcHtmlString/IHtmlContent output</td><td><span class="badge badge-unit">Unit</span></td><td>FR-002</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-003-01</strong></td><td>jQuery plugin init JSON options match baseline (all components)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-003</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-003-02</strong></td><td>Plugin script element placed at correct page location</td><td><span class="badge badge-integration">Integration</span></td><td>FR-003</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-004-01</strong></td><td>All 8 validators emit correct client-side validation rules</td><td><span class="badge badge-unit">Unit</span></td><td>FR-004</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-004-02</strong></td><td>IClientModelValidator replaces IClientValidatable correctly</td><td><span class="badge badge-integration">Integration</span></td><td>FR-004</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-005-01</strong></td><td>DateTimeWithFormatBinder identical results across frameworks</td><td><span class="badge badge-regression">Regression</span></td><td>FR-005</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-005-02</strong></td><td>WeekYearWithFormatBinder identical results</td><td><span class="badge badge-regression">Regression</span></td><td>FR-005</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-005-03</strong></td><td>DataTableContextModelBinder identical results</td><td><span class="badge badge-regression">Regression</span></td><td>FR-005</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-006-01</strong></td><td>All 60+ string keys accessible via IStringLocalizer</td><td><span class="badge badge-unit">Unit</span></td><td>FR-006</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-006-02</strong></td><td>French/English resource switching</td><td><span class="badge badge-integration">Integration</span></td><td>FR-006</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-007-01</strong></td><td>JS resource priority ordering preserved</td><td><span class="badge badge-unit">Unit</span></td><td>FR-007</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-007-02</strong></td><td>CSS resource deduplication</td><td><span class="badge badge-unit">Unit</span></td><td>FR-007</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-008-01</strong></td><td>DataTable POST request format matches baseline</td><td><span class="badge badge-integration">Integration</span></td><td>FR-008</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-008-02</strong></td><td>Encrypted criteria parameters roundtrip</td><td><span class="badge badge-integration">Integration</span></td><td>FR-008</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-009-01</strong></td><td>All 16 composite date types field visibility</td><td><span class="badge badge-functional">Functional</span></td><td>FR-009</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-009-02</strong></td><td>French/English date parsing parity</td><td><span class="badge badge-regression">Regression</span></td><td>FR-009</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-009-03</strong></td><td>UTC and timezone offset handling</td><td><span class="badge badge-unit">Unit</span></td><td>FR-009</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-010-01</strong></td><td>CustomLabel for attribute enforcement</td><td><span class="badge badge-unit">Unit</span></td><td>FR-010</td><td>Should</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-010-02</strong></td><td>Screen-reader text with hide-access class</td><td><span class="badge badge-unit">Unit</span></td><td>FR-010</td><td>Should</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-011-01</strong></td><td>Column reorder, select-all, delete/modify icons</td><td><span class="badge badge-functional">Functional</span></td><td>FR-011</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-FR-011-02</strong></td><td>SwanPagination type</td><td><span class="badge badge-unit">Unit</span></td><td>FR-011</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="section-nfr">
+<h2>5. Non-Functional Requirement Tests</h2>
+<table>
+<thead><tr><th>TC ID</th><th>Description</th><th>NFR Ref</th><th>Criteria</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong>TC-NFR-001</strong></td><td>Project targets net8.0 or later</td><td>NFR-001</td><td>TargetFramework in csproj is net8.0+</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-002</strong></td><td>SDK-style csproj format</td><td>NFR-002</td><td>Project Sdk="Microsoft.NET.Sdk" present</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-003</strong></td><td>All dependencies via PackageReference</td><td>NFR-003</td><td>Zero packages.config, zero manual DLL refs</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-004</strong></td><td>Code coverage >= 80%</td><td>NFR-004</td><td>Coverage report shows >= 80% line coverage</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-005</strong></td><td>Cross-platform build (no Windows-specific scripts)</td><td>NFR-005</td><td>dotnet build succeeds on Linux and Windows</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-006</strong></td><td>Roslyn analyzers configured</td><td>NFR-005</td><td>Analyzer NuGet packages present, no FxCop refs</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-007</strong></td><td>JS minification via modern tooling</td><td>NFR-005</td><td>esbuild/webpack configured, no ajaxmin.bat</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-NFR-008</strong></td><td>CI pipeline configured</td><td>NFR-004</td><td>GitHub Actions workflow runs tests + coverage</td><td><span class="badge badge-pending">Pending</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="section-perf">
+<h2>6. Performance Tests</h2>
+<p>12 performance benchmarks comparing .NET 8 against .NET Framework 4.8 baseline.</p>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-001</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Button rendering throughput</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> BenchmarkDotNet configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark ButtonComponent rendering 10,000 iterations</li><li>Record mean time and memory allocation</li><li>Compare to .NET FW 4.8 baseline</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> No regression > 10% in rendering time; memory allocation within acceptable bounds</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-002</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable rendering with 1000 rows</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with 1000-row DataTable</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark rendering of large DataTable</li><li>Record time and memory</li><li>Assert completes within 500ms</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Large DataTable renders within performance threshold</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-003</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate rendering throughput</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> BenchmarkDotNet configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark CompositeDate with all field types</li><li>Compare to baseline</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> CompositeDate rendering within threshold</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-004</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Resource deduplication performance</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> 100 components registering overlapping resources</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Register resources from 100 components</li><li>Measure deduplication time</li><li>Assert O(n) or better</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Deduplication scales linearly</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-005</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">ComponentFactory instantiation time</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> BenchmarkDotNet configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark factory creation 10,000 times</li><li>Assert < 1ms per instantiation</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Factory creation is fast</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-006</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Model binder parsing throughput</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DateTimeWithFormatBinder with 10,000 dates</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark date parsing</li><li>Compare to .NET FW 4.8</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Date parsing throughput maintained</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-007</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Validator execution time</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> All 8 validators with typical inputs</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark each validator 10,000 times</li><li>Assert < 0.1ms average per validation</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Validation is fast</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-008</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Page with 20 mixed components render time</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with Button, TextBox, DropDown, DataTable, CustomLabel, DateTime, etc.</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render full page with 20 components</li><li>Assert total render < 200ms</li><li>Assert memory < 50MB</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Complex page renders within time and memory bounds</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-009</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">JSON serialization of DataTable options</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> DataTableOptionsSerializer with complex options</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark serialization 10,000 times</li><li>Compare Newtonsoft.Json vs System.Text.Json if applicable</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> JSON serialization performance acceptable</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-010</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Crypt.Encrypt/Decrypt throughput</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Crypt utility with typical parameter strings</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark encrypt/decrypt 10,000 times</li><li>Assert < 0.5ms per operation</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Encryption throughput acceptable</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-011</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Localization string lookup throughput</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ApplicationStrings with 60+ keys</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark lookup of all 60 keys 1,000 times</li><li>Assert < 0.01ms per lookup</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Localization lookup is fast</div>
+</div>
+<div class="tc-card performance">
+  <span class="tc-id">TC-PERF-012</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Static file response time</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer serving static files</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Request 47 JS files sequentially</li><li>Assert each responds < 50ms</li><li>Assert correct caching headers</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Static files served quickly with caching</div>
+</div>
+</section>
+
+<section id="section-security">
+<h2>7. Security Tests</h2>
+<p>6 security test cases covering encryption, XSS, and path traversal.</p>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-001</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Crypt.Encrypt/Decrypt roundtrip parity</div>
+  <div class="tc-field"><strong>URS Ref:</strong> R-009 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Known plaintext/ciphertext pairs from .NET FW 4.8</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Encrypt known plaintext on .NET 8</li><li>Assert ciphertext matches .NET FW 4.8 output</li><li>Decrypt ciphertext</li><li>Assert original plaintext recovered</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Encryption produces identical output across frameworks</div>
+</div>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-002</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">XSS prevention in component text output</div>
+  <div class="tc-field"><strong>URS Ref:</strong> FR-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Components with user-supplied text containing <script> tags</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text to '<script>alert(1)</script>'</li><li>Render</li><li>Assert HTML-encoded output</li><li>Assert no raw script in HTML</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> User input HTML-encoded to prevent XSS</div>
+</div>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-003</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel IsHtmlEncode flag</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with IsHtmlEncode toggled</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set IsHtmlEncode=true, set text with HTML</li><li>Assert encoded output</li><li>Set IsHtmlEncode=false</li><li>Assert raw HTML (developer intentional)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> HTML encoding respects IsHtmlEncode flag</div>
+</div>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-004</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable criteria parameter encryption strength</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-DD-002 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Encrypted criteria parameters</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Encrypt parameter</li><li>Assert ciphertext is not plaintext</li><li>Assert ciphertext length indicates real encryption (not just Base64)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Parameters properly encrypted</div>
+</div>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-005</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">No sensitive data in client-side JavaScript</div>
+  <div class="tc-field"><strong>URS Ref:</strong> FR-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Rendered component init scripts</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Inspect all generated JavaScript</li><li>Assert no server-side secrets, connection strings, or API keys in output</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> No sensitive data leaked to client</div>
+</div>
+<div class="tc-card security">
+  <span class="tc-id">TC-SEC-006</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Static file path traversal prevention</div>
+  <div class="tc-field"><strong>URS Ref:</strong> US-MIG-003 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> TestServer with static file middleware</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Request /_content/../../../etc/passwd</li><li>Assert 404 or 400 (not file content)</li><li>Assert path traversal blocked</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Path traversal attacks blocked</div>
+</div>
+</section>
+
+<section id="section-regression">
+<h2>8. Regression Test Suite</h2>
+<p>HTML output snapshot comparison for all 42 components between .NET Framework 4.8 and .NET 8+. Uses Verify library for snapshot management.</p>
+<table>
+<thead><tr><th>TC ID</th><th>Description</th><th>Type</th><th>Req Ref</th><th>Priority</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td><strong>TC-REG-001</strong></td><td>ActionButton HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-002</strong></td><td>BreadCrumbs HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-003</strong></td><td>Button HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-004</strong></td><td>CheckBox HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-005</strong></td><td>CheckBoxList HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-006</strong></td><td>ClickToVoice HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-007</strong></td><td>CommentBox HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-008</strong></td><td>Communicator HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-009</strong></td><td>CompositeDate HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-010</strong></td><td>CompositeDateExt HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-011</strong></td><td>CustomHeader HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-012</strong></td><td>CustomLabel HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-013</strong></td><td>DataTable HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-014</strong></td><td>DateDuration HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-015</strong></td><td>DateTime HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-016</strong></td><td>DialogBox HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-017</strong></td><td>DropDownList HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-018</strong></td><td>DropDownMenu HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-019</strong></td><td>DualList HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-020</strong></td><td>Duration HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-021</strong></td><td>Error HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-022</strong></td><td>FileUpload HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-023</strong></td><td>HorizontalMenu HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-024</strong></td><td>HorizontalTab HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-025</strong></td><td>HyperLink HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-026</strong></td><td>Image HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-027</strong></td><td>ImageToolTip HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-028</strong></td><td>Label HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-029</strong></td><td>ListBox HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-030</strong></td><td>PopOver HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-031</strong></td><td>PopupImage HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-032</strong></td><td>ProgressBar HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-033</strong></td><td>RadioButton HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-034</strong></td><td>RadioButtonList HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-035</strong></td><td>SpanLabel HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-036</strong></td><td>TextArea HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-037</strong></td><td>TextBox HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-038</strong></td><td>TreeGrid HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-039</strong></td><td>VerticalMenu HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-040</strong></td><td>WeekYear HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-041</strong></td><td>ScriptRenderer HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+<tr><td><strong>TC-REG-042</strong></td><td>StyleRenderer HTML output snapshot comparison (.NET FW 4.8 vs .NET 8)</td><td><span class="badge badge-regression">Regression</span></td><td>FR-001</td><td>Must</td><td><span class="badge badge-pending">Pending</span></td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="section-e2e">
+<h2>9. End-to-End Test Scenarios</h2>
+<p>18 E2E test scenarios using Playwright for browser-based testing.</p>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-001</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Form page with all input controls</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 1 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server running, Playwright configured</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form page with Button, TextBox, TextArea, CheckBox, RadioButton, DropDownList</li><li>Fill all fields</li><li>Click submit</li><li>Assert form posts successfully</li><li>Assert model binding returns correct values</li><li>Assert validation messages appear for empty required fields</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Complete form with multiple input types works end-to-end</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-002</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable with server-side data loading</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 2 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with DataTable endpoint</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to DataTable page</li><li>Assert table loads with data from server</li><li>Click pagination controls</li><li>Assert new page loads</li><li>Sort by column</li><li>Assert data reorders</li><li>Filter by column</li><li>Assert filtered results</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> DataTable server-side features work in browser</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-003</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CompositeDate type switching</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 4 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with CompositeDate form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form with CompositeDate</li><li>Select 'Between' type</li><li>Assert two date fields appear</li><li>Select 'Week' type</li><li>Assert date fields hide, week field appears</li><li>Select 'ModelEqual' type</li><li>Assert model format input appears</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> CompositeDate type switching works in browser with JavaScript</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-004</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Validation feedback in browser</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 5 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with validated form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form with DateRequired, EndDateGreaterThan, LessThanCurrentDate validators</li><li>Submit empty form</li><li>Assert client-side validation messages appear without page reload</li><li>Fix dates but set end < start</li><li>Submit</li><li>Assert EndDateGreaterThan message</li><li>Fix all</li><li>Submit</li><li>Assert form submits successfully</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Client-side validation works in browser without postback</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-005</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">CustomLabel accessibility</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 6 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with form using CustomLabels</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form</li><li>Assert all labels have for attribute matching input id</li><li>Assert screen reader text present (hide-access spans)</li><li>Use keyboard to tab through form</li><li>Assert focus follows label-to-input association</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Labels accessible via keyboard and screen readers</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-006</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Navigation components</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 3 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with full navigation</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Assert breadcrumb trail shows correct path</li><li>Assert horizontal menu items are clickable</li><li>Assert vertical menu renders in sidebar</li><li>Click dropdown menu</li><li>Assert child items appear</li><li>Click tab</li><li>Assert content panel switches</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> All navigation components work in browser</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-007</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Multi-component page rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 7 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with complex page (20+ components)</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to page with multiple component types</li><li>Assert all components render</li><li>Assert no JavaScript errors in console</li><li>Assert all jQuery plugins initialize</li><li>Assert resource deduplication (no duplicate script tags)</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Complex page with many components renders correctly</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-008</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Full CRUD workflow</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 1+2 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with DataTable + form CRUD page</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to list page (DataTable)</li><li>Click 'Add' button</li><li>Fill form with all field types</li><li>Submit form</li><li>Assert redirected to list with new row</li><li>Click modify icon on row</li><li>Assert form pre-filled</li><li>Modify values, submit</li><li>Assert updated in list</li><li>Click delete icon</li><li>Confirm dialog</li><li>Assert row removed</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Create, Read, Update, Delete workflow works end-to-end</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-009</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Localization switching (French/English)</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 7 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Staging server with both cultures</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate in English</li><li>Assert English labels and validation messages</li><li>Switch to French</li><li>Assert French labels and validation messages</li><li>Assert date format changes to dd/MM/yyyy</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> UI localizes correctly for both cultures</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-010</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DialogBox modal interaction</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 7 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with button triggering DialogBox</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Click trigger button</li><li>Assert modal overlay appears</li><li>Assert modal title and body text</li><li>Click Cancel</li><li>Assert modal closes</li><li>Re-open, click OK</li><li>Assert callback fires</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Modal dialog interaction works</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-011</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DualList item transfer</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 1 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with DualList component</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Assert available items list populated</li><li>Select 2 items</li><li>Click Add button</li><li>Assert items move to selected list</li><li>Select 1 item in selected</li><li>Click Remove</li><li>Assert item returns to available</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> DualList item transfer works in browser</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-012</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">FileUpload and submit</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 1 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with FileUpload in multipart form</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Select file via file input</li><li>Submit form</li><li>Assert file received by server</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> File upload works end-to-end</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-013</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">DataTable select-all and bulk delete</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 2 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with DataTable with select/delete columns</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Click select-all checkbox</li><li>Assert all rows checked</li><li>Click bulk delete</li><li>Confirm dialog</li><li>Assert selected rows removed</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Bulk operations via DataTable work</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-014</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">WeekYear picker interaction</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 4 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with WeekYear picker</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enter week number in input</li><li>Enter year</li><li>Submit form</li><li>Assert WeekYearWithFormat model bound correctly</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Week/year picker form submission works</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-015</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Duration input validation</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 4 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with Duration and DurationValidator</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Enter duration exceeding date range</li><li>Submit</li><li>Assert validation error</li><li>Correct duration</li><li>Submit</li><li>Assert success</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Duration validation works in browser</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-016</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">TreeGrid expand/collapse</div>
+  <div class="tc-field"><strong>URS Ref:</strong> Epic 2 | <strong>Priority:</strong> Must</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Page with TreeGrid and hierarchical data</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Assert root rows visible</li><li>Click expand on root row</li><li>Assert child rows appear</li><li>Click collapse</li><li>Assert children hidden</li><li>Assert row highlighting on selection</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> TreeGrid expand/collapse works</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-017</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Cross-browser rendering (Chrome, Firefox, Edge)</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-001 | <strong>Priority:</strong> Should</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Playwright with multiple browser engines</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run TC-E2E-001 on Chromium</li><li>Run on Firefox</li><li>Run on WebKit</li><li>Assert consistent rendering and behavior</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Application works across major browsers</div>
+</div>
+<div class="tc-card e2e">
+  <span class="tc-id">TC-E2E-018</span> <span class="badge badge-e2e">E2E</span> <span class="badge badge-pending">Pending</span>
+  <div class="tc-title">Print-friendly page rendering</div>
+  <div class="tc-field"><strong>URS Ref:</strong> NFR-001 | <strong>Priority:</strong> Could</div>
+  <div class="tc-field"><strong>Preconditions:</strong> Browser print preview</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Open page with components</li><li>Trigger print preview</li><li>Assert all components visible</li><li>Assert no sidebar navigation in print</li></ol></div>
+  <div class="tc-field"><strong>Expected Result:</strong> Print-friendly layout works</div>
+</div>
+</section>
+
+<section id="section-traceability">
+<h2>10. Traceability Matrix</h2>
+<p>Mapping of every URS user story to its test cases with coverage percentage.</p>
+<table>
+<thead><tr><th>User Story</th><th>Test Cases</th><th>Count</th><th>Coverage</th></tr></thead>
+<tbody>
+<tr><td><strong>US-FC-001</strong></td><td>TC-FC-001-U01 to U05, I01, R01</td><td>7</td><td>100%</td></tr>
+<tr><td><strong>US-FC-002</strong></td><td>TC-FC-002-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-FC-003</strong></td><td>TC-FC-003-U01 to U03, I01</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-FC-004</strong></td><td>TC-FC-004-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-FC-005</strong></td><td>TC-FC-005-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-FC-006</strong></td><td>TC-FC-006-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-FC-007</strong></td><td>TC-FC-007-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-FC-008</strong></td><td>TC-FC-008-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-FC-009</strong></td><td>TC-FC-009-U01 to U04</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-FC-010</strong></td><td>TC-FC-010-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-FC-011</strong></td><td>TC-FC-011-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-FC-012</strong></td><td>TC-FC-012-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-FC-013</strong></td><td>TC-FC-013-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DD-001</strong></td><td>TC-DD-001-U01 to U04, I01, R01</td><td>6</td><td>100%</td></tr>
+<tr><td><strong>US-DD-002</strong></td><td>TC-DD-002-U01 to U03, I01</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-DD-003</strong></td><td>TC-DD-003-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-DD-004</strong></td><td>TC-DD-004-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DD-005</strong></td><td>TC-DD-005-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DD-006</strong></td><td>TC-DD-006-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DD-007</strong></td><td>TC-DD-007-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-DD-008</strong></td><td>TC-DD-008-U01</td><td>1</td><td>85%</td></tr>
+<tr><td><strong>US-DD-009</strong></td><td>TC-DD-009-U01, U02</td><td>2</td><td>90%</td></tr>
+<tr><td><strong>US-NAV-001</strong></td><td>TC-NAV-001-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-NAV-002</strong></td><td>TC-NAV-002-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-NAV-003</strong></td><td>TC-NAV-003-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-NAV-004</strong></td><td>TC-NAV-004-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-NAV-005</strong></td><td>TC-NAV-005-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DT-001</strong></td><td>TC-DT-001-U01 to U05, I01, R01</td><td>7</td><td>100%</td></tr>
+<tr><td><strong>US-DT-002</strong></td><td>TC-DT-002-U01 to U05, I01</td><td>6</td><td>100%</td></tr>
+<tr><td><strong>US-DT-003</strong></td><td>TC-DT-003-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-DT-004</strong></td><td>TC-DT-004-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-DT-005</strong></td><td>TC-DT-005-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-DT-006</strong></td><td>TC-DT-006-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-001</strong></td><td>TC-VAL-001-U01 to U04</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-002</strong></td><td>TC-VAL-002-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-003</strong></td><td>TC-VAL-003-U01 to U04</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-004</strong></td><td>TC-VAL-004-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-VAL-005</strong></td><td>TC-VAL-005-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-006</strong></td><td>TC-VAL-006-U01 to U04</td><td>4</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-007</strong></td><td>TC-VAL-007-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-VAL-008</strong></td><td>TC-VAL-008-U01</td><td>1</td><td>85%</td></tr>
+<tr><td><strong>US-LT-001</strong></td><td>TC-LT-001-U01 to U07, R01</td><td>8</td><td>100%</td></tr>
+<tr><td><strong>US-LT-002</strong></td><td>TC-LT-002-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-LT-003</strong></td><td>TC-LT-003-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-LT-004</strong></td><td>TC-LT-004-U01</td><td>1</td><td>85%</td></tr>
+<tr><td><strong>US-LT-005</strong></td><td>TC-LT-005-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-LT-006</strong></td><td>TC-LT-006-U01</td><td>1</td><td>85%</td></tr>
+<tr><td><strong>US-LT-007</strong></td><td>TC-LT-007-U01</td><td>1</td><td>80%</td></tr>
+<tr><td><strong>US-INF-001</strong></td><td>TC-INF-001-U01, U02, I01</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-INF-002</strong></td><td>TC-INF-002-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-INF-003</strong></td><td>TC-INF-003-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-INF-004</strong></td><td>TC-INF-004-U01</td><td>1</td><td>90%</td></tr>
+<tr><td><strong>US-INF-005</strong></td><td>TC-INF-005-U01</td><td>1</td><td>85%</td></tr>
+<tr><td><strong>US-INF-006</strong></td><td>TC-INF-006-U01 to U04, R01</td><td>5</td><td>100%</td></tr>
+<tr><td><strong>US-INF-007</strong></td><td>TC-INF-007-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-MIG-001</strong></td><td>TC-MIG-001-U01 to U03</td><td>3</td><td>100%</td></tr>
+<tr><td><strong>US-MIG-002</strong></td><td>TC-MIG-002-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-MIG-003</strong></td><td>TC-MIG-003-U01, I01</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-MIG-004</strong></td><td>TC-MIG-004-U01, U02</td><td>2</td><td>100%</td></tr>
+<tr><td><strong>US-MIG-005</strong></td><td>TC-MIG-005-U01, U02</td><td>2</td><td>100%</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="section-artifacts">
+<h2>11. Test Artifacts</h2>
+<h3>11.1 Artifacts Per Test Execution</h3>
+<table>
+<thead><tr><th>Artifact</th><th>Format</th><th>Generated By</th><th>Location</th></tr></thead>
+<tbody>
+<tr><td>Unit Test Results</td><td>TRX / JUnit XML</td><td>dotnet test --logger trx</td><td>TestResults/*.trx</td></tr>
+<tr><td>Code Coverage Report</td><td>Cobertura XML + HTML</td><td>dotnet test --collect:"XPlat Code Coverage" + ReportGenerator</td><td>TestResults/coverage/</td></tr>
+<tr><td>Regression Snapshots</td><td>Verified .txt / .html files</td><td>Verify library</td><td>Tests/*.verified.txt</td></tr>
+<tr><td>Performance Benchmarks</td><td>Markdown + CSV</td><td>BenchmarkDotNet</td><td>BenchmarkDotNet.Artifacts/</td></tr>
+<tr><td>E2E Screenshots</td><td>PNG</td><td>Playwright</td><td>TestResults/screenshots/</td></tr>
+<tr><td>E2E Videos</td><td>WebM</td><td>Playwright</td><td>TestResults/videos/</td></tr>
+<tr><td>E2E Traces</td><td>ZIP (Playwright Trace)</td><td>Playwright</td><td>TestResults/traces/</td></tr>
+<tr><td>Security Scan Report</td><td>HTML / JSON</td><td>OWASP ZAP (optional)</td><td>TestResults/security/</td></tr>
+<tr><td>Build Log</td><td>Text</td><td>dotnet build</td><td>CI artifacts</td></tr>
+</tbody>
+</table>
+
+<h3>11.2 CI Pipeline Artifact Collection</h3>
+<p>All test artifacts are collected by the GitHub Actions CI pipeline and attached to each build as downloadable artifacts. The coverage report is published as a GitHub Pages deployment for easy access.</p>
+
+<h3>11.3 Test Execution Schedule</h3>
+<table>
+<thead><tr><th>Phase</th><th>When</th><th>Tests Run</th><th>Duration (est.)</th></tr></thead>
+<tbody>
+<tr><td>Pre-commit</td><td>Before every commit</td><td>Unit tests (fast subset)</td><td>~30 seconds</td></tr>
+<tr><td>CI - PR Check</td><td>Every pull request</td><td>All unit + integration + functional</td><td>~5 minutes</td></tr>
+<tr><td>CI - Nightly</td><td>Daily at 02:00 UTC</td><td>Full suite including regression + performance</td><td>~20 minutes</td></tr>
+<tr><td>Pre-release</td><td>Before each release</td><td>Full suite + E2E + security</td><td>~45 minutes</td></tr>
+<tr><td>Cross-browser</td><td>Weekly</td><td>E2E on Chrome, Firefox, WebKit</td><td>~30 minutes</td></tr>
+</tbody>
+</table>
+
+<h3>11.4 Defect Management</h3>
+<table>
+<thead><tr><th>Severity</th><th>Response Time</th><th>Resolution Time</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-critical">Critical</span></td><td>Immediate</td><td>&lt; 4 hours</td><td>Regression in HTML output, validation bypass, data loss</td></tr>
+<tr><td><span class="badge badge-high">High</span></td><td>&lt; 2 hours</td><td>&lt; 1 day</td><td>Incorrect model binding, broken jQuery plugin init</td></tr>
+<tr><td><span class="badge badge-medium">Medium</span></td><td>&lt; 8 hours</td><td>&lt; 3 days</td><td>Missing CSS class, wrong priority order</td></tr>
+<tr><td><span class="badge badge-low">Low</span></td><td>&lt; 24 hours</td><td>&lt; 1 week</td><td>Whitespace differences, non-critical warning</td></tr>
+</tbody>
+</table>
+</section>
+
+</main>
+
+<script>
+// Sidebar active link highlighting
+document.addEventListener('scroll', function() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sidebar a');
+  let current = '';
+  sections.forEach(function(section) {
+    const sectionTop = section.offsetTop - 100;
+    if (window.scrollY >= sectionTop) { current = section.getAttribute('id'); }
+  });
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) { link.classList.add('active'); }
+  });
+});
+</script>
+</body>
+</html>
