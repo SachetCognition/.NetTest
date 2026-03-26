@@ -46,7 +46,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                 subOuterContent.Append(sw.ToString());
             }
             subOuterContent.Append(copyRightDiv);
-            subOuterContent.AppendFormat(CultureInfo.CurrentCulture, "<input type=\"hidden\" name=\"{0}\">", this.Component.Name);
+            var hiddenInput = new TagBuilder("input");
+            hiddenInput.Attributes["type"] = "hidden";
+            hiddenInput.Attributes["name"] = this.Component.Name ?? string.Empty;
+            hiddenInput.TagRenderMode = TagRenderMode.SelfClosing;
+            using (var sw2 = new StringWriter())
+            {
+                hiddenInput.WriteTo(sw2, System.Text.Encodings.Web.HtmlEncoder.Default);
+                subOuterContent.Append(sw2.ToString());
+            }
 
             tagBuilderSubOuterDiv.InnerHtml.AppendHtml(subOuterContent.ToString());
 
@@ -265,7 +273,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                         });
                     break;
                 default:
-                    actionUrl = string.IsNullOrEmpty(childItem.ActionUrl) ? "#" : childItem.ActionUrl + "&" + this.Component.Name + "=" + id;
+                    actionUrl = string.IsNullOrEmpty(childItem.ActionUrl) ? "#" : childItem.ActionUrl + (childItem.ActionUrl.Contains("?") ? "&" : "?") + this.Component.Name + "=" + id;
                     linkHtml = this.CreateLinkHtml(id, childItem.MenuType, cssclass, childItem.MenuName, accessText, actionUrl, "close");
                     break;
             }
