@@ -12,7 +12,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
 
         public DropDownListBuilder DataBind(SelectList selectList) { return this; }
         public DropDownListBuilder CssClassSelectDiv(string cssClass) { return this; }
-        public DropDownListBuilder CustomLabel(Action<CustomLabelBuilder> configure) { return this; }
+        public DropDownListBuilder CustomLabel(Action<CustomLabelBuilder> configure)
+        {
+            if (configure != null)
+            {
+                var labelComponent = new CustomLabelComponent();
+                var labelBuilder = new CustomLabelBuilder(labelComponent);
+                configure(labelBuilder);
+            }
+            return this;
+        }
         public DropDownListBuilder HtmlAttributes(object attributes) { return this; }
         public DropDownListBuilder Title(string title) { return this; }
         public DropDownListBuilder CssClassLabel(string cssClass) { return this; }

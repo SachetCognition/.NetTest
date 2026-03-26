@@ -10,7 +10,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 
         public CustomLabelBuilder Text(string text) { Component.Text = text; return this; }
         public CustomLabelBuilder AssociatedControlId(string id) { if (string.IsNullOrEmpty(id)) throw new System.ArgumentNullException(nameof(id)); Component.AssociatedControlId = id; return this; }
-        public CustomLabelBuilder HtmlAttributes(object attributes) { return this; }
+        public CustomLabelBuilder HtmlAttributes(object attributes)
+        {
+            if (attributes != null)
+            {
+                foreach (var prop in attributes.GetType().GetProperties())
+                {
+                    Component.HtmlAttributes[prop.Name] = prop.GetValue(attributes);
+                }
+            }
+            return this;
+        }
         public CustomLabelBuilder IsOnlyForAccess(bool value) { Component.IsOnlyForAccess = value; return this; }
         public CustomLabelBuilder IsMandatory(bool value) { Component.IsMandatory = value; return this; }
         public CustomLabelBuilder CssClassLabel(string cssClass) { Component.CssClassLabel = cssClass; return this; }
