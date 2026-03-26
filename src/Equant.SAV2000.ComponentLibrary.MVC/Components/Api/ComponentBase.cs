@@ -58,7 +58,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
                 HtmlAttributes[key] = value;
         }
 
-        public abstract void WriteHtml(TextWriter writer);
-        public abstract void WriteInitScript(TextWriter writer);
+        public virtual void WriteHtml(TextWriter writer) { }
+        public virtual void WriteInitScript(TextWriter writer) { }
+
+        public virtual IHtmlContent BuildHtml() { return HtmlString.Empty; }
+        public virtual string BuildInitScript() { return string.Empty; }
     }
 }
