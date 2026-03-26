@@ -203,7 +203,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> ButtonComponent configured with Id, Text, CssClass</div>
   <div class="tc-steps"><strong>Steps:</strong><ol><li>Render button via HtmlBuilder</li><li>Parse output with AngleSharp</li><li>Assert element is input[type=submit]</li><li>Assert id attribute matches</li><li>Assert value attribute matches Text</li><li>Assert class attribute includes configured CSS</li></ol></div>
-  <div class="tc-field"><strong>Expected Result:</strong> HTML output is <input type='submit' id='btn1' value='Submit' class='btn-primary'></div>
+  <div class="tc-field"><strong>Expected Result:</strong> HTML output is &lt;input type='submit' id='btn1' value='Submit' class='btn-primary'&gt;</div>
 </div>
 <div class="tc-card unit">
   <span class="tc-id">TC-FC-001-U04</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
@@ -250,7 +250,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">ActionButtonHtmlBuilder renders span-wrapped text</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-002 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> ActionButtonComponent with Text='Save'</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render action button</li><li>Parse HTML</li><li>Assert structure is <button><span>Save</span></button></li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render action button</li><li>Parse HTML</li><li>Assert structure is &lt;button&gt;&lt;span&gt;Save&lt;/span&gt;&lt;/button&gt;</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Button wraps text in span element</div>
 </div>
 <div class="tc-card unit">
@@ -378,7 +378,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">TextAreaComponent renders textarea element</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-008 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> TextAreaComponent configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render textarea</li><li>Assert <textarea> element</li><li>Assert rows, cols attributes</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render textarea</li><li>Assert &lt;textarea&gt; element</li><li>Assert rows, cols attributes</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Textarea rendered with dimensions</div>
 </div>
 <div class="tc-card integration">
@@ -394,7 +394,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DropDownListComponent renders select with options</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> DropDownListComponent with DataCollection of 5 items</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind DataCollection</li><li>Render</li><li>Assert <select> with 5 <option> elements</li><li>Assert each option has correct value and text</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind DataCollection</li><li>Render</li><li>Assert &lt;select&gt; with 5 &lt;option&gt; elements</li><li>Assert each option has correct value and text</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Select element rendered with all options from data source</div>
 </div>
 <div class="tc-card unit">
@@ -402,7 +402,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DropDownList default/placeholder option</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-009 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> DropDownListComponent with placeholder text</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set placeholder option</li><li>Render</li><li>Assert first <option> is placeholder with empty value</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set placeholder option</li><li>Render</li><li>Assert first &lt;option&gt; is placeholder with empty value</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Placeholder option rendered as first item</div>
 </div>
 <div class="tc-card integration">
@@ -426,7 +426,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">ListBoxComponent renders select[multiple]</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-010 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> ListBoxComponent with items</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render listbox</li><li>Assert <select multiple> element</li><li>Assert configurable size attribute</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render listbox</li><li>Assert &lt;select multiple&gt; element</li><li>Assert configurable size attribute</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Multi-select listbox rendered</div>
 </div>
 <div class="tc-card integration">
@@ -442,7 +442,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DualListComponent renders two list boxes</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-011 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> DualListComponent with available items</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render dual list</li><li>Assert two <select> elements (available + selected)</li><li>Assert add/remove buttons present</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render dual list</li><li>Assert two &lt;select&gt; elements (available + selected)</li><li>Assert add/remove buttons present</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Dual list structure with controls rendered</div>
 </div>
 <div class="tc-card integration">
@@ -466,7 +466,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">FileUploadComponent renders input[type=file]</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-FC-013 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> FileUploadComponent configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render file upload</li><li>Assert <input type='file'> element</li><li>Assert accept attribute for file type restrictions</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render file upload</li><li>Assert &lt;input type='file'&gt; element</li><li>Assert accept attribute for file type restrictions</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> File upload input rendered</div>
 </div>
 <div class="tc-card integration">
@@ -498,7 +498,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DataTableHtmlBuilder renders table from DataTable</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-DD-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> DataTableComponent with System.Data.DataTable (3 cols, 5 rows)</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind data source</li><li>Render</li><li>Assert <table> with <thead> and <tbody></li><li>Assert 3 column headers</li><li>Assert 5 data rows</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Bind data source</li><li>Render</li><li>Assert &lt;table&gt; with &lt;thead&gt; and &lt;tbody&gt;</li><li>Assert 3 column headers</li><li>Assert 5 data rows</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Table structure matches data source</div>
 </div>
 <div class="tc-card unit">
@@ -658,7 +658,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">ImageComponent renders img element</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-DD-009 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> ImageComponent with src and alt</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set ImageSrc and alt text</li><li>Render</li><li>Assert <img> with src and alt attributes</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set ImageSrc and alt text</li><li>Render</li><li>Assert &lt;img&gt; with src and alt attributes</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Image rendered with attributes</div>
 </div>
 <div class="tc-card unit">
@@ -991,7 +991,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
 </div>
 <div class="tc-card unit">
   <span class="tc-id">TC-VAL-003-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
-  <div class="tc-title">EndDateGreaterThan - end > start passes</div>
+  <div class="tc-title">EndDateGreaterThan - end &gt; start passes</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> Model with start=2026-01-01, end=2026-01-15</div>
   <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate model</li><li>Assert passes</li></ol></div>
@@ -999,7 +999,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
 </div>
 <div class="tc-card unit">
   <span class="tc-id">TC-VAL-003-U02</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
-  <div class="tc-title">EndDateGreaterThan - end < start fails</div>
+  <div class="tc-title">EndDateGreaterThan - end &lt; start fails</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-VAL-003 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> Model with start=2026-01-15, end=2026-01-01</div>
   <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate model</li><li>Assert fails with error including both field names</li></ol></div>
@@ -1090,7 +1090,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DurationValidator - duration within range</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-VAL-007 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> Model with start=08:00, end=17:00, duration=2 hours</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert passes (2h < 9h difference)</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert passes (2h &lt; 9h difference)</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Duration within date range passes</div>
 </div>
 <div class="tc-card unit">
@@ -1098,7 +1098,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">DurationValidator - duration exceeds range</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-VAL-007 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> Model with start=08:00, end=10:00, duration=5 hours</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert fails (5h > 2h difference)</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Validate</li><li>Assert fails (5h &gt; 2h difference)</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Duration exceeding range fails</div>
 </div>
 <div class="tc-card unit">
@@ -1146,7 +1146,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">CustomLabel for attribute and accessibility</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with AssociatedControlId</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AssociatedControlId='txtName'</li><li>Assert HtmlAttributes['for'] == 'txtName'</li><li>Render</li><li>Assert for attribute in <label> element</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AssociatedControlId='txtName'</li><li>Assert HtmlAttributes['for'] == 'txtName'</li><li>Render</li><li>Assert for attribute in &lt;label&gt; element</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> for attribute synced with HtmlAttributes and rendered</div>
 </div>
 <div class="tc-card unit">
@@ -1154,7 +1154,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">CustomLabel screen-reader text hide-access class</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with AccessText</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AccessText='Required field'</li><li>Render</li><li>Assert <span class='hide-access'>Required field</span> in output</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set AccessText='Required field'</li><li>Render</li><li>Assert &lt;span class='hide-access'&gt;Required field&lt;/span&gt; in output</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Screen reader text with hide-access CSS class</div>
 </div>
 <div class="tc-card unit">
@@ -1178,7 +1178,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">CustomLabel superscript rendering</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> CustomLabelComponent with SuperscriptText and SuperscriptCssClass</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set SuperscriptText='(1)'</li><li>Set SuperscriptCssClass='sup-style'</li><li>Render</li><li>Assert <sup class='sup-style'>(1)</sup> in output</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set SuperscriptText='(1)'</li><li>Set SuperscriptCssClass='sup-style'</li><li>Render</li><li>Assert &lt;sup class='sup-style'&gt;(1)&lt;/sup&gt; in output</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Superscript rendered with CSS class</div>
 </div>
 <div class="tc-card regression">
@@ -1194,7 +1194,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">LabelComponent renders label element</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-002 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> LabelComponent configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and for attribute</li><li>Render</li><li>Assert <label for='...'> element</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and for attribute</li><li>Render</li><li>Assert &lt;label for='...'&gt; element</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Label element with for attribute</div>
 </div>
 <div class="tc-card unit">
@@ -1210,7 +1210,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">SpanLabelComponent renders span element</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-002 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> SpanLabelComponent configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and CssClass</li><li>Render</li><li>Assert <span class='...'> element</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text and CssClass</li><li>Render</li><li>Assert &lt;span class='...'&gt; element</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Span label with CSS class</div>
 </div>
 <div class="tc-card unit">
@@ -1242,7 +1242,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">HyperLinkComponent renders anchor</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-LT-005 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> HyperLinkComponent configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Url, Text, Target, CssClass</li><li>Render</li><li>Assert <a href='...' target='...' class='...'> with text</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Url, Text, Target, CssClass</li><li>Render</li><li>Assert &lt;a href='...' target='...' class='...'&gt; with text</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Anchor element with all attributes</div>
 </div>
 <div class="tc-card unit">
@@ -1273,7 +1273,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <span class="tc-id">TC-INF-001-U01</span> <span class="badge badge-unit">Unit</span> <span class="badge badge-pending">Pending</span>
   <div class="tc-title">ComponentFactory returns typed builders</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-INF-001 | <strong>Priority:</strong> Must</div>
-  <div class="tc-field"><strong>Preconditions:</strong> ComponentFactory<TModel> instantiated</div>
+  <div class="tc-field"><strong>Preconditions:</strong> ComponentFactory&lt;TModel&gt; instantiated</div>
   <div class="tc-steps"><strong>Steps:</strong><ol><li>Call factory.Button()</li><li>Assert returns ButtonBuilder</li><li>Call factory.DataTable()</li><li>Assert returns DataTableBuilder</li><li>Test all 42 component factory methods</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> All factory methods return correctly typed builders</div>
 </div>
@@ -1282,7 +1282,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Html.Sav2000() extension method</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-INF-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> Razor view context with HtmlHelper</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Html.Sav2000()</li><li>Assert returns ComponentFactory<TModel></li><li>Call Html.Sav2000(true)</li><li>Assert light requirement mode enabled</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Call Html.Sav2000()</li><li>Assert returns ComponentFactory&lt;TModel&gt;</li><li>Call Html.Sav2000(true)</li><li>Assert light requirement mode enabled</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Extension method returns factory with correct mode</div>
 </div>
 <div class="tc-card integration">
@@ -1418,7 +1418,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">SDK-style csproj format</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-MIG-001 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> .NET 8 project created</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Inspect csproj file</li><li>Assert <Project Sdk='Microsoft.NET.Sdk'></li><li>Assert TargetFramework is net8.0 or later</li><li>Assert all NuGet refs are PackageReference</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Inspect csproj file</li><li>Assert &lt;Project Sdk='Microsoft.NET.Sdk'&gt;</li><li>Assert TargetFramework is net8.0 or later</li><li>Assert all NuGet refs are PackageReference</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> SDK-style csproj targeting .NET 8+</div>
 </div>
 <div class="tc-card nonfunctional">
@@ -1487,10 +1487,10 @@ details > .detail-body { padding: 1rem 1.2rem; }
 </div>
 <div class="tc-card nonfunctional">
   <span class="tc-id">TC-MIG-005-U01</span> <span class="badge badge-nonfunctional">Non-Functional</span> <span class="badge badge-pending">Pending</span>
-  <div class="tc-title">Code coverage >= 80%</div>
+  <div class="tc-title">Code coverage &gt;= 80%</div>
   <div class="tc-field"><strong>URS Ref:</strong> US-MIG-005 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> Full test suite executed</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run tests with coverage collection</li><li>Generate coverage report</li><li>Assert line coverage >= 80%</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Run tests with coverage collection</li><li>Generate coverage report</li><li>Assert line coverage &gt;= 80%</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Coverage target met</div>
 </div>
 <div class="tc-card nonfunctional">
@@ -1565,7 +1565,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> BenchmarkDotNet configured</div>
   <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark ButtonComponent rendering 10,000 iterations</li><li>Record mean time and memory allocation</li><li>Compare to .NET FW 4.8 baseline</li></ol></div>
-  <div class="tc-field"><strong>Expected Result:</strong> No regression > 10% in rendering time; memory allocation within acceptable bounds</div>
+  <div class="tc-field"><strong>Expected Result:</strong> No regression &gt; 10% in rendering time; memory allocation within acceptable bounds</div>
 </div>
 <div class="tc-card performance">
   <span class="tc-id">TC-PERF-002</span> <span class="badge badge-performance">Performance</span> <span class="badge badge-pending">Pending</span>
@@ -1596,7 +1596,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">ComponentFactory instantiation time</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> BenchmarkDotNet configured</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark factory creation 10,000 times</li><li>Assert < 1ms per instantiation</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark factory creation 10,000 times</li><li>Assert &lt; 1ms per instantiation</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Factory creation is fast</div>
 </div>
 <div class="tc-card performance">
@@ -1612,7 +1612,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Validator execution time</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> All 8 validators with typical inputs</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark each validator 10,000 times</li><li>Assert < 0.1ms average per validation</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark each validator 10,000 times</li><li>Assert &lt; 0.1ms average per validation</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Validation is fast</div>
 </div>
 <div class="tc-card performance">
@@ -1620,7 +1620,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Page with 20 mixed components render time</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> Page with Button, TextBox, DropDown, DataTable, CustomLabel, DateTime, etc.</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render full page with 20 components</li><li>Assert total render < 200ms</li><li>Assert memory < 50MB</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Render full page with 20 components</li><li>Assert total render &lt; 200ms</li><li>Assert memory &lt; 50MB</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Complex page renders within time and memory bounds</div>
 </div>
 <div class="tc-card performance">
@@ -1636,7 +1636,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Crypt.Encrypt/Decrypt throughput</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> Crypt utility with typical parameter strings</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark encrypt/decrypt 10,000 times</li><li>Assert < 0.5ms per operation</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark encrypt/decrypt 10,000 times</li><li>Assert &lt; 0.5ms per operation</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Encryption throughput acceptable</div>
 </div>
 <div class="tc-card performance">
@@ -1644,7 +1644,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Localization string lookup throughput</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> ApplicationStrings with 60+ keys</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark lookup of all 60 keys 1,000 times</li><li>Assert < 0.01ms per lookup</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Benchmark lookup of all 60 keys 1,000 times</li><li>Assert &lt; 0.01ms per lookup</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Localization lookup is fast</div>
 </div>
 <div class="tc-card performance">
@@ -1652,7 +1652,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Static file response time</div>
   <div class="tc-field"><strong>URS Ref:</strong> NFR-004 | <strong>Priority:</strong> Should</div>
   <div class="tc-field"><strong>Preconditions:</strong> TestServer serving static files</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Request 47 JS files sequentially</li><li>Assert each responds < 50ms</li><li>Assert correct caching headers</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Request 47 JS files sequentially</li><li>Assert each responds &lt; 50ms</li><li>Assert correct caching headers</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Static files served quickly with caching</div>
 </div>
 </section>
@@ -1672,8 +1672,8 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <span class="tc-id">TC-SEC-002</span> <span class="badge badge-security">Security</span> <span class="badge badge-pending">Pending</span>
   <div class="tc-title">XSS prevention in component text output</div>
   <div class="tc-field"><strong>URS Ref:</strong> FR-001 | <strong>Priority:</strong> Must</div>
-  <div class="tc-field"><strong>Preconditions:</strong> Components with user-supplied text containing <script> tags</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text to '<script>alert(1)</script>'</li><li>Render</li><li>Assert HTML-encoded output</li><li>Assert no raw script in HTML</li></ol></div>
+  <div class="tc-field"><strong>Preconditions:</strong> Components with user-supplied text containing &lt;script&gt; tags</div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Set Text to '&lt;script&gt;alert(1)&lt;/script&gt;'</li><li>Render</li><li>Assert HTML-encoded output</li><li>Assert no raw script in HTML</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> User input HTML-encoded to prevent XSS</div>
 </div>
 <div class="tc-card security">
@@ -1794,7 +1794,7 @@ details > .detail-body { padding: 1rem 1.2rem; }
   <div class="tc-title">Validation feedback in browser</div>
   <div class="tc-field"><strong>URS Ref:</strong> Epic 5 | <strong>Priority:</strong> Must</div>
   <div class="tc-field"><strong>Preconditions:</strong> Staging server with validated form</div>
-  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form with DateRequired, EndDateGreaterThan, LessThanCurrentDate validators</li><li>Submit empty form</li><li>Assert client-side validation messages appear without page reload</li><li>Fix dates but set end < start</li><li>Submit</li><li>Assert EndDateGreaterThan message</li><li>Fix all</li><li>Submit</li><li>Assert form submits successfully</li></ol></div>
+  <div class="tc-steps"><strong>Steps:</strong><ol><li>Navigate to form with DateRequired, EndDateGreaterThan, LessThanCurrentDate validators</li><li>Submit empty form</li><li>Assert client-side validation messages appear without page reload</li><li>Fix dates but set end &lt; start</li><li>Submit</li><li>Assert EndDateGreaterThan message</li><li>Fix all</li><li>Submit</li><li>Assert form submits successfully</li></ol></div>
   <div class="tc-field"><strong>Expected Result:</strong> Client-side validation works in browser without postback</div>
 </div>
 <div class="tc-card e2e">
