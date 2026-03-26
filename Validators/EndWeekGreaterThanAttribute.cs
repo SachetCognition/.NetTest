@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="EndWeekGreaterThanAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -14,16 +14,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date greater than attribute.
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute, IClientValidatable
+    public sealed class EndWeekGreaterThanAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// The other property name.
@@ -102,11 +102,20 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var dateGreaterThanRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "endweekgreaterthan" };
-            dateGreaterThanRule.ValidationParameters.Add("lesserweekid", this.otherPropertyHtmlId);
-            yield return dateGreaterThanRule;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-endweekgreaterthan"))
+            {
+                context.Attributes.Add("data-val-endweekgreaterthan", this.ErrorMessageString);
+            }
+            if (!context.Attributes.ContainsKey("data-val-endweekgreaterthan-lesserweekid"))
+            {
+                context.Attributes.Add("data-val-endweekgreaterthan-lesserweekid", this.otherPropertyHtmlId);
+            }
         }
 
         /// <summary>

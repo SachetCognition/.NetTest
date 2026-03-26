@@ -2,8 +2,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
     using System.Collections.Generic;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
-    using System.Web.Mvc;
-
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     public class CustomLabelComponent : ComponentBase
     {
         public CustomLabelComponent()
@@ -11,7 +11,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
             this.DisplayColon = true;
         }
 
-        public CustomLabelComponent(HtmlHelper htmlHelper) : base(htmlHelper)
+        public CustomLabelComponent(IHtmlHelper htmlHelper) : base(htmlHelper)
         {
             this.DisplayColon = true;
         }
@@ -48,7 +48,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
         public bool DisplayColon { get; set; }
         public bool IsHtmlEncode { get; set; }
 
-        public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
-        public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }
+        public override void WriteHtml(System.IO.TextWriter writer) { }
+        public override void WriteInitScript(System.IO.TextWriter writer) { }
     }
 }

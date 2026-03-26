@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="CheckBoxHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -14,10 +14,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
     using System;
     using System.Globalization;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     /// <summary>
     /// The check box html builder.
@@ -41,7 +41,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -93,8 +93,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBox
                 }
 
                 var sbHtml = new StringBuilder();
-                sbHtml.Append(tagBuilderHidden.ToString(TagRenderMode.StartTag));
-                sbHtml.Append(tagBuilderCheckBox.ToString(TagRenderMode.StartTag));
+                sbHtml.Append(tagBuilderHidden.ToHtmlString(TagRenderMode.StartTag));
+                sbHtml.Append(tagBuilderCheckBox.ToHtmlString(TagRenderMode.StartTag));
                 writer.Write(sbHtml);
             }
         }

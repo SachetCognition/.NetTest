@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ClickToVoiceComponent.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -20,10 +20,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     /// <summary>
     /// The ClickToVoice component to directly open web call interface.
     /// </summary>
@@ -35,7 +33,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public ClickToVoiceComponent(HtmlHelper htmlHelper)
+        public ClickToVoiceComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.Title = string.Empty;
@@ -145,7 +143,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new ClickToVoiceHtmlBuilder(this).Build(writer);
         }
@@ -156,7 +154,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {
@@ -165,7 +163,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 
             if (!string.IsNullOrEmpty(this.RootService))
             {
-                this.ActionUrl = this.ActionUrl.Replace("{1}", HttpUtility.UrlEncode(this.RootService));
+                this.ActionUrl = this.ActionUrl.Replace("{1}", System.Net.WebUtility.UrlEncode(this.RootService));
             }
 
             var options =

@@ -1,11 +1,11 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ListBox
 {
-    using System.Web.UI;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
 
     public class ListBoxHtmlBuilder : HtmlBuilderBase<ListBoxComponent>
     {
         public ListBoxHtmlBuilder(ListBoxComponent component) : base(component) { }
-        public override void Build(HtmlTextWriter writer) { }
+        public override void Build(TextWriter writer) { }
     }
 }

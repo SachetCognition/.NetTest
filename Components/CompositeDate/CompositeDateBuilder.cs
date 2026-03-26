@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CompositeDateBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -13,14 +13,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
 {
     using System;
     using System.Collections.Generic;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ImageToolTip;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The composite date builder.

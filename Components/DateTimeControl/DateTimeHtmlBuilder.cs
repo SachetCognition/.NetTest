@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="DateTimeHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -14,9 +14,6 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     using System;
     using System.Globalization;
     using System.Text;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList;
@@ -27,6 +24,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
     using Equant.SAV2000.ComponentLibrary.MVC.Infrastructure;
 
     using Newtonsoft.Json;
+    using System.IO;
+    using Microsoft.AspNetCore.Html;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The Html Builder class for the DateTime component
@@ -50,7 +51,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -79,13 +80,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 //GKG:Fixed for remark 218.Removed the ExternalLabelText which taken as a parameter in string.format method. 
                 this.Component.CustomLabel.AccessText = string.Format(CultureInfo.CurrentCulture, ApplicationStrings.LBL000022);
 
-                var tagBuilderLabelDiv = new TagBuilder("div") { InnerHtml = this.Component.CustomLabel.ToHtmlString() };
+                var tagBuilderLabelDiv = new TagBuilder("div");
+                tagBuilderLabelDiv.InnerHtml.SetHtmlContent(this.Component.CustomLabel.ToHtmlString());
                 if (!string.IsNullOrEmpty(this.Component.CssClassLabelDiv))
                 {
                     tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
                 }
 
-                sbTagMainDivInnerHtml.Append(tagBuilderLabelDiv);
+                sbTagMainDivInnerHtml.Append(tagBuilderLabelDiv.ToHtmlString());
             }
 
             var tagBuilderDateDiv = new TagBuilder("div");
@@ -156,9 +158,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             //include error comp here to align it with the date
             //certain controls to be added only if the component is updatable
-            if (this.Component.IsUpdatable && !MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if (this.Component.IsUpdatable && !(this.Component.ValidationString == null || string.IsNullOrEmpty(this.Component.ValidationString.Value)))
             {
-                this.Component.ValidationString = new MvcHtmlString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
+                this.Component.ValidationString = new HtmlString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName));
                 this.Component.ErrorMessage = ErrorHelper.CreateErrorComponent(this.Component);
                 sbTagDateDivInnerHtml.Append(this.Component.ErrorMessage.ToHtmlString());
                 //  sbTagMainDivInnerHtml.Append(this.CreateErrorString(this.GetValidationSpan(this.Component.GetUpdatableDateTextName), this.Component.HtmlHelper));
@@ -180,10 +182,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                 }
             }
 
-            tagBuilderDateDiv.InnerHtml = sbTagDateDivInnerHtml.ToString();
-            sbTagMainDivInnerHtml.Append(tagBuilderDateDiv);
-            tagBuilderMainDiv.InnerHtml = sbTagMainDivInnerHtml.ToString();
-            writer.Write(tagBuilderMainDiv.ToString());
+            tagBuilderDateDiv.InnerHtml.SetHtmlContent(sbTagDateDivInnerHtml.ToString());
+            sbTagMainDivInnerHtml.Append(tagBuilderDateDiv.ToHtmlString());
+            tagBuilderMainDiv.InnerHtml.SetHtmlContent(sbTagMainDivInnerHtml.ToString());
+            writer.Write(tagBuilderMainDiv.ToHtmlString());
         }
 
         /// <summary>
@@ -197,7 +199,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
         /// </returns>
         private string GetValidationSpan(string forName)
         {
-            if (MvcHtmlString.IsNullOrEmpty(this.Component.ValidationString))
+            if ((this.Component.ValidationString == null || string.IsNullOrEmpty(this.Component.ValidationString.Value)))
             {
                 return string.Empty;
             }
@@ -266,7 +268,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             tagBuilderDate.MergeAttributes(this.Component.HtmlAttributes);
             tagBuilderDate.MergeAttribute("maxlength", this.Component.Value.IsModel ? "5" : "10");
-            return tagBuilderDate.ToString(TagRenderMode.StartTag);
+            return tagBuilderDate.ToHtmlString(TagRenderMode.StartTag);
         }
 
         /// <summary>
@@ -367,7 +369,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
 
             tagBuilderHidden.MergeAttribute("type", "hidden");
             tagBuilderHidden.MergeAttribute("value", value);
-            return tagBuilderHidden.ToString(TagRenderMode.StartTag);
+            return tagBuilderHidden.ToHtmlString(TagRenderMode.StartTag);
         }
 
         /// <summary>

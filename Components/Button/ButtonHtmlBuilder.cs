@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ButtonHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -12,10 +12,10 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
 {
     using System;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
 
     /// <summary>
     /// The Html Builder class for the Button component
@@ -39,7 +39,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -67,7 +67,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
 
                 tagBuilderButton.AddCssClass(this.Component.IsDisabled ? this.Component.CssClassReadOnly : this.Component.CssClass);
 
-                writer.Write(tagBuilderButton.ToString(TagRenderMode.StartTag));
+                writer.Write(tagBuilderButton.ToHtmlString(TagRenderMode.StartTag));
             }
         }
     }

@@ -1,12 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 {
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
@@ -15,6 +12,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The multi column tree view component.
@@ -42,7 +41,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="treeData">
         /// The tree data.
         /// </param>
-        public TreeGridComponent(HtmlHelper htmlHelper, System.Data.DataTable treeData)
+        public TreeGridComponent(IHtmlHelper htmlHelper, System.Data.DataTable treeData)
             : base(htmlHelper)
         {
             var jsRes = new List<JsResource>
@@ -82,7 +81,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new TreeGridHtmlBuilder(this).Build(writer);
         }
@@ -118,7 +117,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

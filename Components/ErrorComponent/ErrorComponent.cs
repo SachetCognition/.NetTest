@@ -1,23 +1,24 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent
 {
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     public class ErrorComponent : ComponentBase
     {
         public ErrorComponent() { }
-        public ErrorComponent(HtmlHelper htmlHelper) : base(htmlHelper) { }
+        public ErrorComponent(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-        public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
-        public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }
+        public override void WriteHtml(System.IO.TextWriter writer) { }
+        public override void WriteInitScript(System.IO.TextWriter writer) { }
     }
 
     public class ErrorComponents : ComponentBase
     {
         public ErrorComponents() { }
-        public ErrorComponents(HtmlHelper htmlHelper) : base(htmlHelper) { }
+        public ErrorComponents(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-        public override void WriteHtml(System.Web.UI.HtmlTextWriter writer) { }
-        public override void WriteInitScript(System.Web.UI.HtmlTextWriter writer) { }
+        public override void WriteHtml(System.IO.TextWriter writer) { }
+        public override void WriteInitScript(System.IO.TextWriter writer) { }
     }
 }
