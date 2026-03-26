@@ -75,6 +75,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
 
         public void EnableValidationAttribute()
         {
+            if (!this.HtmlAttributes.ContainsKey("data-val"))
+            {
+                this.HtmlAttributes.Add("data-val", "true");
+            }
         }
 
         public void AddValidationAttribute(string key, string value)
