@@ -24,7 +24,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
             var daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
             var firstThursday = jan1.AddDays(daysOffset);
-            var cal = CultureInfo.CurrentCulture.Calendar;
+            var cal = CultureInfo.InvariantCulture.Calendar;
             var firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
             var weekNum = weekOfYear;

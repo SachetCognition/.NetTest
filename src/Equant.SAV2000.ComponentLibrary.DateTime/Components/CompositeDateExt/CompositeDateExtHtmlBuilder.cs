@@ -2,6 +2,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDateExt
 {
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
@@ -85,8 +86,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDateExt
 
             var sb = new StringBuilder();
             var selectedValue = ((int)this.Component.ViewModel.SelectedDateType).ToString(CultureInfo.InvariantCulture);
+            var items = this.Component.AvailableDateTypes != null && this.Component.AvailableDateTypes.Count > 0
+                ? this.Component.DateTypeItems.Where(i => this.Component.AvailableDateTypes.Contains((EnumDateTypes)int.Parse(i.Value, CultureInfo.InvariantCulture))).ToList()
+                : this.Component.DateTypeItems;
 
-            foreach (var item in this.Component.DateTypeItems)
+            foreach (var item in items)
             {
                 var option = new TagBuilder("option");
                 option.Attributes["value"] = item.Value;

@@ -3,6 +3,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
     using Equant.SAV2000.ComponentLibrary.Common.Resources;
@@ -71,7 +72,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
             }
 
             var sb = new StringBuilder();
-            var items = this.Component.DateTypeItems;
+            var items = this.Component.AvailableDateTypes != null && this.Component.AvailableDateTypes.Count > 0
+                ? this.Component.DateTypeItems.Where(i => this.Component.AvailableDateTypes.Contains((EnumDateTypes)int.Parse(i.Value, CultureInfo.InvariantCulture))).ToList()
+                : this.Component.DateTypeItems;
             var selectedValue = ((int)this.Component.ViewModel.SelectedDateType).ToString(CultureInfo.InvariantCulture);
 
             foreach (var item in items)
