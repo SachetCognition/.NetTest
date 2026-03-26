@@ -80,14 +80,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             var copyRightDiv = this.CreateCopyRightDiv();
 
             //Add tagBuilderMenuDiv in tagBuilderSubOuterDiv
-            tagBuilderSubOuterDiv.InnerHtml.SetHtmlContent(tagBuilderMenuDiv.ToString()
+            tagBuilderSubOuterDiv.InnerHtml.SetHtmlContent(tagBuilderMenuDiv.ToHtmlString()
                 .AppendWithBuilder(copyRightDiv, string.Format(CultureInfo.CurrentCulture, "<input type = 'hidden' name='{0}'>", this.Component.Name)));
 
             //Add tagBuilderSubOuterDiv in outer Div
-            tagBuilderOuterDiv.InnerHtml.SetHtmlContent(tagBuilderSubOuterDiv.ToString());
+            tagBuilderOuterDiv.InnerHtml.SetHtmlContent(tagBuilderSubOuterDiv.ToHtmlString());
 
             //Render menu HTML
-            writer.Write(tagBuilderOuterDiv.ToString());
+            writer.Write(tagBuilderOuterDiv.ToHtmlString());
         }
 
         /// <summary>
@@ -106,16 +106,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
             var copyRightTextDiv = new TagBuilder("div");
             var copyRightPara = new TagBuilder("p");
             copyRightPara.InnerHtml.Clear(); copyRightPara.InnerHtml.Append(this.Component.CopyRightText);
-            copyRightTextDiv.InnerHtml.SetHtmlContent(copyRightPara.ToString());
+            copyRightTextDiv.InnerHtml.SetHtmlContent(copyRightPara.ToHtmlString());
 
             var copyRightImgAndText = new StringBuilder(string.Empty);
             copyRightImgAndText.Append(this.Component.CopyRightImage.ToHtmlString());
          
-            copyRightImgAndText.Append(copyRightTextDiv);
+            copyRightImgAndText.Append(copyRightTextDiv.ToHtmlString());
             innerCopyDIv.InnerHtml.SetHtmlContent(copyRightImgAndText.ToString());
-            copyRightDiv.InnerHtml.SetHtmlContent(innerCopyDIv.ToString());
+            copyRightDiv.InnerHtml.SetHtmlContent(innerCopyDIv.ToHtmlString());
 
-            return copyRightDiv.ToString();
+            return copyRightDiv.ToHtmlString();
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
            
             //Add Other menu Items
             headerTemplateUl.InnerHtml.SetHtmlContent(this.CreateMenuItems());
-            return headerTemplateUl.ToString();
+            return headerTemplateUl.ToHtmlString();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                     liBuilder.AddCssClass("active");
                 }
 
-                liBuilder.InnerHtml.SetHtmlContent(anchorBuilder1Html + (childMenuTagsUl == null ? string.Empty : childMenuTagsUl.ToString()));
+                liBuilder.InnerHtml.SetHtmlContent(anchorBuilder1Html + (childMenuTagsUl == null ? string.Empty : childMenuTagsUl.ToHtmlString()));
 
                 if (Array.IndexOf((liBuilder.InnerHtml.ToHtmlString().Split('"')), this.Component.SelectedMenu) > -1)
                 {
@@ -182,7 +182,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                 }
 
                 itemIndex++;
-                menuBuilder.Append(liBuilder);
+                menuBuilder.Append(liBuilder.ToHtmlString());
             }
 
             return menuBuilder.ToString();
@@ -229,7 +229,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                         childMenuTagsUl.Attributes["style"] = "display:block";
                     }
 
-                    childMenuItems.Append(childLiTag);
+                    childMenuItems.Append(childLiTag.ToHtmlString());
                     index++;
                 }
 
@@ -405,11 +405,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
                 }
 
                 tbAccSpan.InnerHtml.SetHtmlContent(accessText);
-                sbInnerHtml.Append(tbAccSpan);
+                sbInnerHtml.Append(tbAccSpan.ToHtmlString());
             }
 
             tagBuilderAnchor.InnerHtml.SetHtmlContent(sbInnerHtml.ToString());
-            return tagBuilderAnchor.ToString();
+            return tagBuilderAnchor.ToHtmlString();
         }
 
         /// <summary>

@@ -85,8 +85,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                 {
                     tagBuilderdiv.InnerHtml.AppendHtml(ReturnEmptylistDiv());
                 }
-                outerdiv.InnerHtml.SetHtmlContent(tagBuilderdiv.ToString());
-                strComponent.Append(outerdiv);
+                outerdiv.InnerHtml.SetHtmlContent(tagBuilderdiv.ToHtmlString());
+                strComponent.Append(outerdiv.ToHtmlString());
                 writer.Write(strComponent.ToString());
             }
         }
@@ -131,7 +131,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
             sbCustomInnerHtml.Append(this.Maketree());
             tagBuilderul.InnerHtml.SetHtmlContent(sbCustomInnerHtml.ToString());
 
-            return tagBuilderul.ToString();
+            return tagBuilderul.ToHtmlString();
         }
 
 
@@ -170,17 +170,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                     tagSpan.MergeAttribute("class", "tree-headervisibility");
                 }
                 x++;
-                tagBuilderDiv.InnerHtml.SetHtmlContent(tagSpan.ToString());
+                tagBuilderDiv.InnerHtml.SetHtmlContent(tagSpan.ToHtmlString());
 
-                headerString.Append(tagBuilderDiv);
+                headerString.Append(tagBuilderDiv.ToHtmlString());
             }
 
 
             tagBuilderinnerDiv.InnerHtml.SetHtmlContent(headerString.ToString());
 
-            tagBuilderHeaderLi.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToString());
+            tagBuilderHeaderLi.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToHtmlString());
 
-            return tagBuilderHeaderLi.ToString();
+            return tagBuilderHeaderLi.ToHtmlString();
         }
 
         /// <summary>
@@ -198,9 +198,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
 
             tagBuilderinnerDiv.InnerHtml.SetHtmlContent("&nbsp;");
-            tagBuilderHeaderLi.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToString());
+            tagBuilderHeaderLi.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToHtmlString());
 
-            return tagBuilderHeaderLi.ToString();
+            return tagBuilderHeaderLi.ToHtmlString();
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
             sbEmptydiv.MergeAttribute("class", "Emptytree");
             sbEmptydiv.InnerHtml.SetHtmlContent(ApplicationStrings.LBL000021);
 
-            return sbEmptydiv.ToString();
+            return sbEmptydiv.ToHtmlString();
         }
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
                             var tagbuilderspan = new TagBuilder("span");
                             tagbuilderspan.MergeAttribute("class", "glyphicon glyphicon-minus");
-                            tagBulderanchor.InnerHtml.SetHtmlContent(tagbuilderspan.ToString());
-                            sb.Append(tagBulderanchor);
+                            tagBulderanchor.InnerHtml.SetHtmlContent(tagbuilderspan.ToHtmlString());
+                            sb.Append(tagBulderanchor.ToHtmlString());
                         }
                         else if (foundRows.Last() == row)
                         {
@@ -268,7 +268,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
                         tagBulderli.InnerHtml.SetHtmlContent(sb.ToString());
 
-                        treeString.Append(tagBulderli);
+                        treeString.Append(tagBulderli.ToHtmlString());
                     }
                 }
 
@@ -343,14 +343,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                         var spanHideAccess = new TagBuilder("Span");
                         spanHideAccess.AddCssClass("hide-access");
                         spanHideAccess.InnerHtml.SetHtmlContent(drow.AccessText + " ");
-                        taglbl.InnerHtml.SetHtmlContent(spanHideAccess.ToString().AppendWithBuilder(drow.Text));
+                        taglbl.InnerHtml.SetHtmlContent(spanHideAccess.ToHtmlString().AppendWithBuilder(drow.Text));
                     }
                     else if (!string.IsNullOrEmpty(col.AccessText))
                     {
                         var spanHideAccess = new TagBuilder("Span");
                         spanHideAccess.AddCssClass("hide-access");
                         spanHideAccess.InnerHtml.SetHtmlContent(col.AccessText + " ");
-                        taglbl.InnerHtml.SetHtmlContent(spanHideAccess.ToString().AppendWithBuilder(drow.Text));
+                        taglbl.InnerHtml.SetHtmlContent(spanHideAccess.ToHtmlString().AppendWithBuilder(drow.Text));
                     }
                     else
                     {
@@ -360,7 +360,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
                     if (!drow.IsVisible)
                     {
-                        sb.Append(taglbl);
+                        sb.Append(taglbl.ToHtmlString());
                     }
 
                     if (drow.IsVisible)
@@ -395,7 +395,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                         }
                         sb.Append(tagchk.ToHtmlString(TagRenderMode.SelfClosing));
 
-                        sb.Append(taglbl);
+                        sb.Append(taglbl.ToHtmlString());
 
                     }
                 }
@@ -426,14 +426,14 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                 tagSpan.InnerHtml.SetHtmlContent(sb.ToString());
 
                 x++;
-                tagBuilderinnerDiv.InnerHtml.SetHtmlContent(tagSpan.ToString());
-                tagBuilderDiv.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToString());
-                childString.Append(tagBuilderDiv);
+                tagBuilderinnerDiv.InnerHtml.SetHtmlContent(tagSpan.ToHtmlString());
+                tagBuilderDiv.InnerHtml.SetHtmlContent(tagBuilderinnerDiv.ToHtmlString());
+                childString.Append(tagBuilderDiv.ToHtmlString());
             }
 
             //  ChildString.Append(this.MakeChild(dr, 1));
             tagbuilderLineRowDiv.InnerHtml.SetHtmlContent(childString.ToString());
-            return tagbuilderLineRowDiv.ToString();
+            return tagbuilderLineRowDiv.ToHtmlString();
         }
 
         /// <summary>
@@ -478,8 +478,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
 
                         var tagbuilderspan = new TagBuilder("span");
                         tagbuilderspan.MergeAttribute("class", "glyphicon glyphicon-minus");
-                        tagBulderanchor.InnerHtml.SetHtmlContent(tagbuilderspan.ToString());
-                        this.str.Append(tagBulderanchor);
+                        tagBulderanchor.InnerHtml.SetHtmlContent(tagbuilderspan.ToHtmlString());
+                        this.str.Append(tagBulderanchor.ToHtmlString());
                     }
                     else if (foundRows.Last() == foundRow)
                     {
@@ -499,12 +499,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.TreeGrid
                         tagbuilderli.InnerHtml.AppendHtml(this.Makechild(foundRow));
                     }
 
-                    strChild.Append(tagbuilderli);
+                    strChild.Append(tagbuilderli.ToHtmlString());
                 }
             }
 
             tagBulderul.InnerHtml.SetHtmlContent(Convert.ToString(strChild.ToString(), CultureInfo.InvariantCulture));
-            return tagBulderul.ToString();
+            return tagBulderul.ToHtmlString();
         }
     }
 }

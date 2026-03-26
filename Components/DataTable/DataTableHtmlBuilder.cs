@@ -5,6 +5,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
     using Microsoft.AspNetCore.Html;
 
     /// <summary>
@@ -93,7 +94,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
                         column.HeaderTemplate.Title = column.HeaderText;
                         column.HeaderTemplate.BuildHtml(stringBuilderTh);
                         tagBuilderTh.InnerHtml.SetHtmlContent(stringBuilderTh.ToString());
-                        stringBuilderTr.Append(tagBuilderTh);
+                        stringBuilderTr.Append(tagBuilderTh.ToHtmlString());
                     }
                     else
                     {
@@ -108,7 +109,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
                             tagBuilderTh.InnerHtml.SetHtmlContent(string.Format(CultureInfo.CurrentUICulture,"<span class=\"hide-access\">{0}</span>",column.HeaderText ));
                         }
 
-                        stringBuilderTr.Append(tagBuilderTh);
+                        stringBuilderTr.Append(tagBuilderTh.ToHtmlString());
                     }
 
                     // Add filter th tag
@@ -116,12 +117,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
                     {
                         var tagBuilderThFilter = new TagBuilder("td");
                         tagBuilderThFilter.AddCssClass(column.CssClass);
-                        stringBuilderTrFilter.Append(tagBuilderThFilter);
+                        stringBuilderTrFilter.Append(tagBuilderThFilter.ToHtmlString());
                     }
                 }
                 
                 tagBuilderTr.InnerHtml.SetHtmlContent(stringBuilderTr.ToString());
-                tagBuilderThead.InnerHtml.SetHtmlContent(tagBuilderTr.ToString());
+                tagBuilderThead.InnerHtml.SetHtmlContent(tagBuilderTr.ToHtmlString());
 
                 if (this.Component.IsFilter && this.Component.IsShowHeader)
                 {
@@ -129,15 +130,15 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
                     tagBuilderThead.InnerHtml.SetHtmlContent(string.Format(CultureInfo.InvariantCulture, "{0}{1}", tagBuilderThead.InnerHtml, tagBuilderTrFilter));
                 }
 
-                stringBuilderTable.Append(tagBuilderCaption);
-                stringBuilderTable.Append(tagBuilderThead);
+                stringBuilderTable.Append(tagBuilderCaption.ToHtmlString());
+                stringBuilderTable.Append(tagBuilderThead.ToHtmlString());
 
                 var tagBuilderTbody = new TagBuilder("tbody");
-                stringBuilderTable.Append(tagBuilderTbody);
+                stringBuilderTable.Append(tagBuilderTbody.ToHtmlString());
 
                 tagBuilderTable.InnerHtml.SetHtmlContent(stringBuilderTable.ToString());
 
-                writer.Write(tagBuilderTable);
+                writer.Write(tagBuilderTable.ToHtmlString());
             }
         }
     }

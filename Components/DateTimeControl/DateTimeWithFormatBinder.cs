@@ -98,6 +98,35 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             if (string.IsNullOrEmpty(hourValue) ^ string.IsNullOrEmpty(minuteValue))
             {
                 bindingContext.ModelState.AddModelError(modelName, ApplicationStrings.TimeMandatory);
+                dateTimeValue = new DateTimeWithFormat(formatValue, isModel)
+                {
+                    DateText = dateValue,
+                    HourValue = hourValue,
+                    MinuteValue = minuteValue,
+                    TimeOffset = timeOffset,
+                    IsUtcMode = isUtcMode
+                };
+                bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+                return Task.CompletedTask;
+            }
+
+            if (!string.IsNullOrEmpty(hourValue) && !string.IsNullOrEmpty(minuteValue))
+            {
+                if (!int.TryParse(hourValue, out int hourParsed) || hourParsed < 0 || hourParsed > 23 ||
+                    !int.TryParse(minuteValue, out int minuteParsed) || minuteParsed < 0 || minuteParsed > 59)
+                {
+                    bindingContext.ModelState.AddModelError(modelName, ApplicationStrings.TimeMandatory);
+                    dateTimeValue = new DateTimeWithFormat(formatValue, isModel)
+                    {
+                        DateText = dateValue,
+                        HourValue = hourValue,
+                        MinuteValue = minuteValue,
+                        TimeOffset = timeOffset,
+                        IsUtcMode = isUtcMode
+                    };
+                    bindingContext.Result = ModelBindingResult.Success(dateTimeValue);
+                    return Task.CompletedTask;
+                }
             }
 
             dateTimeValue = new DateTimeWithFormat(formatValue, isModel)

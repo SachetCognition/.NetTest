@@ -100,7 +100,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                         tagBuilderLi.InnerHtml.SetHtmlContent(chkBoxBuilder.ToString());
                         chkBoxBuilder.Clear();
                     }
-                    liStringBuilder.Append(tagBuilderLi);
+                    liStringBuilder.Append(tagBuilderLi.ToHtmlString());
                 }
                 //the complete LI will be placed in the UL's inner html.
                 if (liStringBuilder.Length == 0)
@@ -120,7 +120,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 legend.MergeAttribute("class", "hide-access");
                 var hiddenSpan = new TagBuilder("span");
                 hiddenSpan.InnerHtml.SetHtmlContent(this.Component.Title);
-                legend.InnerHtml.SetHtmlContent(hiddenSpan.ToString());
+                legend.InnerHtml.SetHtmlContent(hiddenSpan.ToHtmlString());
 
                 var div = new TagBuilder("div");
 
@@ -131,7 +131,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                 tagBuilderFieldSet.InnerHtml.SetHtmlContent(sbinnerHtml.AppendWithBuilder(
                     legend.ToHtmlString(TagRenderMode.Normal),
                     div.ToHtmlString(TagRenderMode.StartTag),
-                    tagBuilderUl.ToString(),
+                    tagBuilderUl.ToHtmlString(),
                     div.ToHtmlString(TagRenderMode.EndTag)));
                 if (this.Component.IsOuterDivNeeded)
                 {
@@ -142,12 +142,12 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
                     }
                     controlStringBuiler.Append(sbinnerHtml.AppendWithBuilder(
                         tagBuilderOuterDiv.ToHtmlString(TagRenderMode.StartTag),
-                        tagBuilderFieldSet.ToString(),
+                        tagBuilderFieldSet.ToHtmlString(),
                         tagBuilderOuterDiv.ToHtmlString(TagRenderMode.EndTag)));
                 }
                 else
                 {
-                    controlStringBuiler.Append(tagBuilderFieldSet);
+                    controlStringBuiler.Append(tagBuilderFieldSet.ToHtmlString());
                 }
                 writer.Write(controlStringBuiler.ToString());
             }
@@ -184,7 +184,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CheckBoxList
             var tagBuilderLabel = new TagBuilder("label");
             tagBuilderLabel.MergeAttribute("for", compId);
             tagBuilderLabel.InnerHtml.Clear(); tagBuilderLabel.InnerHtml.Append(item.Text);
-            chkBoxBuilder.Append(tagBuilderCheckBox.ToHtmlString(TagRenderMode.StartTag)).Append(tagBuilderLabel);
+            chkBoxBuilder.Append(tagBuilderCheckBox.ToHtmlString(TagRenderMode.StartTag)).Append(tagBuilderLabel.ToHtmlString());
         }
     }
 }

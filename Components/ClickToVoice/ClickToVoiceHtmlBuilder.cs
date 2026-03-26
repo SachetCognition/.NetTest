@@ -100,11 +100,11 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
                     }
 
                     tbtelnoSpan.InnerHtml.SetHtmlContent(this.Component.TelephoneNumber);
-                    sbInnerHtml.Append(tbtelnoSpan);
+                    sbInnerHtml.Append(tbtelnoSpan.ToHtmlString());
                 }
 
                 tagBuilderAnchor.InnerHtml.SetHtmlContent(sbInnerHtml.ToString());
-                writer.Write(tagBuilderAnchor.ToString());
+                writer.Write(tagBuilderAnchor.ToHtmlString());
             }
         }
 

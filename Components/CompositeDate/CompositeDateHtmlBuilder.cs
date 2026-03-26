@@ -112,7 +112,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
                 tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
             }
 
-            var sbTagMainDivInnerHtml = new StringBuilder(tagBuilderLabelDiv.ToString());
+            var sbTagMainDivInnerHtml = new StringBuilder(tagBuilderLabelDiv.ToHtmlString());
 
             //add dropdown list here
             sbTagMainDivInnerHtml.Append(this.DateTypesHtml());
@@ -216,7 +216,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CompositeDate
             }
 
             tagBuilderMainDiv.InnerHtml.SetHtmlContent(sbTagMainDivInnerHtml.ToString());
-            writer.Write(tagBuilderMainDiv.ToString());
+            writer.Write(tagBuilderMainDiv.ToHtmlString());
         }
 
         /// <summary>

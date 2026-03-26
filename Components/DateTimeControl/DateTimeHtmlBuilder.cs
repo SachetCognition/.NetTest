@@ -87,7 +87,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
                     tagBuilderLabelDiv.AddCssClass(this.Component.CssClassLabelDiv);
                 }
 
-                sbTagMainDivInnerHtml.Append(tagBuilderLabelDiv);
+                sbTagMainDivInnerHtml.Append(tagBuilderLabelDiv.ToHtmlString());
             }
 
             var tagBuilderDateDiv = new TagBuilder("div");
@@ -183,9 +183,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             }
 
             tagBuilderDateDiv.InnerHtml.SetHtmlContent(sbTagDateDivInnerHtml.ToString());
-            sbTagMainDivInnerHtml.Append(tagBuilderDateDiv);
+            sbTagMainDivInnerHtml.Append(tagBuilderDateDiv.ToHtmlString());
             tagBuilderMainDiv.InnerHtml.SetHtmlContent(sbTagMainDivInnerHtml.ToString());
-            writer.Write(tagBuilderMainDiv.ToString());
+            writer.Write(tagBuilderMainDiv.ToHtmlString());
         }
 
         /// <summary>

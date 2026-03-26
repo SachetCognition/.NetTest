@@ -71,7 +71,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable
 
                 builder.Append(tagBuilder.ToHtmlString(TagRenderMode.StartTag));
 
-                builder.AppendLine(tbAccSpan.ToString());
+                builder.AppendLine(tbAccSpan.ToHtmlString());
 
 
             }

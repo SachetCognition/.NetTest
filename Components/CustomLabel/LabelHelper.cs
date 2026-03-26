@@ -12,6 +12,7 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
     using Microsoft.AspNetCore.Html;
     /// <summary>
     /// The label helper.
@@ -59,7 +60,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
                 tagBuilderSpan.InnerHtml.SetHtmlContent(spanText);
             }
 
-            return tagBuilderSpan.ToString();
+            return tagBuilderSpan.ToHtmlString();
         }
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
             tagBuilderSpan.MergeAttribute("class", "required");
             tagBuilderSpan.InnerHtml.SetHtmlContent(abbrText);
 
-            return tagBuilderSpan.ToString();
+            return tagBuilderSpan.ToHtmlString();
         }
     }
 }

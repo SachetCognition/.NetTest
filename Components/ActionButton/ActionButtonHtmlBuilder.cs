@@ -17,6 +17,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using System.IO;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
     using Microsoft.AspNetCore.Html;
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
                     var tbAccSpan = new TagBuilder("span");
                     tbAccSpan.AddCssClass("hide-access");
                     tbAccSpan.InnerHtml.SetHtmlContent(this.Component.AccessText);
-                    sbInnerHtml.Append(tbAccSpan);
+                    sbInnerHtml.Append(tbAccSpan.ToHtmlString());
                 }
                 
                 var tbTextSpan = new TagBuilder("span");
@@ -84,9 +85,9 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
                 }
 
                 tbTextSpan.InnerHtml.SetHtmlContent(this.Component.Text);
-                sbInnerHtml.Append(tbTextSpan);
+                sbInnerHtml.Append(tbTextSpan.ToHtmlString());
                 tbActionButton.InnerHtml.SetHtmlContent(sbInnerHtml.ToString());
-                writer.Write(tbActionButton.ToString());
+                writer.Write(tbActionButton.ToHtmlString());
             }
         }
     }
