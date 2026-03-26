@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable

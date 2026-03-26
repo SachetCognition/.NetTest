@@ -156,7 +156,7 @@
                 return null;
             }
 
-            var week = ParseWeekString(weekYear.WeekText, weekYear.Format);
+            var week = ParseWeekString(weekYear.WeekText, weekYear.WeekFormat);
 
             if (week != int.MinValue)
             {
