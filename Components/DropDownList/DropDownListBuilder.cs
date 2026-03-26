@@ -19,6 +19,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DropDownList
                 var labelComponent = new CustomLabelComponent();
                 var labelBuilder = new CustomLabelBuilder(labelComponent);
                 configure(labelBuilder);
+                Component.Label = labelComponent;
             }
             return this;
         }
