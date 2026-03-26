@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ClickToVoiceBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -11,8 +11,8 @@
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ClickToVoice
 {
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// The ClickToVoice HTML Builder class

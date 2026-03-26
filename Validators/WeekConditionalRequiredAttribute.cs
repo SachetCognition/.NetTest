@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="WeekConditionalRequiredAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,17 +15,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear;
     using Equant.SAV2000.ComponentLibrary.MVC.Helpers;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date greater than attribute.
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class WeekConditionalRequiredAttribute : ValidationAttribute, IClientValidatable
+    public sealed class WeekConditionalRequiredAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// The other property name.
@@ -109,11 +109,20 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var conditionalRequiredRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "weekconditionalrequired" };
-            conditionalRequiredRule.ValidationParameters.Add("otherweekid", this.otherPropertyHtmlId);
-            yield return conditionalRequiredRule;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-weekconditionalrequired"))
+            {
+                context.Attributes.Add("data-val-weekconditionalrequired", this.ErrorMessageString);
+            }
+            if (!context.Attributes.ContainsKey("data-val-weekconditionalrequired-otherweekid"))
+            {
+                context.Attributes.Add("data-val-weekconditionalrequired-otherweekid", this.otherPropertyHtmlId);
+            }
         }
 
         /// <summary>

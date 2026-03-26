@@ -1,12 +1,14 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.WeekYear
 {
-    using System.Web.Mvc;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public class WeekYearWithFormatBinder : IModelBinder
     {
-        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            return null;
+            bindingContext.Result = ModelBindingResult.Failed();
+            return Task.CompletedTask;
         }
     }
 }

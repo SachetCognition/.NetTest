@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="EndDateGreaterThanAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -14,16 +14,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date greater than attribute.
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class EndDateGreaterThanAttribute : ValidationAttribute, IClientValidatable
+    public sealed class EndDateGreaterThanAttribute : ValidationAttribute, IClientModelValidator
     {
         /// <summary>
         /// The other property name.
@@ -87,10 +87,16 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var dateGreaterThanRule = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "enddategreaterthan" };
-            yield return dateGreaterThanRule;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-enddategreaterthan"))
+            {
+                context.Attributes.Add("data-val-enddategreaterthan", this.ErrorMessageString);
+            }
         }
 
         /// <summary>

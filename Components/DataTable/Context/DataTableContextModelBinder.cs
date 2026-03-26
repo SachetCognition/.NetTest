@@ -1,49 +1,34 @@
-﻿namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context
+namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DataTable.Context
 {
     using System;
-    using System.Web.Mvc;
-
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Newtonsoft.Json;
 
-    /// <summary>
-    /// The data table context model binder.
-    /// </summary>
     public class DataTableContextModelBinder : IModelBinder
     {
-        /// <summary>
-        /// The bind model.
-        /// </summary>
-        /// <param name="controllerContext">
-        /// The controller context.
-        /// </param>
-        /// <param name="bindingContext">
-        /// The binding context.
-        /// </param>
-        /// <returns>
-        /// The <see cref="object"/>.
-        /// </returns>
-        /// <exception cref="NotImplementedException">
-        /// </exception>
-        public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            if (bindingContext != null)
+            if (bindingContext == null)
             {
-                var contextName = bindingContext.ModelName + ".Context";
-                var value = bindingContext.ValueProvider.GetValue(contextName);
-                if (value != null)
-                {
-                    if (value.AttemptedValue != null)
-                    {
-                        var retrievedValue = JsonConvert.DeserializeObject<DataTableContext>(value.AttemptedValue);
-                        bindingContext.ModelState.Remove(contextName);
-                        bindingContext.ModelState.Add(contextName, new ModelState());
-                        bindingContext.ModelState.SetModelValue(contextName, new ValueProviderResult(retrievedValue, value.AttemptedValue, null));
-                        return retrievedValue;
-                    }
-                }     
+                throw new ArgumentNullException(nameof(bindingContext));
             }
 
-            return null;
+            var contextName = bindingContext.ModelName + ".Context";
+            var valueProviderResult = bindingContext.ValueProvider.GetValue(contextName);
+            if (valueProviderResult != ValueProviderResult.None)
+            {
+                var value = valueProviderResult.FirstValue;
+                if (value != null)
+                {
+                    var retrievedValue = JsonConvert.DeserializeObject<DataTableContext>(value);
+                    bindingContext.Result = ModelBindingResult.Success(retrievedValue);
+                    return Task.CompletedTask;
+                }
+            }
+
+            bindingContext.Result = ModelBindingResult.Failed();
+            return Task.CompletedTask;
         }
     }
 }

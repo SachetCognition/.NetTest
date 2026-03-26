@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ActionButtonHtmlBuilder.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -12,11 +12,13 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
 {
     using System;
-    using System.Web.Mvc;
-    using System.Web.UI;
     using System.Text;
 
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+    using Microsoft.AspNetCore.Html;
 
     /// <summary>
     /// The Html Builder class for the ActionButton component
@@ -40,7 +42,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void Build(HtmlTextWriter writer)
+        public override void Build(TextWriter writer)
         {
             if (writer == null)
             {
@@ -72,8 +74,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
                 {
                     var tbAccSpan = new TagBuilder("span");
                     tbAccSpan.AddCssClass("hide-access");
-                    tbAccSpan.InnerHtml = this.Component.AccessText;
-                    sbInnerHtml.Append(tbAccSpan);
+                    tbAccSpan.InnerHtml.SetHtmlContent(this.Component.AccessText);
+                    sbInnerHtml.Append(tbAccSpan.ToHtmlString());
                 }
                 
                 var tbTextSpan = new TagBuilder("span");
@@ -82,10 +84,10 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ActionButton
                     tbTextSpan.AddCssClass(this.Component.CssSpan);
                 }
 
-                tbTextSpan.InnerHtml = this.Component.Text;
-                sbInnerHtml.Append(tbTextSpan);
-                tbActionButton.InnerHtml = sbInnerHtml.ToString();
-                writer.Write(tbActionButton.ToString());
+                tbTextSpan.InnerHtml.SetHtmlContent(this.Component.Text);
+                sbInnerHtml.Append(tbTextSpan.ToHtmlString());
+                tbActionButton.InnerHtml.SetHtmlContent(sbInnerHtml.ToString());
+                writer.Write(tbActionButton.ToHtmlString());
             }
         }
     }

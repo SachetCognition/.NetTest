@@ -1,4 +1,4 @@
-﻿// -------------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------------------------------------
 // <copyright file="ButtonComponent.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,14 +15,13 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Web.Mvc;
-    using System.Web.UI;
-
     using Equant.SAV2000.ComponentLibrary.Common.Helper;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
 
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using System.IO;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The component class for the Button component
@@ -35,7 +34,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// <param name="htmlHelper">
         /// The html helper.
         /// </param>
-        public ButtonComponent(HtmlHelper htmlHelper)
+        public ButtonComponent(IHtmlHelper htmlHelper)
             : base(htmlHelper)
         {
             this.OnClick = "null";
@@ -169,7 +168,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteHtml(HtmlTextWriter writer)
+        public override void WriteHtml(TextWriter writer)
         {
             new ButtonHtmlBuilder(this).Build(writer);
         }
@@ -180,7 +179,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Button
         /// <param name="writer">
         /// The writer.
         /// </param>
-        public override void WriteInitScript(HtmlTextWriter writer)
+        public override void WriteInitScript(TextWriter writer)
         {
             if (writer == null)
             {

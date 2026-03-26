@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
-
 namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
 {
+    using System.Collections.Generic;
     using System.Globalization;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// Specifies the minimum and maximum length of characters that are allowed in a data field
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientValidatable
+    public sealed class CustomStringLengthAttribute : StringLengthAttribute, IClientModelValidator
     {
 
         /// <summary>
@@ -47,11 +47,31 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var adapt = new StringLengthAttributeAdapter(metadata, context, this);
-            return adapt.GetClientValidationRules();
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
 
+            MergeAttribute(context.Attributes, "data-val", "true");
+            MergeAttribute(context.Attributes, "data-val-length", FormatErrorMessage(context.ModelMetadata.GetDisplayName()));
+            MergeAttribute(context.Attributes, "data-val-length-max", MaximumLength.ToString(CultureInfo.InvariantCulture));
+            if (MinimumLength > 0)
+            {
+                MergeAttribute(context.Attributes, "data-val-length-min", MinimumLength.ToString(CultureInfo.InvariantCulture));
+            }
+        }
+
+        private static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
+        {
+            if (attributes.ContainsKey(key))
+            {
+                return false;
+            }
+
+            attributes.Add(key, value);
+            return true;
         }
     }
 }

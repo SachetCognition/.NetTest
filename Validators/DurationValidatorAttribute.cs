@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DurationValidatorAttribute.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -15,17 +15,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
-    using System.Web.Mvc;
-
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateDurationControl;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
     /// <summary>
     /// The date greater than attribute.
     /// This is an example of a custom validator implementation
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public sealed class DurationValidatorAttribute : ValidationAttribute, IClientValidatable
+    public sealed class DurationValidatorAttribute : ValidationAttribute, IClientModelValidator
     {
         #region Fields
 
@@ -204,13 +204,28 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        public void AddValidation(ClientModelValidationContext context)
         {
-            var durationvalidator = new ModelClientValidationRule { ErrorMessage = this.ErrorMessageString, ValidationType = "durationvalidator" };
-            durationvalidator.ValidationParameters.Add("startdateid", this.firstPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("enddateid", this.secondPropertyHtmlId);
-            durationvalidator.ValidationParameters.Add("datedurationid", this.thirdPropertyHtmlId);
-            yield return durationvalidator;
+            if (!context.Attributes.ContainsKey("data-val"))
+            {
+                context.Attributes.Add("data-val", "true");
+            }
+            if (!context.Attributes.ContainsKey("data-val-durationvalidator"))
+            {
+                context.Attributes.Add("data-val-durationvalidator", this.ErrorMessageString);
+            }
+            if (!context.Attributes.ContainsKey("data-val-durationvalidator-startdateid"))
+            {
+                context.Attributes.Add("data-val-durationvalidator-startdateid", this.firstPropertyHtmlId);
+            }
+            if (!context.Attributes.ContainsKey("data-val-durationvalidator-enddateid"))
+            {
+                context.Attributes.Add("data-val-durationvalidator-enddateid", this.secondPropertyHtmlId);
+            }
+            if (!context.Attributes.ContainsKey("data-val-durationvalidator-datedurationid"))
+            {
+                context.Attributes.Add("data-val-durationvalidator-datedurationid", this.thirdPropertyHtmlId);
+            }
         }
 
         #endregion

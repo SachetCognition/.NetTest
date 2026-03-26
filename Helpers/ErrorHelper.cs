@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ErrorHelper.cs" company="OBS">
 //   OBS
 // </copyright>
@@ -17,10 +17,11 @@ using System.Collections.Generic;
 
 namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
 {
-    using System.Web.Mvc;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent;
     using Equant.SAV2000.ComponentLibrary.MVC.Extensions;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Rendering;
 
     /// <summary>
     /// The error helper.

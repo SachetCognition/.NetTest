@@ -1,8 +1,7 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.ErrorComponent
 {
     using System.Collections.Generic;
-    using System.Web.Mvc;
-
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     public class ErrorBuilder
     {
         private ErrorComponents _component;
