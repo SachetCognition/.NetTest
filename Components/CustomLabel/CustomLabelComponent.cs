@@ -1,19 +1,44 @@
 namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
 {
+    using System.Collections.Generic;
     using Equant.SAV2000.ComponentLibrary.MVC.Components.Api;
     using System.Web.Mvc;
 
     public class CustomLabelComponent : ComponentBase
     {
-        public CustomLabelComponent() { }
-        public CustomLabelComponent(HtmlHelper htmlHelper) : base(htmlHelper) { }
+        public CustomLabelComponent()
+        {
+            this.DisplayColon = true;
+        }
+
+        public CustomLabelComponent(HtmlHelper htmlHelper) : base(htmlHelper)
+        {
+            this.DisplayColon = true;
+        }
 
         public override string Id { get; set; }
         public string Text { get; set; }
         public string AccessText { get; set; }
         public string CssClass { get; set; }
         public string ForId { get; set; }
-        public string AssociatedControlId { get; set; }
+        public string AssociatedControlId
+        {
+            get
+            {
+                if (this.HtmlAttributes.ContainsKey("for"))
+                {
+                    return this.HtmlAttributes["for"].ToString();
+                }
+                return string.Empty;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    this.HtmlAttributes["for"] = value;
+                }
+            }
+        }
         public bool IsMandatory { get; set; }
         public bool IsOnlyForAccess { get; set; }
         public string CssClassLabel { get; set; }

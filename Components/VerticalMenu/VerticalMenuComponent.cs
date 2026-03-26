@@ -10,7 +10,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.VerticalMenu
 
     public class VerticalMenuComponent : ComponentBase
     {
-        public VerticalMenuComponent() { }
+        public VerticalMenuComponent() { this.MenuItems = new List<MenuItem>(); }
         public VerticalMenuComponent(HtmlHelper htmlHelper) : base(htmlHelper)
         {
             this.MenuItems = new List<MenuItem>();
