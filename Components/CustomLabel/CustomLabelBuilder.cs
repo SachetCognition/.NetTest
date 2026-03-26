@@ -16,7 +16,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.CustomLabel
             {
                 foreach (var prop in attributes.GetType().GetProperties())
                 {
-                    Component.HtmlAttributes[prop.Name] = prop.GetValue(attributes);
+                    Component.HtmlAttributes[prop.Name.Replace('_', '-')] = prop.GetValue(attributes);
                 }
             }
             return this;
