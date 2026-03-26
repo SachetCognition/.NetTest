@@ -61,7 +61,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Helpers
                 return DateTime.MinValue;
             }
 
-            string regexPattern = format == DateTimeConstants.EnglishFormat ? "^[D|d]{1}(([+-]{1}[0-999]{1,3})?)$" : "^[J|j]{1}(([+-]{1}[0-999]{1,3})?)$";
+            string regexPattern = format == DateTimeConstants.EnglishFormat ? "^[Dd]{1}(([+-]{1}[0-9]{1,3})?)$" : "^[Jj]{1}(([+-]{1}[0-9]{1,3})?)$";
 
             var match = Regex.Match(modelDate, regexPattern);
 

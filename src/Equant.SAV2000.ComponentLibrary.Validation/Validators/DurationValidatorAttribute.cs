@@ -113,31 +113,42 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Validators
             if (validationContext != null)
             {
                 var inputduration = value as DateDuration;
+
+                if (inputduration == null)
+                {
+                    return new ValidationResult("Duration cannot be blank. Please specify the duration");
+                }
+
                 var firstPropertyInfo = validationContext.ObjectType.GetProperty(this.FirstPropertyName);
                 var secondPropertyInfo = validationContext.ObjectType.GetProperty(this.SecondPropertyName);
-                var startDate = (DateTimeWithFormat)firstPropertyInfo.GetValue(validationContext.ObjectInstance, null);
-                var endDate = (DateTimeWithFormat)secondPropertyInfo.GetValue(validationContext.ObjectInstance, null);
+
+                if (firstPropertyInfo == null || secondPropertyInfo == null)
+                {
+                    return new ValidationResult(ErrorMessageString);
+                }
+
+                var startDate = firstPropertyInfo.GetValue(validationContext.ObjectInstance, null) as DateTimeWithFormat;
+                var endDate = secondPropertyInfo.GetValue(validationContext.ObjectInstance, null) as DateTimeWithFormat;
+
+                if (startDate == null || endDate == null || startDate.Date == null || endDate.Date == null)
+                {
+                    return new ValidationResult(ErrorMessageString);
+                }
+
                 var timediffernce = Convert.ToDateTime(endDate.Date, CultureInfo.InvariantCulture) - Convert.ToDateTime(startDate.Date, CultureInfo.InvariantCulture);
                 var datetimeduration = new TimeSpan(
                     timediffernce.Days, timediffernce.Hours, timediffernce.Minutes, timediffernce.Seconds, timediffernce.Milliseconds);
 
-                if (inputduration != null)
-                {
-                    var duration = new TimeSpan(
-                        0,
-                        Convert.ToInt32(inputduration.Hour, CultureInfo.InvariantCulture),
-                        Convert.ToInt32(inputduration.Minute, CultureInfo.InvariantCulture),
-                        Convert.ToInt32(inputduration.Second, CultureInfo.InvariantCulture),
-                        Convert.ToInt32(inputduration.MiliSecond, CultureInfo.InvariantCulture));
+                var duration = new TimeSpan(
+                    0,
+                    Convert.ToInt32(inputduration.Hour, CultureInfo.InvariantCulture),
+                    Convert.ToInt32(inputduration.Minute, CultureInfo.InvariantCulture),
+                    Convert.ToInt32(inputduration.Second, CultureInfo.InvariantCulture),
+                    Convert.ToInt32(inputduration.MiliSecond, CultureInfo.InvariantCulture));
 
-                    validationResult = datetimeduration.TotalMilliseconds >= duration.TotalMilliseconds
-                                           ? ValidationResult.Success
-                                           : new ValidationResult("Invalid Duration");
-                }
-                else
-                {
-                    validationResult = new ValidationResult("Duration cannot be black.Please specify the duration");
-                }
+                validationResult = datetimeduration.TotalMilliseconds >= duration.TotalMilliseconds
+                                       ? ValidationResult.Success
+                                       : new ValidationResult(ErrorMessageString);
             }
 
             return validationResult;

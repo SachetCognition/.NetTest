@@ -11,8 +11,8 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Infrastructure
         public const string TimeDefaultValue = "";
         public const string ModelFormat = "model";
         public const string StandardFormat = "standard";
-        public const string RegexWeekEnglish = "^[W|w]{1}(([+-]{1}[0-99]{1,2})?)$";
-        public const string RegexWeekFrench = "^[S|s]{1}(([+-]{1}[0-99]{1,2})?)$";
+        public const string RegexWeekEnglish = "^[Ww]{1}(([+-]{1}[0-9]{1,2})?)$";
+        public const string RegexWeekFrench = "^[Ss]{1}(([+-]{1}[0-9]{1,2})?)$";
         public const string IsUtc = "1";
         public const string IsNonUtc = "0";
     }

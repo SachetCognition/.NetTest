@@ -25,7 +25,7 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.DateTimeControl
             }
             set
             {
-                if (Convert.ToInt32(value, CultureInfo.CurrentCulture) == 0)
+                if (value.HasValue && Convert.ToInt32(value.Value, CultureInfo.CurrentCulture) == 0)
                 {
                     this.IsUtcMode = true;
                 }
