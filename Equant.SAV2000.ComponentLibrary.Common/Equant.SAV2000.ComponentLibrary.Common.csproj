@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{bca12e0a-90fb-4f7e-9094-f69344658cf7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Equant.SAV2000.ComponentLibrary.Common</RootNamespace>
+    <AssemblyName>Equant.SAV2000.ComponentLibrary.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helper\JsResource.cs" />
+    <Compile Include="Helper\CssResource.cs" />
+    <Compile Include="Locator.cs" />
+    <Compile Include="Resources\Locator.cs" />
+    <Compile Include="Resources\ApplicationStrings.cs" />
+    <Compile Include="Resources\PersistanceMode.cs" />
+    <Compile Include="Components\DataTables\SortDirection.cs" />
+    <Compile Include="Components\DataTables\CriteriaParameter.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableColumnsOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableOptions.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableLanguageOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableLanguagePaginateOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableLanguageAriaOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableColumnsReorderOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableColumnFilterColumnOption.cs" />
+    <Compile Include="Components\DataTables\Options\DataTableColumnFilterColumnTypeOption.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
