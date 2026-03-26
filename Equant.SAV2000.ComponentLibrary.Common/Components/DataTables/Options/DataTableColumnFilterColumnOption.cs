@@ -17,6 +17,6 @@ namespace Equant.SAV2000.ComponentLibrary.Common.Components.DataTables.Options
         /// Gets or sets the max length for the filter input.
         /// </summary>
         [JsonProperty("maxLength", NullValueHandling = NullValueHandling.Ignore)]
-        public int MaxLength { get; set; }
+        public int? MaxLength { get; set; }
     }
 }
