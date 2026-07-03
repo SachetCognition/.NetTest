@@ -6,6 +6,7 @@
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Net;
     using System.Web.Mvc;
     using System.Web.UI;
 
@@ -622,7 +623,9 @@
             if (string.IsNullOrEmpty(this.ErrorPageUrl))
             {
                 this.ErrorPageUrl = string.Format(CultureInfo.InvariantCulture, "{0}/Home/SubErr?NUMFEN={1}&COOKIENAME={2}",
-                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'), request["NumFen"], request["COOKIENAME"]);
+                     string.IsNullOrEmpty(path) ? string.Empty : path.TrimEnd('/'),
+                     WebUtility.UrlEncode(request["NumFen"] ?? string.Empty),
+                     WebUtility.UrlEncode(request["COOKIENAME"] ?? string.Empty));
             }
 
             if (writer != null)

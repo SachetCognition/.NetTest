@@ -154,7 +154,8 @@
                     },
                     //<PERF desc='remove useless data in JSON' author='blerouic' date='17-Feb-2016'>
                     new JsonSerializerSettings { 
-                                NullValueHandling = NullValueHandling.Ignore
+                                NullValueHandling = NullValueHandling.Ignore,
+                                StringEscapeHandling = StringEscapeHandling.EscapeHtml
                             }
                     );
         }
