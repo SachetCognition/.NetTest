@@ -82,7 +82,17 @@ namespace Equant.SAV2000.ComponentLibrary.MVC.Components.Api
             using (var htmlWriter = new HtmlTextWriter(stringWriter))
             {
                 this.Component.WriteHtml(htmlWriter);
-                this.Component.WriteInitScript(htmlWriter);
+                using (var scriptWriter = new StringWriter())
+                using (var scriptHtmlWriter = new HtmlTextWriter(scriptWriter))
+                {
+                    this.Component.WriteInitScript(scriptHtmlWriter);
+                    var initScript = scriptWriter.ToString();
+                    if (!string.IsNullOrWhiteSpace(initScript))
+                    {
+                        htmlWriter.WriteLine("<script>jQuery(function () {{ {0} }});</script>", initScript);
+                    }
+                }
+
                 return stringWriter.ToString();
             }
         }
